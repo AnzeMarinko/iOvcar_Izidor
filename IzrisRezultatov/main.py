@@ -5,7 +5,7 @@ from matplotlib.colors import TABLEAU_COLORS
 from mpl_toolkits.mplot3d import axes3d
 
 # folder = "Rezultati-novemberVoronoi/"
-folder = "../game/Rezultati/"  # mapa z rezultati
+folder = "../iOvcar_Izidor/game/Rezultati/"  # mapa z rezultati
 
 colors = list(TABLEAU_COLORS)  # barve za locevanje med stevili ovc in ovcarjev
 markers = [".", "*", "o", "x", "+", "y", "v", "^"]
@@ -127,8 +127,9 @@ def graf_OdCasa(f, title="", ylab="", up_bound=None):
 
 
 # TODO:
-#  škatle z brki (min, 1-kvartil, mediana, 3-kvartil, max) in standardne deviacije za določene primere
 #  razni grafi iz drugih virov
+#  škatle z brki (min, 1-kvartil, mediana, 3-kvartil, max)
+#  razlika med časom ko je pripeljal čez 80% in 100% (da se vidi ali jih hkrati pelje čez)
 
 
 def cas_simulacije(p, std=False):
