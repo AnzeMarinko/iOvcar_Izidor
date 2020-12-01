@@ -10,6 +10,7 @@ from mpl_toolkits.mplot3d import axes3d
 #  razlika med časom ko je pripeljal čez 80% in 100% (da se vidi ali jih hkrati pelje čez)
 #  evoulucijski algoritmi da se izpilijo parametri do čim boljših
 #  nek drug algoritem AI za primerjavo
+#  doprinos dodatnega psa (razlika v porabljenem času ipd. v primerjavi z enim psom manj
 
 
 # folder = "Rezultati-novemberVoronoi/"
