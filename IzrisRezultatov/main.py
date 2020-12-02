@@ -37,6 +37,7 @@ for gin0, novc0, vod0, novcar0 in files:
     poskusi.append(len(casi))
     data[(gin0, novc0, vod0, novcar0)] = np.array(casi)
 print(f"\n\t{min(poskusi)}-{max(poskusi)} poskusov na kombinacijo")
+
 # uporabljeni parametri
 gins = sorted(list({p[0] for p in data.keys()}))
 novcs = sorted(list({p[1] for p in data.keys()}))
@@ -153,7 +154,7 @@ def delez_ovc(g, n1, v, n2):
     return prop(d)
 
 
-cas3D(delez_ovc, "Povp. % ovc na travniku")
+# cas3D(delez_ovc, "Povp. % ovc na travniku")
 graf_OdCasa(delez_ovc, "Povprečen delež ovc na travniku", up_bound=1)
 
 
@@ -166,8 +167,8 @@ def cas_simulacije(p):
     return aux
 
 
+graf3D(cas_simulacije(1), f"Povp. čas ({100} % ovc)")
 for delez_ovc in [0.8, 1]:
-    graf3D(cas_simulacije(delez_ovc), f"Povp. čas ({delez_ovc * 100} % ovc)")
     graf_OdOvc(cas_simulacije(delez_ovc), True,
                f"Povp. čas simulacije do pripeljanih {delez_ovc * 100} % ovc", up_bound=maxT)
     graf_OdOvc(cas_simulacije(delez_ovc), False,
@@ -182,8 +183,8 @@ def uspesnost(p):
     return aux
 
 
+graf3D(uspesnost(1), f"Povp. uspešnost v {round(maxT)} s")
 for delez_casa in [0.333, 0.5, 1]:
-    graf3D(uspesnost(delez_casa), f"Povp. uspešnost v {round(delez_casa * maxT)} s")
     graf_OdOvc(uspesnost(delez_casa), True, f"Povprečna uspešnost v {round(delez_casa * maxT)} s", up_bound=1)
     graf_OdOvc(uspesnost(delez_casa), False, f"Povprečna uspešnost v {round(delez_casa * maxT)} s", up_bound=1)
 
