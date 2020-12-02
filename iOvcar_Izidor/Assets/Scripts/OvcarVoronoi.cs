@@ -154,10 +154,10 @@ public class OvcarVoronoi : MonoBehaviour
                 (ovcar.transform.position - GCM).magnitude > (GCM - tocka.transform.position).magnitude * 0.95f) { }  // ce sem blizu tocki ali dlje od GCM kot tocka ne zaokrozim
             else if (preblizu)
             {  // https://math.stackexchange.com/questions/274712/calculate-on-which-side-of-a-straight-line-is-a-given-point-located
-                Vector3 rotLevo = new Vector3(Mathf.Cos(Mathf.PI / 9f) * smer.x - Mathf.Sin(Mathf.PI / 9f) * smer.z,
-                    0f, Mathf.Cos(Mathf.PI / 9f) * smer.z + Mathf.Sin(Mathf.PI / 9f) * smer.x);
-                Vector3 rotDesno = new Vector3(Mathf.Cos(-Mathf.PI / 9f) * smer.x - Mathf.Sin(-Mathf.PI / 9f) * smer.z,
-                    0f, Mathf.Cos(-Mathf.PI / 9f) * smer.z + Mathf.Sin(-Mathf.PI / 9f) * smer.x);
+                Vector3 rotLevo = new Vector3(Mathf.Cos(Mathf.PI / 6f) * smer.x - Mathf.Sin(Mathf.PI / 6f) * smer.z,
+                    0f, Mathf.Cos(Mathf.PI / 6f) * smer.z + Mathf.Sin(Mathf.PI / 6f) * smer.x);
+                Vector3 rotDesno = new Vector3(Mathf.Cos(-Mathf.PI / 6f) * smer.x - Mathf.Sin(-Mathf.PI / 6f) * smer.z,
+                    0f, Mathf.Cos(-Mathf.PI / 6f) * smer.z + Mathf.Sin(-Mathf.PI / 6f) * smer.x);
                 float dGCM = (GCM.x - ovcar.transform.position.x) * smer.z - (GCM.z - ovcar.transform.position.z) * smer.x;
                 float dRotLevo = rotLevo.x * smer.z - rotLevo.z * smer.x;
                 if (dGCM * dRotLevo < 0)  // GCM on the other side as rotation in left
@@ -200,6 +200,7 @@ public class OvcarVoronoi : MonoBehaviour
             {
                 hitrost = hitrost * 0.9f + v2 * 0.1f;
             }
+            smer = IzogibOgraji(transform.position, smer);
             Vector3 step = ovcar.transform.position + Time.deltaTime * hitrost * smer;
             Vector3 p = Vector3.MoveTowards(transform.position, step, hitrost);
             if (p.x > 49f) { GetComponent<Rigidbody>().MovePosition(new Vector3(49f, 0f, p.z)); }  // da se ne zatakne v stajo, ker ne zna ven
@@ -211,6 +212,38 @@ public class OvcarVoronoi : MonoBehaviour
             ovcar.transform.position = new Vector3(ovcar.transform.position.x, 0f, ovcar.transform.position.z);
             ovcar.transform.forward = new Vector3(ovcar.transform.forward.x, 0f, ovcar.transform.forward.z);
         }
+
+    }
+
+    Vector3 IzogibOgraji(Vector3 lokacija, Vector3 smer)
+    {
+        // ce sem ograji blizje kot r se ji izognem, da ne grem proti njej prevec direktno
+        float r = 2f;
+        if (Mathf.Abs(lokacija.z) > 50f - r && lokacija.z * smer.z > 0f && Mathf.Abs(smer.x) < 0.9f)
+        {
+
+            float kot = (Mathf.Abs(lokacija.z) - 50f - r) *
+                Mathf.PI / 30f * (lokacija.z > 0 ? -1f : 1f) *
+                    (smer.x > 0 ? -1f : 1f);
+            smer = new Vector3(Mathf.Cos(kot) * smer.x - Mathf.Sin(kot) * smer.z,
+                Mathf.Cos(kot) * smer.z + Mathf.Sin(kot) * smer.x);
+        }
+        else if (Mathf.Abs(lokacija.x) > 50f - r && lokacija.x * smer.x > 0f && Mathf.Abs(smer.z) < 0.9f)
+        {
+            float kot = (Mathf.Abs(lokacija.x) - 50f - r) *
+                Mathf.PI / 30f * (lokacija.x > 0 ? -1f : 1f) *
+                    (smer.z > 0 ? 1f : -1f);
+            smer = new Vector3(Mathf.Cos(kot) * smer.x - Mathf.Sin(kot) * smer.z,
+                Mathf.Cos(kot) * smer.z + Mathf.Sin(kot) * smer.x);
+        }
+        if (Mathf.Abs(lokacija.z) > 50f - r && Mathf.Abs(lokacija.x) > 50f - r && lokacija.x * smer.x > 0f && lokacija.z * smer.z > 0f)
+        {
+            float kotKot = Mathf.PI / 3f * ((lokacija.z * lokacija.x) > 0 ? 1f : -1f) *
+                (Mathf.Abs(lokacija.z) < Mathf.Abs(lokacija.x) ? 1f : -1f);
+            smer = new Vector3(Mathf.Cos(kotKot) * smer.x - Mathf.Sin(kotKot) * smer.z, 0f,
+                Mathf.Cos(kotKot) * smer.z + Mathf.Sin(kotKot) * smer.x);
+        }
+        return smer.normalized;
     }
 
     float F(int N)   // najvecja dovoljena velikost crede (polmer) odvisna od stevila ovc

@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 
 /* TODO:
  * 
- * Uporaba umetne inteligence (poljuben algoritem - deep learning, Unity ML agents, genetic algorithms ...) za treniranje psov.
- * Evalvacija posameznih pristopov (ročno razviti psi, umetna inteligenca ...).
+ * genetski algoritmi (galib), Unity ML agents / Markov brains, Reinforcement learning (tabela stanj in potez)
+ * Evalvacija posameznih pristopov (ročno razviti psi, umetna inteligenca, morda tudi najosnovnejši model brez upoštevanja GCM ipd.).
  * 
  *      Dodatne ideje, če bomo slučajno imeli preveč časa:
  * Ovire ali drugačna oblika polja ali npr. voda kjer ovce nočejo hoditi
@@ -21,15 +21,15 @@ public class GuiScript : MonoBehaviour
     readonly float pospesitev = 7;   // hitrost predvajanja, ce je mogoce
     public int nOvc = 100;  // stevilo ovc na zacetku
     public int nOvcarjev = 2;  // stevilo psov
-    public bool byGinelli = true;   // gibanje ovc
-
+    public GinelliOvca.ModelGibanja modelGibanja = GinelliOvca.ModelGibanja.Ginelli;   // gibanje ovc
+    
     public OvcarEnum.ObnasanjePsa obnasanjeOvcarja = OvcarEnum.ObnasanjePsa.Voronoi;   // gibanje ovcarjev
     // OvcarEnum.ObnasanjePsa.AI1, OvcarEnum.ObnasanjePsa.AI2
 
     public int steviloPonovitev1 = 50;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
     public int[] nOvc1 = { 25, 50, 75, 100, 125, 150 };
     public int[] nOvcarjev1 = { 1, 2, 3, 4, 5, 6, 7 };
-    public bool[] byGinelli1 = { true, false };
+    public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Ginelli };
 
     int score;  // rezultat za izpis
     public GameObject ovcaGO;
@@ -57,7 +57,7 @@ public class GuiScript : MonoBehaviour
         {
             nOvc = int.Parse(prostaKombinacija[1]);  // nastavi parametre
             nOvcarjev = int.Parse(prostaKombinacija[3]);
-            byGinelli = prostaKombinacija[0] == "Ginelli";
+            modelGibanja = prostaKombinacija[0] == "Ginelli" ? GinelliOvca.ModelGibanja.Ginelli : prostaKombinacija[0] == "PopravljenStroembom" ? GinelliOvca.ModelGibanja.PopravljenStroembom : GinelliOvca.ModelGibanja.Stroembom;
             obnasanjeOvcarja = (prostaKombinacija[2] == "Voronoi") ? OvcarEnum.ObnasanjePsa.Voronoi : (prostaKombinacija[2] == "AI1") ? OvcarEnum.ObnasanjePsa.AI1 : OvcarEnum.ObnasanjePsa.AI2;
         }
         score = 0;
@@ -74,7 +74,7 @@ public class GuiScript : MonoBehaviour
         float phi = Random.Range(0f, 360f);  // dodaj ovco nekam na sredino
         Vector2 loc = Random.insideUnitCircle * 20;
         GameObject o = Instantiate(ovcaGO, new Vector3(loc.x, -0.5f, loc.y), Quaternion.Euler(0f, phi, 0f));
-        o.GetComponent<GinelliOvca>().Ginelli = byGinelli;
+        o.GetComponent<GinelliOvca>().model = modelGibanja;
     }
 
     void AddDog()
@@ -98,14 +98,14 @@ public class GuiScript : MonoBehaviour
         {
             string dirName = "Rezultati";
             if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
-            string fileName = dirName + "/" + (byGinelli ? "Ginelli" : "Stroembom") + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev + ".txt";
+            string fileName = dirName + "/" + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev + ".txt";
 
             if (!File.Exists(fileName))
             {
                 // Create a file to write to.
                 using (StreamWriter sw = File.CreateText(fileName))
                 {
-                    sw.WriteLine("\t" + nOvc + (byGinelli ? " Ginellijevih" : " Stroembomovih") + " ovc\n\t" + nOvcarjev +
+                    sw.WriteLine("\t" + nOvc + modelGibanja.ToString() + " ovc\n\t" + nOvcarjev +
                     " " + obnasanjeOvcarja.ToString() + " ovcarjev");
                 }
             }
@@ -151,7 +151,7 @@ public class GuiScript : MonoBehaviour
         if (GUI.Button(new Rect(150, 0, 50, 20), "Izhod"))
         { Application.Quit(); }
         GUI.Box(new Rect(3, 20, 200, 90),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
-            "\nModel gibanja ovc: " + (byGinelli ? "Ginelli" : "Stroembom") + "\nStevilo ovcarjev: " + nOvcarjev + "\nModel vodenja ovcarjev: " + obnasanjeOvcarja.ToString());
+            "\nModel gibanja ovc: " + modelGibanja.ToString() + "\nStevilo ovcarjev: " + nOvcarjev + "\nModel vodenja ovcarjev: " + obnasanjeOvcarja.ToString());
         if (GUI.Button(new Rect(120, 110, 85, 20), "Naprej!"))  // naslednja simulacija iz seznama
         { SceneManager.LoadScene("testScene"); }
         if (GUI.Button(new Rect(3, 130, 180, 20), kamera.GetComponent<Camera>().depth < 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
@@ -196,9 +196,9 @@ public class GuiScript : MonoBehaviour
                     {
                         for (int i = 0; i < steviloPonovitev1; i++)
                             foreach (int n1 in nOvc1)
-                                foreach (bool gin in byGinelli1)
+                                foreach (GinelliOvca.ModelGibanja gin in modelGibanja1)
                                     foreach (int n2 in nOvcarjev1)
-                                        sw.WriteLine((gin ? "Ginelli" : "Stroembom") + "," + n1 + "," + obnasanjeOvcarja.ToString() + "," + n2);
+                                        sw.WriteLine(gin.ToString() + "," + n1 + "," + obnasanjeOvcarja.ToString() + "," + n2);
                     }
                     StaticClass.datoteka = fileName1;
                     StaticClass.zapStPrograma = j;
