@@ -6819,6 +6819,7 @@ GameObject:
   - component: {fileID: 7680363512706763380}
   - component: {fileID: 2802139175542863573}
   - component: {fileID: 4640587728716246633}
+  - component: {fileID: 3893584801281127004}
   - component: {fileID: -3999843541062935227}
   - component: {fileID: -2456375403125765363}
   m_Layer: 0
@@ -6905,7 +6906,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b84373dfd67c54280cde69a17ca3ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pika: {fileID: 8535847695671887709, guid: 16a69222be8f03646912f6f1a11acb98, type: 3}
 --- !u!114 &4640587728716246633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6918,6 +6918,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d703d034fe34e14f980e6304f01ac69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3893584801281127004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3645773933241199218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22de1e482f205c4ab9b46a149c278ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smer: {x: 0, y: 0, z: 0}
+  pika: {fileID: 8535847695671887709, guid: 16a69222be8f03646912f6f1a11acb98, type: 3}
 --- !u!114 &-3999843541062935227
 MonoBehaviour:
   m_ObjectHideFlags: 0

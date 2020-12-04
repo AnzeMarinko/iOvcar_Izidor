@@ -7,8 +7,9 @@ using UnityEngine.SceneManagement;
 
 /* TODO:
  * 
- * genetski algoritmi (galib), Unity ML agents / Markov brains, Reinforcement learning (tabela stanj in potez)
+ * genetski algoritmi, Unity ML agents / Markov brains, Reinforcement learning (tabela stanj in potez)
  * Evalvacija posameznih pristopov (ročno razviti psi, umetna inteligenca, morda tudi najosnovnejši model brez upoštevanja GCM ipd.).
+ * Odstrani izris in pospeši
  * 
  *      Dodatne ideje, če bomo slučajno imeli preveč časa:
  * Ovire ali drugačna oblika polja ali npr. voda kjer ovce nočejo hoditi
@@ -23,13 +24,13 @@ public class GuiScript : MonoBehaviour
     public int nOvcarjev = 2;  // stevilo psov
     public GinelliOvca.ModelGibanja modelGibanja = GinelliOvca.ModelGibanja.Ginelli;   // gibanje ovc
     
-    public OvcarEnum.ObnasanjePsa obnasanjeOvcarja = OvcarEnum.ObnasanjePsa.Voronoi;   // gibanje ovcarjev
+    public OvcarEnum.ObnasanjePsa obnasanjeOvcarja = OvcarEnum.ObnasanjePsa.AI1;   // gibanje ovcarjev
     // OvcarEnum.ObnasanjePsa.AI1, OvcarEnum.ObnasanjePsa.AI2
 
-    public int steviloPonovitev1 = 50;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
-    public int[] nOvc1 = { 25, 50, 75, 100, 125, 150 };
-    public int[] nOvcarjev1 = { 1, 2, 3, 4, 5, 6, 7 };
-    public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Ginelli };
+    public int steviloPonovitev1 = 5;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
+    public int[] nOvc1 = { 25 };   // { 25, 50, 75, 100, 125, 150 };
+    public int[] nOvcarjev1 = { 1 };   // { 1, 2, 3, 4, 5, 6, 7 };
+    public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli };  // { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Ginelli };
 
     int score;  // rezultat za izpis
     public GameObject ovcaGO;
@@ -115,10 +116,14 @@ public class GuiScript : MonoBehaviour
             //    Appends text at the end of an existing file
             {
                 string rezultati = "";
+                float fitness = 0;
                 foreach (float cas in casi)
                 {
                     rezultati += (rezultati.Length > 0 ? "," : "") + Mathf.FloorToInt(cas);
+                    fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, ovce.Length == 0 ? 2 : 1);
                 }
+                fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2);
+                print(fitness);
                 sw.WriteLine(rezultati);
             }
             Time.timeScale = 0;

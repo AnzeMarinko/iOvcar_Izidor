@@ -1218,8 +1218,48 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
         type: 3}
+      propertyPath: nOvc1.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
+      propertyPath: nOvcarjev1.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
+      propertyPath: modelGibanja1.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
       propertyPath: byGinelli1.Array.data[0]
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
+      propertyPath: obnasanjeOvcarja
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
+      propertyPath: modelGibanja1.Array.data[0]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
+      propertyPath: steviloPonovitev1
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
+      propertyPath: nOvc1.Array.data[0]
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925610929468137613, guid: ec4015072a1751c4dbe47738697aec07,
+        type: 3}
+      propertyPath: nOvcarjev1.Array.data[0]
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec4015072a1751c4dbe47738697aec07, type: 3}
