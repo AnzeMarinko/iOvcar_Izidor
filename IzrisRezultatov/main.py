@@ -36,6 +36,8 @@ for gin0, novc0, vod0, novcar0 in files:
     poskusi.append(len(casi))
     data[(gin0, novc0, vod0, novcar0)] = np.array(casi)
 print(f"\n\t{min(poskusi)}-{max(poskusi)} poskusov na kombinacijo")
+plt.plot(sorted(poskusi, key=lambda x: -x))
+plt.show()
 
 # uporabljeni parametri
 gins = sorted(list({p[0] for p in data.keys()}))
