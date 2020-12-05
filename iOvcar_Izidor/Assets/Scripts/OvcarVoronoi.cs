@@ -30,6 +30,7 @@ public class OvcarVoronoi : MonoBehaviour
     // Use this for initialization
     public void VoronoiStart()
     {
+        ComputeGen();
         GetComponent<OvcarFunkcije>().SetParameters(v1, ra, dc, da, d0, df, e, trajanjeNakljucnegaPremika, casNakljucnegaPremika, nakljucniDodatek,
             pomenRazdalje, pomenDoOvce, dovoljenoSpredaj, dovoljenoZadaj, pomenOvcarjev, protiTockiNazaj, udobnaRazdalja, blizuTocki, dljeCilju, rotiraj, pomenSmeriDrugih);
         GetComponent<OvcarFunkcije>().VoronoiStart();
@@ -39,5 +40,17 @@ public class OvcarVoronoi : MonoBehaviour
     public void VoronoiUpdate()
     {
         GetComponent<OvcarFunkcije>().VoronoiUpdate();
+    }
+
+    public void ComputeGen()
+    {
+        float[] par = {v1, ra, dc, da, d0, df, e, trajanjeNakljucnegaPremika, casNakljucnegaPremika, nakljucniDodatek,
+            pomenRazdalje, pomenDoOvce, dovoljenoSpredaj, dovoljenoZadaj, pomenOvcarjev, protiTockiNazaj, udobnaRazdalja, blizuTocki, dljeCilju, rotiraj, pomenSmeriDrugih };
+        float[] zm = StaticClass.zgornjeMeje;
+        float[] sm = StaticClass.spodnjeMeje;
+
+        float[] gen = new float[par.Length];
+        for (int i = 0; i < par.Length; i++) gen[i] = (par[i] - sm[i]) / (zm[i] - sm[i]);
+        StaticClass.rocniGen = gen;
     }
 }

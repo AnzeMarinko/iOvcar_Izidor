@@ -40,6 +40,7 @@ public class OvcarFunkcije : MonoBehaviour
     public void VoronoiUpdate()
     {
         GameObject[] ovce = GameObject.FindGameObjectsWithTag("Ovca");
+        ovcarji = GameObject.FindGameObjectsWithTag("Ovcar");
         casDoNakljucnegaPremika -= Time.deltaTime;
         if (ovce.Length > 0)
         {

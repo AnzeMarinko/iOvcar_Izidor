@@ -20,47 +20,35 @@ using UnityEngine.SceneManagement;
 public class GuiScript : MonoBehaviour
 {
     readonly float pospesitev = 7;   // hitrost predvajanja, ce je mogoce
-    public int nOvc = 100;  // stevilo ovc na zacetku
-    public int nOvcarjev = 2;  // stevilo psov
-    public GinelliOvca.ModelGibanja modelGibanja = GinelliOvca.ModelGibanja.Ginelli;   // gibanje ovc
-    
-    public OvcarEnum.ObnasanjePsa obnasanjeOvcarja = OvcarEnum.ObnasanjePsa.AI1;   // gibanje ovcarjev
-    // OvcarEnum.ObnasanjePsa.AI1, OvcarEnum.ObnasanjePsa.AI2
 
-    public int steviloPonovitev1 = 5;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
-    public int[] nOvc1 = { 25 };   // { 25, 50, 75, 100, 125, 150 };
-    public int[] nOvcarjev1 = { 1 };   // { 1, 2, 3, 4, 5, 6, 7 };
-    public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli };  // { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Ginelli };
+    int nOvc;
+    int nOvcarjev;
+    GinelliOvca.ModelGibanja modelGibanja;
+    OvcarEnum.ObnasanjePsa obnasanjeOvcarja;
 
-    int score;  // rezultat za izpis
     public GameObject ovcaGO;
     public GameObject ovcarGO;
     GameObject[] ovce;
-    static float timer;
-    List<float> casi;   // casi prihodov v stajo
+    int score = 0;  // rezultat za izpis
+    float timer;
+    List<float> casi = new List<float>();   // casi prihodov v stajo
     readonly float maxCas = 180f;  // casovna omejitev simulacije
-    string[] prostaKombinacija;  // prebrana prosta kombinacija
     bool konec = false;  // cas za izpis navodil na koncu in konec simulacije
+
     public GameObject kameraGO;
-    GameObject kamera;
+    public GameObject kamera;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         kamera = Instantiate(kameraGO, new Vector3(0f, 100f, 0f), Quaternion.Euler(90f, 0f, 0f));
         kamera.GetComponent<Camera>().depth = StaticClass.kamera;
-        prostaKombinacija = VrniKombinacijo();  // preberi prosto kombinacijo iz datoteke
-        if (prostaKombinacija.Length < 4)   // ce obstaja
-        {
-            // napisi da je konec in zapri okno
-            konec = true;
-        } else
-        {
-            nOvc = int.Parse(prostaKombinacija[1]);  // nastavi parametre
-            nOvcarjev = int.Parse(prostaKombinacija[3]);
-            modelGibanja = prostaKombinacija[0] == "Ginelli" ? GinelliOvca.ModelGibanja.Ginelli : prostaKombinacija[0] == "PopravljenStroembom" ? GinelliOvca.ModelGibanja.PopravljenStroembom : GinelliOvca.ModelGibanja.Stroembom;
-            obnasanjeOvcarja = (prostaKombinacija[2] == "Voronoi") ? OvcarEnum.ObnasanjePsa.Voronoi : (prostaKombinacija[2] == "AI1") ? OvcarEnum.ObnasanjePsa.AI1 : OvcarEnum.ObnasanjePsa.AI2;
-        }
+        SimulationManeger.SimulationStart();
+        SimulationManeger.SimulationUpdate();
+        nOvc = StaticClass.kombinacija.nOvc;
+        nOvcarjev = StaticClass.kombinacija.nOvcarjev;
+        modelGibanja = StaticClass.kombinacija.modelGibanja;
+        obnasanjeOvcarja = StaticClass.kombinacija.obnasanjePsa;
         score = 0;
         timer = 0;
         for (int i = 0; i < nOvc; i++) { AddSheep(); }  // postavi ovce in pse na polje
@@ -99,7 +87,8 @@ public class GuiScript : MonoBehaviour
         {
             string dirName = "Rezultati";
             if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
-            string fileName = dirName + "/" + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev + ".txt";
+            string fileName = dirName + "/" + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev
+                + "_" + StaticClass.zapStPrograma + ".txt";
 
             if (!File.Exists(fileName))
             {
@@ -115,19 +104,12 @@ public class GuiScript : MonoBehaviour
             using (StreamWriter sw = File.AppendText(fileName))
             //    Appends text at the end of an existing file
             {
-                string rezultati = "";
-                float fitness = 0;
-                foreach (float cas in casi)
-                {
-                    rezultati += (rezultati.Length > 0 ? "," : "") + Mathf.FloorToInt(cas);
-                    fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, ovce.Length == 0 ? 2 : 1);
-                }
-                fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2);
-                print(fitness);
-                sw.WriteLine(rezultati);
+                foreach (float c in casi) SimulationManeger.DNA.casi.Add(c);
+                print(SimulationManeger.DNA.GetFitness(maxCas, timer));
+                sw.WriteLine(SimulationManeger.DNA.GenStr());
             }
             Time.timeScale = 0;
-            SceneManager.LoadScene("testScene");  // nova simulacija
+            SceneManager.LoadScene(0);
         }
         else 
         {
@@ -152,16 +134,18 @@ public class GuiScript : MonoBehaviour
 
     private void OnGUI()   // v zgornjem levem kotu napisi nekaj lastnosti simulacije in dodaj nekaj gumbov
     {
+        ovce = GameObject.FindGameObjectsWithTag("Ovca");
         GUI.Label(new Rect(3, 0, 100, 20), string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)));
         if (GUI.Button(new Rect(150, 0, 50, 20), "Izhod"))
         { Application.Quit(); }
-        GUI.Box(new Rect(3, 20, 200, 90),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
-            "\nModel gibanja ovc: " + modelGibanja.ToString() + "\nStevilo ovcarjev: " + nOvcarjev + "\nModel vodenja ovcarjev: " + obnasanjeOvcarja.ToString());
-        if (GUI.Button(new Rect(120, 110, 85, 20), "Naprej!"))  // naslednja simulacija iz seznama
-        { SceneManager.LoadScene("testScene"); }
-        if (GUI.Button(new Rect(3, 130, 180, 20), kamera.GetComponent<Camera>().depth < 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
+        GUI.Box(new Rect(3, 20, 200, 120),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
+            "\nModel gibanja ovc: " + StaticClass.kombinacija.modelGibanja.ToString() + "\nStevilo ovcarjev: " + StaticClass.kombinacija.nOvcarjev + "\nModel vodenja ovcarjev: " + StaticClass.kombinacija.obnasanjePsa.ToString() +
+            "\nGeneracija: " + Evolucija.generation + ", poskus: " + SimulationManeger.osebek);
+        if (GUI.Button(new Rect(130, 140, 85, 20), "Naprej!"))  // naslednja simulacija iz seznama
+        { SceneManager.LoadScene(0); }
+        if (GUI.Button(new Rect(3, 160, 180, 20), kamera.GetComponent<Camera>().depth < 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
         { kamera.GetComponent<Camera>().depth *= -1; StaticClass.kamera = kamera.GetComponent<Camera>().depth; }
-        if (GUI.Button(new Rect(3, 110, 105, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
+        if (GUI.Button(new Rect(3, 140, 105, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
         { Screen.fullScreen = !Screen.fullScreen; }
         if (konec)   // na koncu eno minuto predvajaj spodnja navodila
         {
@@ -183,48 +167,5 @@ public class GuiScript : MonoBehaviour
             if (!other.GetComponent<GinelliOvca>().umira)
             { casi.Add(timer); other.GetComponent<GinelliOvca>().umira = true; }
         }
-    }
-
-    public string[] VrniKombinacijo()  // ce se ni datoteke s kombinacijami jo naredi, sicer le preberi prvo vrstico in ostale prepisi
-    {
-        if (StaticClass.zapStPrograma == 0)
-        {
-            string dirName = "Kombinacije";
-            if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
-            for (int j = 1; j < 20; j++)
-            {
-                string fileName1 = dirName + "/kombinacije" + j + ".txt";
-                if (!File.Exists(fileName1))
-                {
-                    // Create a file to write to.
-                    using (StreamWriter sw = File.CreateText(fileName1))
-                    {
-                        for (int i = 0; i < steviloPonovitev1; i++)
-                            foreach (int n1 in nOvc1)
-                                foreach (GinelliOvca.ModelGibanja gin in modelGibanja1)
-                                    foreach (int n2 in nOvcarjev1)
-                                        sw.WriteLine(gin.ToString() + "," + n1 + "," + obnasanjeOvcarja.ToString() + "," + n2);
-                    }
-                    StaticClass.datoteka = fileName1;
-                    StaticClass.zapStPrograma = j;
-                    break;
-                }
-            }
-        }
-        string prostaKombinacija = "";
-        string kombinacije = "";
-        // Open the file to read from.
-        using (StreamReader sr = File.OpenText(StaticClass.datoteka))
-        {
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (prostaKombinacija.Length == 0)
-                { prostaKombinacija = line; }   // prvo vrstico si zapomni, ostale prepisi
-                else { kombinacije += (kombinacije.Length > 0 ? "\n" : "") + line; }
-            }
-        }
-        File.WriteAllText(StaticClass.datoteka, kombinacije);
-        return prostaKombinacija.Split(',');
     }
 }

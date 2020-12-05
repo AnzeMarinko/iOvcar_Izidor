@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 230540331003910500}
   - component: {fileID: 230540331003910501}
+  - component: {fileID: 1972910494330410505}
   - component: {fileID: 230540331003910502}
   - component: {fileID: 230540331003910503}
   - component: {fileID: 230540331003910496}
-  - component: {fileID: 8925610929468137613}
   m_Layer: 0
-  m_Name: staja 1
+  m_Name: staja
   m_TagString: Finish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,6 +43,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 230540331003910498}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1972910494330410505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230540331003910498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6787ec7b62c22246a7a714ba33f4f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ovcaGO: {fileID: 3698624625586939356, guid: 9cf998d37834a9048b0937eddae8532b, type: 3}
+  ovcarGO: {fileID: 3645773933241199218, guid: 4e960c6b9b1efcb4ebf208da1d522d4f, type: 3}
+  kameraGO: {fileID: 5014267330574818082, guid: 4621bca61cc62044d9bdfc5732f7be1a,
+    type: 3}
+  kamera: {fileID: 0}
 --- !u!23 &230540331003910502
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -264,27 +281,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8925610929468137613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230540331003910498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6787ec7b62c22246a7a714ba33f4f0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nOvc: 100
-  nOvcarjev: 2
-  byGinelli: 1
-  obnasanjeOvcarja: 0
-  steviloPonovitev1: 50
-  nOvc1: 19000000320000004b000000640000007d00000096000000
-  nOvcarjev1: 01000000020000000300000004000000050000000600000007000000
-  byGinelli1: 0100
-  ovcaGO: {fileID: 3698624625586939356, guid: 9cf998d37834a9048b0937eddae8532b, type: 3}
-  ovcarGO: {fileID: 3645773933241199218, guid: 4e960c6b9b1efcb4ebf208da1d522d4f, type: 3}
-  kameraGO: {fileID: 5014267330574818082, guid: 4621bca61cc62044d9bdfc5732f7be1a,
-    type: 3}
