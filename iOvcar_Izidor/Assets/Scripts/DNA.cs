@@ -12,6 +12,7 @@ public class DNA
     public float fitness;
     public List<float> casi;
     public int generacija;
+    public int ponovitev = 0;
 
     public DNA(int gene, GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2)
     {
@@ -20,27 +21,35 @@ public class DNA
         nOvcarjev = n2;
         modelGibanja = gin;
         obnasanjePsa = vod;
-        for (int i = 0; i < 21; i++) gen[i] = Random.Range(0f, 1f);
+        for (int i = 0; i < 21; i++) gen[i] = Random.Range(0f, 10001f) / 10000f;
         fitness = 0;
         casi = new List<float>();
 }
 
     public float GetFitness(float maxCas, float timer)
     {
+        float oldFitness = fitness;
         foreach (float cas in casi)
         {
             fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, casi.ToArray().Length == nOvc ? 2 : 1);
         }
         fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2);
+        fitness = (ponovitev > 0 && StaticClass.kombinacija.obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && Evolucija.generation != SimulationManeger.maxGeneracij + 1)
+            ? Mathf.Min(oldFitness, fitness) : fitness;
+        ponovitev++;
         return fitness;
     }
                 
 
     public string GenStr()
     {
-        string gN = "" + generacija + " " + fitness;
+        string gN = "Gen ";
+        if (generacija < SimulationManeger.maxGeneracij + 1)
+        {
+            gN = "Generacija " + generacija + ", Fitness " + fitness + ", Gen ";
+        }
         if (obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi) gen = StaticClass.rocniGen;
-        foreach (float g in gen) gN += " " + Mathf.RoundToInt(g * 10000);
+        foreach (float g in gen) gN += ";" + (Mathf.RoundToInt(g * 10000f) / 10000f);
         gN += "\n";
         foreach (float cas in casi) gN += "," + Mathf.FloorToInt(cas);
         return gN;
@@ -49,22 +58,22 @@ public class DNA
     public DNA Crossover(DNA partner)
     {
         DNA child = new DNA(generacija + 1, modelGibanja, nOvc, obnasanjePsa, nOvcarjev);
-
         for (int i = 0; i < gen.Length; i++)
         {
-            child.gen[i] = Random.Range(0f, 1f) > 0.5f ? gen[i] : partner.gen[i];
+            child.gen[i] = Random.Range(0f, 10001f) / 10000f > 0.5f ? gen[i] : partner.gen[i];
         }
         return child;
     }
 
-    public void mutate()
+    public void Mutate()
     {
         float mutationRate = 0.01f;
         for (int i = 0; i < gen.Length; i++)
         {
-            if (Random.Range(0f, 1f) < mutationRate)
+            if (Random.Range(0f, 10001f) / 10000f < mutationRate)
             {
-                gen[i] = Random.Range(0f, 1f);
+                gen[i] = Random.Range(Mathf.Max((gen[i] - 1 / generacija) * 10000f, 0f),
+                    Mathf.Min((gen[i] + 1 / generacija) * 10000f, 10001f)) / 10000f;
             }
         }
     }

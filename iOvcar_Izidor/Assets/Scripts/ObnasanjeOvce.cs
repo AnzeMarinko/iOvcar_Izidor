@@ -110,7 +110,7 @@ public class ObnasanjeOvce : MonoBehaviour
                 if (tecejo > 0) l1 /= tecejo;
                 if (ustavljane > 0) l2 /= ustavljane;
 
-                float x = Random.Range(.0f, 1.0f);   // preskok med stanjem in hojo
+                float x = Random.Range(0f, 10001f) / 10000f;   // preskok med stanjem in hojo
                 if (!ovca.GetComponent<GinelliOvca>().tek)
                 {
                     if (ovca.GetComponent<GinelliOvca>().hoja)
@@ -131,7 +131,7 @@ public class ObnasanjeOvce : MonoBehaviour
                     }
                 }
 
-                x = Random.Range(.0f, 1.0f);   // preskok v tek ali iz teka
+                x = Random.Range(0f, 10001f) / 10000f;   // preskok v tek ali iz teka
                 if (!ovca.GetComponent<GinelliOvca>().tek
                     && (Mathf.Max(Mathf.Abs(ovca.transform.position.x), Mathf.Abs(ovca.transform.position.z)) < 48f
                     || (ovca.transform.position.x > 45f && Mathf.Abs(ovca.transform.position.x) < 20f)))
@@ -262,7 +262,7 @@ public class ObnasanjeOvce : MonoBehaviour
                 if (Ci.magnitude > 1e-4) { Ci = Ci.normalized; }
                 Vector3 staraSmer = smer;
                 smer = h * smer + pa * Ra + c * Ci + ps * Rs;   // posodobitev smeri z upostevanjem tudi prejsnje
-                if (Random.value < dodajSum)   // dodajanje suma
+                if (Random.Range(0f, 10001f) / 10000f < dodajSum)   // dodajanje suma
                 {
                     float phi = Random.Range(0f, 2f * Mathf.PI);
                     smer += new Vector2(e * Mathf.Cos(phi), e * Mathf.Sin(phi));  // sum
@@ -316,7 +316,7 @@ public class ObnasanjeOvce : MonoBehaviour
             smer = new Vector2(Mathf.Cos(kot) * smer.x - Mathf.Sin(kot) * smer.y,
                 Mathf.Cos(kot) * smer.y + Mathf.Sin(kot) * smer.x);
         }
-        if (lokacija.x > 50f - r && Mathf.Abs(lokacija.y) < 15f) { }   // normalno kjer je vhod v stajo
+        if (lokacija.x > 50f - r && Mathf.Abs(lokacija.y) + lokacija.x < 60f) { }   // normalno kjer je vhod v stajo
         else if (Mathf.Abs(lokacija.x) > 50f - r && lokacija.x * smer.x > 0f && Mathf.Abs(smer.y) < 0.9f)
         {
             float kot = (Mathf.Abs(lokacija.x) - 50f - r) *

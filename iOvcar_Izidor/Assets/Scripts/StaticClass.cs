@@ -4,12 +4,15 @@ using UnityEngine;
 
 public static class StaticClass
 {
-    public static int zapStPrograma = 0;
     public static string datoteka = "kombinacije";
     public static float kamera = 1;
     public static float vMax = 7.5f / 3f;
     public static bool zacetek = true;
     public static DNA kombinacija;
+    public static float maxFitness = 0;
+    public static float currentBest = 0;
+    public static int steviloUspesnih = 0;
+    public static int bestGen = 0;
 
     /*
     float v1 = (5 - 1) / 3f;  // Hitrost premikanja v stanju vodenja ovc
@@ -34,7 +37,7 @@ public static class StaticClass
     float rotiraj = Mathf.PI / 6f;
     float pomenSmeriDrugih = 0.1f;
     */
-    public static float[] zgornjeMeje = { vMax, 1, 4, 10, 5, 3, 0.5f, 5, 90, 30, 3, 3, 40, 0.5f, 3, 5, 40, 30, 2, Mathf.PI / 3, 1 };
-    public static float[] spodnjeMeje = { 0, 1 / 3, 1, 0, 0, 0, 0.01f, 0, 10, 0, -1, -1, -10, 0, 0, 0, 5, 0, 0, 0, -1 };
+    public static float[] zgornjeMeje = { vMax, 1f, 4f, 10f, 5f, 3f, 0.5f, 5f, 90f, 30f, 3f, 3f, 40f, 0.5f, 3f, 5f, 40f, 30f, 2f, Mathf.PI / 3f, 1f };
+    public static float[] spodnjeMeje = { 0f, 1f / 3f, 1f, 0f, 0f, 0f, 0.01f, 0f, 10f, 0f, -1f, -1f, -10f, 0f, 0f, 0f, 5f, 0f, 0f, 0f, -1f };
     public static float[] rocniGen = new float[21];
 }

@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
  * 
  * genetski algoritmi, Unity ML agents / Markov brains, Reinforcement learning (tabela stanj in potez)
  * Evalvacija posameznih pristopov (ročno razviti psi, umetna inteligenca, morda tudi najosnovnejši model brez upoštevanja GCM ipd.).
- * Odstrani izris in pospeši
+ * Odstrani izris in pospeši, uredi kodo, datoteke, lastnosti projekta
  * 
  *      Dodatne ideje, če bomo slučajno imeli preveč časa:
  * Ovire ali drugačna oblika polja ali npr. voda kjer ovce nočejo hoditi
@@ -19,7 +19,7 @@ using UnityEngine.SceneManagement;
 
 public class GuiScript : MonoBehaviour
 {
-    readonly float pospesitev = 7;   // hitrost predvajanja, ce je mogoce
+    readonly float pospesitev = 10;   // hitrost predvajanja, ce je mogoce
 
     int nOvc;
     int nOvcarjev;
@@ -85,10 +85,14 @@ public class GuiScript : MonoBehaviour
         score = nOvc - ovce.Length;
         if (ovce.Length == 0 || timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
-            string dirName = "Rezultati";
+            string dirName = "Rezultati" + "-" + obnasanjeOvcarja.ToString();
+            if (Evolucija.generation == SimulationManeger.maxGeneracij + 1)
+            {
+                dirName += "-Final";
+            }  
             if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
             string fileName = dirName + "/" + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev
-                + "_" + StaticClass.zapStPrograma + ".txt";
+                + ".txt";
 
             if (!File.Exists(fileName))
             {
@@ -138,14 +142,15 @@ public class GuiScript : MonoBehaviour
         GUI.Label(new Rect(3, 0, 100, 20), string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)));
         if (GUI.Button(new Rect(150, 0, 50, 20), "Izhod"))
         { Application.Quit(); }
-        GUI.Box(new Rect(3, 20, 200, 120),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
+        GUI.Box(new Rect(3, 20, 220, 160),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
             "\nModel gibanja ovc: " + StaticClass.kombinacija.modelGibanja.ToString() + "\nStevilo ovcarjev: " + StaticClass.kombinacija.nOvcarjev + "\nModel vodenja ovcarjev: " + StaticClass.kombinacija.obnasanjePsa.ToString() +
-            "\nGeneracija: " + Evolucija.generation + ", poskus: " + SimulationManeger.osebek);
-        if (GUI.Button(new Rect(130, 140, 85, 20), "Naprej!"))  // naslednja simulacija iz seznama
+            "\nGeneracija: " + (Evolucija.generation == SimulationManeger.maxGeneracij + 1 ? "Final" : Evolucija.generation.ToString()) + ", poskus: " + (SimulationManeger.osebek + 1) + " (" + (SimulationManeger.DNA.ponovitev + 1) + ")\nGlobal max. fitness: " + StaticClass.currentBest + "\n    (generacija " + StaticClass.bestGen +
+            ")\nMax. fitness v generaciji " + (Evolucija.generation == SimulationManeger.maxGeneracij + 1 ? Evolucija.generation : Evolucija.generation - 1) + ": " + StaticClass.maxFitness + "\n   Pozitivnih: " + StaticClass.steviloUspesnih);
+        if (GUI.Button(new Rect(130, 180, 85, 20), "Naprej!"))  // naslednja simulacija iz seznama
         { SceneManager.LoadScene(0); }
-        if (GUI.Button(new Rect(3, 160, 180, 20), kamera.GetComponent<Camera>().depth < 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
+        if (GUI.Button(new Rect(3, 200, 180, 20), kamera.GetComponent<Camera>().depth < 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
         { kamera.GetComponent<Camera>().depth *= -1; StaticClass.kamera = kamera.GetComponent<Camera>().depth; }
-        if (GUI.Button(new Rect(3, 140, 105, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
+        if (GUI.Button(new Rect(3, 180, 105, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
         { Screen.fullScreen = !Screen.fullScreen; }
         if (konec)   // na koncu eno minuto predvajaj spodnja navodila
         {
