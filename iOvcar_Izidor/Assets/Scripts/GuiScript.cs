@@ -83,7 +83,7 @@ public class GuiScript : MonoBehaviour
         score = nOvc - ovce.Length;
         if (ovce.Length == 0 || StaticClass.timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
-            string dirName = "Rezultati" + "-" + obnasanjeOvcarja.ToString();
+            string dirName = "Rezultati/Rezultati" + "-" + obnasanjeOvcarja.ToString();
             if (Evolucija.generation == SimulationManeger.maxGeneracij + 1)
             {
                 dirName += "-Final";
