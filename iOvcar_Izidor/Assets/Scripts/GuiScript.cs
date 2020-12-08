@@ -111,6 +111,8 @@ public class GuiScript : MonoBehaviour
                 foreach (float c in casi) SimulationManeger.DNA.casi.Add(c);
                 print(SimulationManeger.DNA.GetFitness(maxCas, timer));
                 sw.WriteLine(SimulationManeger.DNA.GenStr());
+                SimulationManeger.DNA.casi = new List<float>();
+
             }
             Time.timeScale = 0;
             SceneManager.LoadScene(0);

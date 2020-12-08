@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class SimulationManeger
 {
-    public static int steviloPonovitev = 50;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
+    public static int steviloPonovitev = 40;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
     public static int[] nOvc1 = { 25, 50, 75, 100, 125, 150 };
     public static int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
     public static GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Stroembom };
@@ -68,7 +68,7 @@ public static class SimulationManeger
             } else if (Evolucija.generation > maxGeneracij - zadnjeGeneracije &&
                 Evolucija.generation <= maxGeneracij && (osebek < Evolucija.populationSize - 1 || DNA.ponovitev < 3))
             {
-                if (DNA.ponovitev == 3) { osebek++; DNA = Evolucija.population[osebek]; }
+                if (DNA.ponovitev == 5) { osebek++; DNA = Evolucija.population[osebek]; }
             }
             else if (osebek < Evolucija.populationSize - 1)
             {

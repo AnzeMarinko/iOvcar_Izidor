@@ -13,6 +13,8 @@ public class DNA
     public List<float> casi;
     public int generacija;
     public int ponovitev = 0;
+    float minFit = 10000f;
+    List<float> fits = new List<float>();
 
     public DNA(int gene, GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2)
     {
@@ -28,14 +30,19 @@ public class DNA
 
     public float GetFitness(float maxCas, float timer)
     {
-        float oldFitness = fitness;
         foreach (float cas in casi)
         {
             fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, casi.ToArray().Length == nOvc ? 2 : 1);
         }
         fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2);
+        fits.Add(fitness);
         fitness = (ponovitev > 0 && StaticClass.kombinacija.obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && Evolucija.generation != SimulationManeger.maxGeneracij + 1)
-            ? Mathf.Min(oldFitness, fitness) : fitness;
+            ? Mathf.Min(minFit, fitness) : fitness;
+        minFit = fitness;
+        float mean = 0;
+        foreach (float fit in fits) mean += fit;
+        mean /= (ponovitev + 1);
+        fitness *= mean;
         ponovitev++;
         return fitness;
     }
@@ -43,10 +50,13 @@ public class DNA
 
     public string GenStr()
     {
-        string gN = "Gen ";
+        string gN;
         if (generacija < SimulationManeger.maxGeneracij + 1)
         {
-            gN = "Generacija " + generacija + ", Fitness " + fitness + ", Gen ";
+            gN = "Generacija " + generacija + ", Fitness " + fits[ponovitev - 1] + ", Gen ";
+        } else
+        {
+            gN = "Fitness " + fits[ponovitev-1] + ", Gen ";
         }
         if (obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi) gen = StaticClass.rocniGen;
         foreach (float g in gen) gN += ";" + (Mathf.RoundToInt(g * 10000f) / 10000f);
