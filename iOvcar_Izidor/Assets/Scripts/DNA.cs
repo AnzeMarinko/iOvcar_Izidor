@@ -14,7 +14,7 @@ public class DNA
     public int generacija;
     public int ponovitev = 0;
     float minFit = 10000f;
-    List<float> fits = new List<float>();
+    public List<float> fits = new List<float>();
 
     public DNA(int gene, GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2)
     {

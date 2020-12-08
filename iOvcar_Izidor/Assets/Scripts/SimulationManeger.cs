@@ -85,7 +85,7 @@ public static class SimulationManeger
             foreach (GinelliOvca.ModelGibanja gin in modelGibanja1)
                 foreach (int n2 in nOvcarjev1)
                     foreach (OvcarEnum.ObnasanjePsa vod in obnasanjeOvcarja)
-                        if (!File.Exists("Rezultati" + "-" + vod.ToString() + "/"
+                        if (!File.Exists("Rezultati/Rezultati" + "-" + vod.ToString() + "/"
                                     + gin.ToString() + "_" + n1 + "-" + vod.ToString() + "_" + n2 + ".txt"))
                                 kombinacije.Add(new DNA(1, gin, n1, vod, n2));
     }
