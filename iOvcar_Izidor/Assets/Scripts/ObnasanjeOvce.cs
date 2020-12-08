@@ -302,6 +302,12 @@ public class ObnasanjeOvce : MonoBehaviour
         {
             ovca.GetComponent<Rigidbody>().velocity = ovca.GetComponent<Rigidbody>().velocity.normalized * 5;
         }
+        if (transform.position.x > 51f)
+        {
+            Destroy(gameObject, 3f);
+            if (!GetComponent<GinelliOvca>().umira)
+            { StaticClass.casi.Add(StaticClass.timer); GetComponent<GinelliOvca>().umira = true; }
+        }
     }    
 
     Vector2 IzogibOgraji(Vector2 lokacija, Vector2 smer)

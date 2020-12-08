@@ -30,8 +30,6 @@ public class GuiScript : MonoBehaviour
     public GameObject ovcarGO;
     GameObject[] ovce;
     int score = 0;  // rezultat za izpis
-    float timer;
-    List<float> casi = new List<float>();   // casi prihodov v stajo
     readonly float maxCas = 180f;  // casovna omejitev simulacije
     bool konec = false;  // cas za izpis navodil na koncu in konec simulacije
 
@@ -50,11 +48,11 @@ public class GuiScript : MonoBehaviour
         modelGibanja = StaticClass.kombinacija.modelGibanja;
         obnasanjeOvcarja = StaticClass.kombinacija.obnasanjePsa;
         score = 0;
-        timer = 0;
+        StaticClass.timer = 0;
         for (int i = 0; i < nOvc; i++) { AddSheep(); }  // postavi ovce in pse na polje
         for (int i = 0; i < nOvcarjev; i++) { AddDog(); }
         // GetComponent<AudioSource>().Play();   // zaigraj zvok na zacetku simulacije
-        casi = new List<float>();
+        StaticClass.casi = new List<float>();
         Time.timeScale = pospesitev;
     }
 
@@ -83,7 +81,7 @@ public class GuiScript : MonoBehaviour
         ovce = GameObject.FindGameObjectsWithTag("Ovca");  // izracunaj rezultat
         
         score = nOvc - ovce.Length;
-        if (ovce.Length == 0 || timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
+        if (ovce.Length == 0 || StaticClass.timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
             string dirName = "Rezultati" + "-" + obnasanjeOvcarja.ToString();
             if (Evolucija.generation == SimulationManeger.maxGeneracij + 1)
@@ -108,8 +106,8 @@ public class GuiScript : MonoBehaviour
             using (StreamWriter sw = File.AppendText(fileName))
             //    Appends text at the end of an existing file
             {
-                foreach (float c in casi) SimulationManeger.DNA.casi.Add(c);
-                print(SimulationManeger.DNA.GetFitness(maxCas, timer));
+                foreach (float c in StaticClass.casi) SimulationManeger.DNA.casi.Add(c);
+                print(SimulationManeger.DNA.GetFitness(maxCas, StaticClass.timer));
                 sw.WriteLine(SimulationManeger.DNA.GenStr());
                 SimulationManeger.DNA.casi = new List<float>();
 
@@ -119,7 +117,7 @@ public class GuiScript : MonoBehaviour
         }
         else 
         {
-            timer += Time.deltaTime;
+            StaticClass.timer += Time.deltaTime;
             Vector3 GCM = new Vector3(0f, 0f, 0f);
             foreach (GameObject ovca in ovce)
             {
@@ -141,7 +139,7 @@ public class GuiScript : MonoBehaviour
     private void OnGUI()   // v zgornjem levem kotu napisi nekaj lastnosti simulacije in dodaj nekaj gumbov
     {
         ovce = GameObject.FindGameObjectsWithTag("Ovca");
-        GUI.Label(new Rect(3, 0, 100, 20), string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)));
+        GUI.Label(new Rect(3, 0, 100, 20), string.Format("{0:00}:{1:00}", Mathf.FloorToInt(StaticClass.timer / 60), Mathf.FloorToInt(StaticClass.timer % 60)));
         if (GUI.Button(new Rect(150, 0, 50, 20), "Izhod"))
         { Application.Quit(); }
         GUI.Box(new Rect(3, 20, 220, 160),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
@@ -162,17 +160,7 @@ public class GuiScript : MonoBehaviour
                                                 "Ob tem bo ohranil rezultate, ki se nahajajo v mapi\n" +
                                                 "'Rezultati'." +
                                                 "\n\n\tProgram se bo zdaj samodejno ugasnil.");
-            if (timer > 60f) Application.Quit();
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Ovca"))  // ko ovca pride v stajo dodaj njen cas in jo po treh sekundah odstrani
-        {
-            Destroy(other.gameObject, 3f);
-            if (!other.GetComponent<GinelliOvca>().umira)
-            { casi.Add(timer); other.GetComponent<GinelliOvca>().umira = true; }
+            if (StaticClass.timer > 60f) Application.Quit();
         }
     }
 }

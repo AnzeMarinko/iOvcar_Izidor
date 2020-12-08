@@ -13,6 +13,8 @@ public static class StaticClass
     public static float currentBest = 0;
     public static int steviloUspesnih = 0;
     public static int bestGen = 0;
+    public static float timer = 0;
+    public static List<float> casi = new List<float>();
 
     /*
     float v1 = (5 - 1) / 3f;  // Hitrost premikanja v stanju vodenja ovc

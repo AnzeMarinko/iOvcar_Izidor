@@ -9,7 +9,7 @@ public static class SimulationManeger
     public static int[] nOvc1 = { 25, 50, 75, 100, 125, 150 };
     public static int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
     public static GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Stroembom };
-    public static OvcarEnum.ObnasanjePsa[] obnasanjeOvcarja = { OvcarEnum.ObnasanjePsa.AI1, OvcarEnum.ObnasanjePsa.Voronoi };
+    public static OvcarEnum.ObnasanjePsa[] obnasanjeOvcarja = { OvcarEnum.ObnasanjePsa.Voronoi, OvcarEnum.ObnasanjePsa.AI1 };
 
     public static int maxGeneracij = 24;
     public static int zadnjeGeneracije = 3;  // stevilo generacij, ko se izvaja po tri poskuse in se vzame minimal fitness ali mean fitness
@@ -81,10 +81,10 @@ public static class SimulationManeger
     public static void VrniKombinacijo()  // skrbi za jemanje novih genov in delanje novih generacij
     {
         kombinacije = new List<DNA>();
-        foreach (OvcarEnum.ObnasanjePsa vod in obnasanjeOvcarja)
-            foreach (int n1 in nOvc1)
-                foreach (GinelliOvca.ModelGibanja gin in modelGibanja1)
-                    foreach (int n2 in nOvcarjev1)
+        foreach (int n1 in nOvc1)
+            foreach (GinelliOvca.ModelGibanja gin in modelGibanja1)
+                foreach (int n2 in nOvcarjev1)
+                    foreach (OvcarEnum.ObnasanjePsa vod in obnasanjeOvcarja)
                         if (!File.Exists("Rezultati" + "-" + vod.ToString() + "/"
                                     + gin.ToString() + "_" + n1 + "-" + vod.ToString() + "_" + n2 + ".txt"))
                                 kombinacije.Add(new DNA(1, gin, n1, vod, n2));
