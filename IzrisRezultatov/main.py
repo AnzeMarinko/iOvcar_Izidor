@@ -6,14 +6,14 @@ from mpl_toolkits.mplot3d import axes3d
 
 
 # TODO:
-#  sledenje psom (izriši njihovo gibanje in koliko časa so bili v stanju zbiranja in koliko vodenja)
+#  naberi v en seznam vse datoteke in razberi kombinacije za izris
 #  škatle z brki (min, 1-kvartil, mediana, 3-kvartil, max) za vse 4 različne funkcije
 #  razlika med časom ko je pripeljal čez 80% in 100% (da se vidi ali jih hkrati pelje čez)
 #  doprinos dodatnega psa (razlika v porabljenem času ipd. v primerjavi z enim psom manj
 
 
 # folder = "Rezultati-novemberVoronoi/"
-folder = "../iOvcar_Izidor/game/Rezultati/"  # mapa z rezultati
+folder = "../iOvcar_Izidor/iOvcar-IZIDOR/Rezultati/Rezultati-Voronoi/"  # mapa z rezultati
 
 colors = list(TABLEAU_COLORS)  # barve za locevanje med stevili ovc in ovcarjev
 markers = [".", "*", "o", "x", "+", "y", "v", "^"]
