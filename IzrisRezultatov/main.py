@@ -1,12 +1,11 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import TABLEAU_COLORS
 from mpl_toolkits.mplot3d import axes3d
-from branjePodatkov import data, bins, maxT, gins, novcs, vods, novcars
+from branjePodatkov import data, maxT, gins, novcs, vods, novcars
 import numpy as np
 
 
 # TODO:
-#  naberi v en seznam vse datoteke in razberi kombinacije za izris
 #  škatle z brki (min, 1-kvartil, mediana, 3-kvartil, max) za vse 4 različne funkcije
 #  razlika med časom ko je pripeljal čez 80% in 100% (da se vidi ali jih hkrati pelje čez)
 #  doprinos dodatnega psa (razlika v porabljenem času ipd. v primerjavi z enim psom manj

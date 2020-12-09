@@ -84,7 +84,7 @@ public class GuiScript : MonoBehaviour
         if (ovce.Length == 0 || StaticClass.timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
             string dirName = "Rezultati/Rezultati" + "-" + obnasanjeOvcarja.ToString();
-            if (Evolucija.generation == SimulationManeger.maxGeneracij + 1)
+            if (Evolucija.generation == SimulationManeger.maxGeneracij + 1 || StaticClass.kombinacija.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
             {
                 dirName += "-Final";
             }  
@@ -106,13 +106,14 @@ public class GuiScript : MonoBehaviour
             using (StreamWriter sw = File.AppendText(fileName))
             //    Appends text at the end of an existing file
             {
-                Vector3 GCM = new Vector3(1f, 1f, 1f);
+                Vector3 GCM = new Vector3(0f, 0f, 0f);
                 foreach (GameObject ovca in ovce)
                 {
                     GCM += ovca.transform.position;
                 }
+                float razdalja = ovce.Length > 0 ? (GCM / ovce.Length - transform.position).magnitude : 0f;
                 foreach (float c in StaticClass.casi) SimulationManeger.DNA.casi.Add(c);
-                print(SimulationManeger.DNA.GetFitness(maxCas, StaticClass.timer, (GCM / ovce.Length - transform.position).magnitude, ovce.Length));
+                print(SimulationManeger.DNA.GetFitness(maxCas, StaticClass.timer, razdalja, ovce.Length));
                 sw.WriteLine(SimulationManeger.DNA.GenStr());
                 SimulationManeger.DNA.casi = new List<float>();
 

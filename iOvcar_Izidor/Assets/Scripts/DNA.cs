@@ -35,7 +35,7 @@ public class DNA
             fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, casi.ToArray().Length == nOvc ? 2 : 1);
         }
         fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2);
-        fitness += 1 / (GCM + 1000f + ovce);
+        fitness += 1 / (GCM + 100f + ovce);
         fits.Add(fitness);
         fitness = (ponovitev > 0 && StaticClass.kombinacija.obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && Evolucija.generation != SimulationManeger.maxGeneracij + 1)
             ? Mathf.Min(minFit, fitness) : fitness;
@@ -52,7 +52,7 @@ public class DNA
     public string GenStr()
     {
         string gN;
-        if (generacija < SimulationManeger.maxGeneracij + 1)
+        if (generacija < SimulationManeger.maxGeneracij + 1 && StaticClass.kombinacija.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI1)
         {
             gN = "Generacija " + generacija + ", Fitness " + fits[ponovitev - 1] + ", Gen ";
         } else
