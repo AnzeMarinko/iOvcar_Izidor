@@ -106,8 +106,13 @@ public class GuiScript : MonoBehaviour
             using (StreamWriter sw = File.AppendText(fileName))
             //    Appends text at the end of an existing file
             {
+                Vector3 GCM = new Vector3(1f, 1f, 1f);
+                foreach (GameObject ovca in ovce)
+                {
+                    GCM += ovca.transform.position;
+                }
                 foreach (float c in StaticClass.casi) SimulationManeger.DNA.casi.Add(c);
-                print(SimulationManeger.DNA.GetFitness(maxCas, StaticClass.timer));
+                print(SimulationManeger.DNA.GetFitness(maxCas, StaticClass.timer, (GCM / ovce.Length - transform.position).magnitude, ovce.Length));
                 sw.WriteLine(SimulationManeger.DNA.GenStr());
                 SimulationManeger.DNA.casi = new List<float>();
 

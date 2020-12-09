@@ -28,13 +28,14 @@ public class DNA
         casi = new List<float>();
 }
 
-    public float GetFitness(float maxCas, float timer)
+    public float GetFitness(float maxCas, float timer, float GCM, int ovce)
     {
         foreach (float cas in casi)
         {
             fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, casi.ToArray().Length == nOvc ? 2 : 1);
         }
         fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2);
+        fitness += 1 / (GCM + 1000f + ovce);
         fits.Add(fitness);
         fitness = (ponovitev > 0 && StaticClass.kombinacija.obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && Evolucija.generation != SimulationManeger.maxGeneracij + 1)
             ? Mathf.Min(minFit, fitness) : fitness;
