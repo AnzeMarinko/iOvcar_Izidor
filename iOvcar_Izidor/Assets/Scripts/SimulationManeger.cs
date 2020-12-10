@@ -27,7 +27,7 @@ public static class SimulationManeger
             StaticClass.kombinacija = kombinacije[0];
             Evolucija.Setup(StaticClass.kombinacija.modelGibanja, StaticClass.kombinacija.nOvc,
                 StaticClass.kombinacija.obnasanjePsa, StaticClass.kombinacija.nOvcarjev);
-            StaticClass.bestGen = 0;
+            StaticClass.bestGen = 1;
             StaticClass.maxFitness = 0;
             DNA = Evolucija.population[0];
             osebek = -1;
@@ -37,12 +37,14 @@ public static class SimulationManeger
 
     static void ZamenjajKombinacijo()
     {
+        ZapisiGen(StaticClass.kombinacija.modelGibanja, StaticClass.kombinacija.nOvc,
+            StaticClass.kombinacija.obnasanjePsa, StaticClass.kombinacija.nOvcarjev, DNA.gen);
         VrniKombinacijo();
         if (0 == kombinacije.ToArray().Length) Application.Quit();
         StaticClass.kombinacija = kombinacije[0];
         Evolucija.Setup(StaticClass.kombinacija.modelGibanja, StaticClass.kombinacija.nOvc,
             StaticClass.kombinacija.obnasanjePsa, StaticClass.kombinacija.nOvcarjev);
-        StaticClass.bestGen = 0;
+        StaticClass.bestGen = 1;
         StaticClass.maxFitness = 0;
         StaticClass.currentBest = 0;
         DNA = Evolucija.population[0];
@@ -81,6 +83,7 @@ public static class SimulationManeger
 
     public static void VrniKombinacijo()  // skrbi za jemanje novih genov in delanje novih generacij
     {
+        if (!Directory.Exists("Rezultati")) Directory.CreateDirectory("Rezultati");
         kombinacije = new List<DNA>();
         foreach (int n2 in nOvcarjev1)
             foreach (int n1 in nOvc1)
@@ -92,5 +95,52 @@ public static class SimulationManeger
                             !File.Exists("Rezultati/Rezultati" + "-" + vod.ToString() + "-Final" + name))
                             kombinacije.Add(new DNA(1, gin, n1, vod, n2));
                     }
+    }
+
+    static void ZapisiGen(GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2, float[] gen)
+    {
+        if (vod != OvcarEnum.ObnasanjePsa.AI2)
+        {
+            string fileName = "Rezultati/geni.txt";
+            if (!File.Exists(fileName))
+            {
+                // glava z imeni in mejami parametrov
+                using (StreamWriter sw = File.CreateText(fileName))
+                {
+                    string[] imena = {"Hitrost v stanju vodenja",
+                        "Faktor za dovoljeno velikost črede",
+                        "Razdalja za zbiranje",
+                        "Razdalja za zaznavo ovc na poti",
+                        "Razdalja za upočasnitve v bližini ovc",
+                        "Razdalja za upočasnitev v bližini cilja",
+                        "Relativna moč šuma",
+                        "Trajanje nakljucnega premika",
+                        "Fiksen čas do naključnega premika",
+                        "Razpon naključnega dodatnega časa",
+                        "Pomen oddaljenosti pobegle ovce od črede",
+                        "Pomen oddaljenosti pobegle ovce od ovčarja",
+                        "Ovčar bližje cilju kot čreda",
+                        "Največji delež ignoriranih ovc",
+                        "Vpliv števila ovčarjev na delež ignoriranih ovc",
+                        "Odpor pred pred stanjem bližje cilju kot točka",
+                        "Udobna razdalja med ovčarji",
+                        "Razdalja za upočasnitev v bližini točke",
+                        "Odpor pred pred stanjem bližje čredi kot točka",
+                        "Zaokroževanje blizu ovc",
+                        "Pomen smeri drugih ovčarjev" };
+                    float[] zm = StaticClass.zgornjeMeje;
+                    float[] sm = StaticClass.spodnjeMeje;
+                    string glava = "";
+                    for (int i = 0; i < imena.Length; i++) glava += "" + imena[i] + ": (" + sm[i] + "-" + zm[i] + ")\n";
+                    sw.WriteLine(glava);
+                }
+            }
+            using (StreamWriter sw = File.AppendText(fileName))
+            {
+                string vrstica = "" + gin.ToString() + " " + n1 + " " + vod.ToString() + " " + n2 + " ";
+                foreach (float g in gen) vrstica += (Mathf.RoundToInt(g * 10000f) / 10000f) + ";";
+                sw.WriteLine(vrstica);
+            }
+        }
     }
 }

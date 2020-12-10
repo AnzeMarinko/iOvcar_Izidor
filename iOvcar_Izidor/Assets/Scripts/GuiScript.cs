@@ -7,11 +7,20 @@ using UnityEngine.SceneManagement;
 
 /* TODO:
  * 
- * genetski algoritmi, Unity ML agents / Markov brains, Reinforcement learning (tabela stanj in potez)
- * Evalvacija posameznih pristopov (ročno razviti psi, umetna inteligenca, morda tudi najosnovnejši model brez upoštevanja GCM ipd.).
+ * optimalne gene mora tudi znati prebrati in iz njih ekstrapolirati za nove kombinacije
+ * spreminjajoči AI1 - spreminjanje optimalnega gena glede na naučene kombinacije
+ *   (ko se zmanjša št. ovc spremeni parametre),
+ * na podlagi kombinacije izračunaj parametre (predvidi tudi za nenaučeno - več ovc (150 in 200) ipd.)
+ * drsniki za ročno nastavljanje poljubnih parametrov (gumb, ki ustavi igro in ti ponudi izbiro in brez
+ *   beleženja rezultatov požene), zraven gumbi za izbiro kombinacije (obnašanje psa možno ročno, AI1-Opt,
+ *   Voronoi, AI2-Opt (brez gena), naključen gen, osnoven - gre lahko poljubno pred čredo, zbira vse ...) in
+ *   gumb za zagon
+ * 
+ * Unity ML agents / Markov brains, Reinforcement learning (tabela stanj in potez)
+ * Evalvacija posameznih pristopov (ročno razviti psi, umetna inteligenca).
  * Odstrani izris in pospeši, uredi kodo, datoteke, lastnosti projekta
  * 
- *      Dodatne ideje, če bomo slučajno imeli preveč časa:
+ *      Dodatne ideje kot predlogi za nadaljnje delo:
  * Ovire ali drugačna oblika polja ali npr. voda kjer ovce nočejo hoditi
  * Fizikalna/teoretična študija kjer ovce smatramo kot delce (particle system) ter skušamo primerjati vedenje z elementarnimi 
  *        fizikalnimi pojavi v naravi (npr. https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.110.228701). N -> \infty
@@ -19,8 +28,6 @@ using UnityEngine.SceneManagement;
 
 public class GuiScript : MonoBehaviour
 {
-    readonly float pospesitev = 10;   // hitrost predvajanja, ce je mogoce
-
     int nOvc;
     int nOvcarjev;
     GinelliOvca.ModelGibanja modelGibanja;
@@ -149,7 +156,7 @@ public class GuiScript : MonoBehaviour
         GUI.Label(new Rect(3, 0, 100, 20), string.Format("{0:00}:{1:00}", Mathf.FloorToInt(StaticClass.timer / 60), Mathf.FloorToInt(StaticClass.timer % 60)));
         if (GUI.Button(new Rect(150, 0, 50, 20), "Izhod"))
         { Application.Quit(); }
-        GUI.Box(new Rect(3, 20, 220, 160),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
+        GUI.Box(new Rect(3, 20, 240, 160),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
             "\nModel gibanja ovc: " + StaticClass.kombinacija.modelGibanja.ToString() + "\nStevilo ovcarjev: " + StaticClass.kombinacija.nOvcarjev + "\nModel vodenja ovcarjev: " + StaticClass.kombinacija.obnasanjePsa.ToString() +
             "\nGeneracija: " + (Evolucija.generation == SimulationManeger.maxGeneracij + 1 ? "Final" : Evolucija.generation.ToString()) + ", poskus: " + (SimulationManeger.osebek + 1) + " (" + (SimulationManeger.DNA.ponovitev + 1) + ")\nGlobal max. fitness: " + StaticClass.currentBest + "\n    (generacija " + StaticClass.bestGen +
             ")\nMax. fitness v generaciji " + (Evolucija.generation == SimulationManeger.maxGeneracij + 1 ? Evolucija.generation : Evolucija.generation - 1) + ": " + StaticClass.maxFitness + "\n   Nad 1: " + StaticClass.steviloUspesnih);
