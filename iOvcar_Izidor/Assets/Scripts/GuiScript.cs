@@ -53,7 +53,8 @@ public class GuiScript : MonoBehaviour
         for (int i = 0; i < nOvcarjev; i++) { AddDog(); }
         // GetComponent<AudioSource>().Play();   // zaigraj zvok na zacetku simulacije
         StaticClass.casi = new List<float>();
-        Time.timeScale = pospesitev;
+        Time.timeScale = 250f / nOvc;
+        Time.maximumDeltaTime = nOvc / 250f;
     }
 
     void AddSheep()
@@ -151,7 +152,7 @@ public class GuiScript : MonoBehaviour
         GUI.Box(new Rect(3, 20, 220, 160),    "Ovce v staji: " + score + "\nOvce na pašniku: " + ovce.Length +
             "\nModel gibanja ovc: " + StaticClass.kombinacija.modelGibanja.ToString() + "\nStevilo ovcarjev: " + StaticClass.kombinacija.nOvcarjev + "\nModel vodenja ovcarjev: " + StaticClass.kombinacija.obnasanjePsa.ToString() +
             "\nGeneracija: " + (Evolucija.generation == SimulationManeger.maxGeneracij + 1 ? "Final" : Evolucija.generation.ToString()) + ", poskus: " + (SimulationManeger.osebek + 1) + " (" + (SimulationManeger.DNA.ponovitev + 1) + ")\nGlobal max. fitness: " + StaticClass.currentBest + "\n    (generacija " + StaticClass.bestGen +
-            ")\nMax. fitness v generaciji " + (Evolucija.generation == SimulationManeger.maxGeneracij + 1 ? Evolucija.generation : Evolucija.generation - 1) + ": " + StaticClass.maxFitness + "\n   Pozitivnih: " + StaticClass.steviloUspesnih);
+            ")\nMax. fitness v generaciji " + (Evolucija.generation == SimulationManeger.maxGeneracij + 1 ? Evolucija.generation : Evolucija.generation - 1) + ": " + StaticClass.maxFitness + "\n   Nad 1: " + StaticClass.steviloUspesnih);
         if (GUI.Button(new Rect(130, 180, 85, 20), "Naprej!"))  // naslednja simulacija iz seznama
         { SceneManager.LoadScene(0); }
         if (GUI.Button(new Rect(3, 200, 180, 20), kamera.GetComponent<Camera>().depth < 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
