@@ -30,6 +30,7 @@ public class DNA
 
     public float GetFitness(float maxCas, float timer, float GCM, int ovce)
     {
+        fitness = 0;
         foreach (float cas in casi)
         {
             fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, casi.ToArray().Length == nOvc ? 2 : 1);

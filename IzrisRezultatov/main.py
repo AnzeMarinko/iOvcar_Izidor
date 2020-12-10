@@ -9,6 +9,8 @@ import numpy as np
 #  škatle z brki (min, 1-kvartil, mediana, 3-kvartil, max) za vse 4 različne funkcije
 #  razlika med časom ko je pripeljal čez 80% in 100% (da se vidi ali jih hkrati pelje čez)
 #  doprinos dodatnega psa (razlika v porabljenem času ipd. v primerjavi z enim psom manj
+#  porazdelitev, min, max in povprečje parametra in fitnessa skozi čas (po generacijah)
+#  kako se je parameter spreminjal pri najboljšem skozi čas
 
 
 colors = list(TABLEAU_COLORS)  # barve za locevanje med stevili ovc in ovcarjev

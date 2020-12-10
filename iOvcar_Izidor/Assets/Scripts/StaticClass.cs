@@ -12,7 +12,7 @@ public static class StaticClass
     public static float maxFitness = 0;
     public static float currentBest = 0;
     public static int steviloUspesnih = 0;
-    public static int bestGen = 0;
+    public static int bestGen = 1;
     public static float timer = 0;
     public static List<float> casi = new List<float>();
 

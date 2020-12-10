@@ -28,7 +28,7 @@ public static class Evolucija
         {
             d.fits.Sort();
             maxFitness = Mathf.Max(d.fits[0], maxFitness);
-            uspesnih += d.fitness > 0 ? 1 : 0;
+            uspesnih += d.fitness > 1f ? 1 : 0;
         }
         StaticClass.steviloUspesnih = uspesnih;
         StaticClass.maxFitness = maxFitness;
