@@ -2,59 +2,59 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public static class SimulationManeger
+public class SimulationManeger
 {
-    public static int steviloPonovitev = 40;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
-    public static int[] nOvc1 = { 5, 10, 25, 50, 75, 100 };
-    public static int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
-    public static GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Stroembom };
-    public static OvcarEnum.ObnasanjePsa[] obnasanjeOvcarja = { OvcarEnum.ObnasanjePsa.Voronoi, OvcarEnum.ObnasanjePsa.AI1 };
+    public int steviloPonovitev = 40;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
+    public int[] nOvc1 = { 5, 10, 25, 50, 75, 100 };
+    public int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
+    public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Stroembom };
+    public List<OvcarEnum.ObnasanjePsa> obnasanjeOvcarja = new List<OvcarEnum.ObnasanjePsa>();  //, OvcarEnum.ObnasanjePsa.AI2 };
 
-    public static int maxGeneracij = 24;
-    public static int zadnjeGeneracije = 3;  // stevilo generacij, ko se izvaja po tri poskuse in se vzame minimal fitness ali mean fitness
-    
-    public static DNA DNA;
-    public static List<DNA> kombinacije = new List<DNA>();
-    public static int osebek = 0;
+    public DNA DNA;
+    public List<DNA> kombinacije = new List<DNA>();
+    public int osebek = 0;
+    public Evolucija evolucija;
+    bool zacetek;
 
-    public static void SimulationStart()
+    public SimulationManeger()
     {
-        if (StaticClass.zacetek)
+        zacetek = true;
+        if (SceneManager.GetActiveScene().name == "testScene")
+        { obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi); obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1); }
+        else
         {
-            VrniKombinacijo();
-            if (0 == kombinacije.ToArray().Length) Application.Quit();
-            StaticClass.kombinacija = kombinacije[0];
-            Evolucija.Setup(StaticClass.kombinacija.modelGibanja, StaticClass.kombinacija.nOvc,
-                StaticClass.kombinacija.obnasanjePsa, StaticClass.kombinacija.nOvcarjev);
-            StaticClass.bestGen = 1;
-            StaticClass.maxFitness = 0;
-            DNA = Evolucija.population[0];
-            osebek = -1;
-            StaticClass.zacetek = false;
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
         }
     }
 
-    static void ZamenjajKombinacijo()
+    public void SimulationStart()
     {
-        ZapisiGen(StaticClass.kombinacija.modelGibanja, StaticClass.kombinacija.nOvc,
-            StaticClass.kombinacija.obnasanjePsa, StaticClass.kombinacija.nOvcarjev, DNA.gen);
+        if (zacetek)
+        {
+            VrniKombinacijo();
+            if (0 == kombinacije.ToArray().Length) Application.Quit();
+            evolucija = new Evolucija(kombinacije[0].modelGibanja, kombinacije[0].nOvc, kombinacije[0].obnasanjePsa, kombinacije[0].nOvcarjev);
+            DNA = evolucija.population[0];
+            osebek = -1;
+            zacetek = false;
+        }
+    }
+
+    void ZamenjajKombinacijo()
+    {
+        ZapisiGen(DNA.modelGibanja, DNA.nOvc, DNA.obnasanjePsa, DNA.nOvcarjev, DNA.gen);
         VrniKombinacijo();
         if (0 == kombinacije.ToArray().Length) Application.Quit();
-        StaticClass.kombinacija = kombinacije[0];
-        Evolucija.Setup(StaticClass.kombinacija.modelGibanja, StaticClass.kombinacija.nOvc,
-            StaticClass.kombinacija.obnasanjePsa, StaticClass.kombinacija.nOvcarjev);
-        StaticClass.bestGen = 1;
-        StaticClass.maxFitness = 0;
-        StaticClass.currentBest = 0;
-        DNA = Evolucija.population[0];
+        evolucija = new Evolucija(kombinacije[0].modelGibanja, kombinacije[0].nOvc, kombinacije[0].obnasanjePsa, kombinacije[0].nOvcarjev);
+        DNA = evolucija.population[0];
         osebek = 0;
     }
 
-    // Update is called once per frame
-    public static void SimulationUpdate()
+    public void SimulationUpdate()
     {
-        if (StaticClass.kombinacija.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
+        if (DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
         {
             if (DNA.ponovitev == steviloPonovitev) ZamenjajKombinacijo();
             else
@@ -62,26 +62,26 @@ public static class SimulationManeger
                 osebek = 0;
                 DNA.fitness = 0;
             }
-        } else if (StaticClass.kombinacija.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI1)
+        } else if (DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI1)
         {
-            if (Evolucija.generation == maxGeneracij + 1)
+            if (DNA.generacija == evolucija.maxGeneracij + 1)
             {
                 if (DNA.ponovitev == steviloPonovitev) ZamenjajKombinacijo();
                 else osebek++;
-            } else if (Evolucija.generation > maxGeneracij - zadnjeGeneracije &&
-                Evolucija.generation <= maxGeneracij && (osebek < Evolucija.populationSize - 1 || DNA.ponovitev < 3))
+            } else if (DNA.generacija > evolucija.maxGeneracij - evolucija.zadnjeGeneracije &&
+                DNA.generacija <= evolucija.maxGeneracij && (osebek < evolucija.populationSize - 1 || DNA.ponovitev < 3))
             {
-                if (DNA.ponovitev == 5) { osebek++; DNA = Evolucija.population[osebek]; }
+                if (DNA.ponovitev == 5) { osebek++; DNA = evolucija.population[osebek]; }
             }
-            else if (osebek < Evolucija.populationSize - 1)
+            else if (osebek < evolucija.populationSize - 1)
             {
-                osebek++; DNA = Evolucija.population[osebek]; 
+                osebek++; DNA = evolucija.population[osebek]; 
             } else
-            { Evolucija.Reproduce(); DNA = Evolucija.population[0]; osebek = 0; }
+            { evolucija.Reproduce(); DNA = evolucija.population[0]; osebek = 0; }
         }
     }
 
-    public static void VrniKombinacijo()  // skrbi za jemanje novih genov in delanje novih generacij
+    public void VrniKombinacijo()  // skrbi za jemanje novih genov in delanje novih generacij
     {
         if (!Directory.Exists("Rezultati")) Directory.CreateDirectory("Rezultati");
         kombinacije = new List<DNA>();
@@ -93,11 +93,11 @@ public static class SimulationManeger
                         string name = "/" + gin.ToString() + "_" + n1 + "-" + vod.ToString() + "_" + n2 + ".txt";
                         if (!File.Exists("Rezultati/Rezultati" + "-" + vod.ToString() + name) &&
                             !File.Exists("Rezultati/Rezultati" + "-" + vod.ToString() + "-Final" + name))
-                            kombinacije.Add(new DNA(1, gin, n1, vod, n2));
+                            kombinacije.Add(new DNA(1, gin, n1, vod, n2, 0));
                     }
     }
 
-    static void ZapisiGen(GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2, float[] gen)
+    void ZapisiGen(GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2, float[] gen)
     {
         if (vod != OvcarEnum.ObnasanjePsa.AI2)
         {

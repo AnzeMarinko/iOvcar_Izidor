@@ -3,43 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public static class Evolucija
+public class Evolucija
 {
     // ta datoteka naj nadzoruje evolucijo
-    public readonly static int populationSize = 50;
-    public static DNA[] population;
-    public static int generation = 0;
+    public readonly int populationSize = 50;
+    public int maxGeneracij = 24;
+    public int zadnjeGeneracije = 3;  // stevilo generacij, ko se izvaja po tri poskuse in se vzame minimal fitness ali mean fitness
 
-    public static void Setup(GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2)
+    public float maxFitness = 0;
+    public float currentBest = 0;
+    public int steviloUspesnih = 0;
+    public int bestGen = 1;
+    public DNA[] population;
+    public int generation;
+
+    public Evolucija(GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2)
     { 
         population = new DNA[populationSize];
-        for (int i = 0; i < populationSize; i++) population[i] = new DNA(1, gin, n1, vod, n2); generation = 1; }
+        for (int i = 0; i < populationSize; i++) population[i] = new DNA(1, gin, n1, vod, n2, maxGeneracij);
+        generation = 1;
+    }
 
-    public static void Reproduce()
+    public void Reproduce()
     {
         List<DNA> Order = new List<DNA>();
         foreach (DNA d in population)
         {
             Order.Add(d);
         }
-        float maxFitness = 0;
-        int uspesnih = 0;
+        currentBest = 0;
+        steviloUspesnih = 0;
         foreach (DNA d in population)
         {
             d.fits.Sort();
-            maxFitness = Mathf.Max(d.fits[0], maxFitness);
-            uspesnih += d.fitness > 1f ? 1 : 0;
+            currentBest = Mathf.Max(d.fits[0], currentBest);
+            steviloUspesnih += d.fitness > 1f ? 1 : 0;
         }
-        StaticClass.steviloUspesnih = uspesnih;
-        StaticClass.maxFitness = maxFitness;
-        if (StaticClass.currentBest < maxFitness)
-        {
-            StaticClass.currentBest = maxFitness;
-            StaticClass.bestGen = generation;
-        }
+        bestGen = currentBest > maxFitness ? generation : bestGen;
+        maxFitness = Mathf.Max(currentBest, maxFitness);
         List<int> matingPool = new List<int>();
         List<DNA> Sorted = Order.OrderBy(order => order.fitness).ToList();
-        if (generation == SimulationManeger.maxGeneracij)
+        if (generation == maxGeneracij)
         {
             population[0] = Sorted[populationSize-1];
             population[0].generacija += 1;
@@ -52,7 +56,7 @@ public static class Evolucija
             int k = 0;
             foreach (DNA d in Sorted)
             {
-                for (int j = 0; j < 2 * Mathf.Pow(i, generation < SimulationManeger.maxGeneracij - SimulationManeger.zadnjeGeneracije ? 2 : 3) / populationSize; j++)
+                for (int j = 0; j < 2 * Mathf.Pow(i, generation < maxGeneracij - zadnjeGeneracije ? 2 : 3) / populationSize; j++)
                 {
                     matingPool.Add(i);
                     k++;

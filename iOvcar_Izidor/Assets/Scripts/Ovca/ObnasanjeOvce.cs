@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class ObnasanjeOvce : MonoBehaviour
 {
-    GameObject ovca;   // izbrana ovca
     Vector2 smer;      // njena smer
-    GameObject[] ovcarji;   // seznam ovcarjev
     readonly float rd = 15/3f;    // Obmocje zaznavanja sosednjih agentov in ograje
     readonly float rs = 30/3f;    // Obmocje zaznavanja ovcarja
     GinelliOvca.ModelGibanja modelGibanja;  // gibanje po popravljenem Stroembomu
+    public Terrain terrain;
 
     // po Stroembomovem modelu:
     float speed = 5/3f;  // Hitrost premikanja
@@ -40,42 +39,33 @@ public class ObnasanjeOvce : MonoBehaviour
     // Use this for initialisation
     void Start()
     {
-        ovca = GetComponent<Rigidbody>().gameObject;    // nastavitev zacetnih vrednosti
-        smer = new Vector3(Mathf.Cos(ovca.transform.rotation.eulerAngles.y * 180f / Mathf.PI),
-            Mathf.Sin(ovca.transform.rotation.eulerAngles.y * 180f / Mathf.PI)); ;
-        ovcarji = GameObject.FindGameObjectsWithTag("Ovcar");
-        modelGibanja = ovca.GetComponent<GinelliOvca>().model;
-        ovca.GetComponent<GinelliOvca>().voronoiPes = ovcarji[0];
-        foreach (GameObject ovcar in ovcarji)   // izbira najblizjega psa
-        {
-            if ((ovcar.transform.position - ovca.transform.position).magnitude < (ovca.GetComponent<GinelliOvca>().voronoiPes.transform.position - ovca.transform.position).magnitude)
-            {
-                ovca.GetComponent<GinelliOvca>().voronoiPes = ovcar;
-            }
-        }
+        smer = new Vector3(Mathf.Cos(transform.rotation.eulerAngles.y * 180f / Mathf.PI),
+            Mathf.Sin(transform.rotation.eulerAngles.y * 180f / Mathf.PI));
+        modelGibanja = GetComponent<GinelliOvca>().model;
+        GetComponent<GinelliOvca>().voronoiPes = GameObject.FindGameObjectWithTag("Ovcar");
+        terrain = transform.parent.GetComponent<Terrain>();
+        GetComponent<GinelliOvca>().voronoiPes = terrain.sheepardList[0];
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        foreach (GameObject ovcar in ovcarji)   // posodobitev, kateri pes je najblizje
+        foreach (GameObject ovcar in terrain.sheepardList)   // posodobitev, kateri pes je najblizje
         {
-            if ((ovcar.transform.position - ovca.transform.position).magnitude < (ovca.GetComponent<GinelliOvca>().voronoiPes.transform.position - ovca.transform.position).magnitude)
+            if ((ovcar.transform.position - transform.position).magnitude < (GetComponent<GinelliOvca>().voronoiPes.transform.position - transform.position).magnitude)
             {
-                ovca.GetComponent<GinelliOvca>().voronoiPes = ovcar;
+                GetComponent<GinelliOvca>().voronoiPes = ovcar;
             }
         }
-        GameObject[] ovce = GameObject.FindGameObjectsWithTag("Ovca");
         switch (modelGibanja)
         {
             case GinelliOvca.ModelGibanja.Ginelli:
             {
                 // po Ginelliju
-                Vector2 position = new Vector2(ovca.transform.position.x, ovca.transform.position.z);  // pozicija izbrane ovce v Vector2
+                Vector2 position = new Vector2(transform.position.x, transform.position.z);  // pozicija izbrane ovce v Vector2
                 Vector2 vsotaSmeri = new Vector2(0f, 0f);
-                float speed;
-                t012 = ovce.Length;  // stopnja preskoka iz stanja ali hoje v tek
-                t20 = ovce.Length;   // stopnja preskoka iz teka v stanje
+                t012 = terrain.sheepList.Count;  // stopnja preskoka iz stanja ali hoje v tek
+                t20 = terrain.sheepList.Count;   // stopnja preskoka iz teka v stanje
                 int stojece = 0;
                 int hodijo = 0;
                 int tecejo = 0;
@@ -84,7 +74,7 @@ public class ObnasanjeOvce : MonoBehaviour
                 float l2 = 0;  // povprecna razdalja do ustavljenih ovc
 
                 // prestej sosednje ovce glede na stanja in izracunaj novo stanje
-                foreach (GameObject o in ovce)
+                foreach (GameObject o in terrain.sheepList)
                 {
                     Vector2 point = new Vector2(o.transform.position.x, o.transform.position.z);
                     float razdalja = (point - position).magnitude;
@@ -111,13 +101,13 @@ public class ObnasanjeOvce : MonoBehaviour
                 if (ustavljane > 0) l2 /= ustavljane;
 
                 float x = Random.Range(0f, 10001f) / 10000f;   // preskok med stanjem in hojo
-                if (!ovca.GetComponent<GinelliOvca>().tek)
+                if (!GetComponent<GinelliOvca>().tek)
                 {
-                    if (ovca.GetComponent<GinelliOvca>().hoja)
+                    if (GetComponent<GinelliOvca>().hoja)
                     {
                         float p10 = (1 + alpha * stojece) / t10;
                         p10 = 1 - Mathf.Exp(-p10);
-                        if (x < p10) ovca.GetComponent<GinelliOvca>().hoja = false;
+                        if (x < p10) GetComponent<GinelliOvca>().hoja = false;
                     }
                     else
                     {
@@ -125,23 +115,23 @@ public class ObnasanjeOvce : MonoBehaviour
                         p01 = 1 - Mathf.Exp(-p01);
                         if (x < p01)
                         {
-                            ovca.GetComponent<GinelliOvca>().hoja = true;
+                            GetComponent<GinelliOvca>().hoja = true;
                         }
-                        ovca.GetComponent<GinelliOvca>().ustavljanje = false;
+                        GetComponent<GinelliOvca>().ustavljanje = false;
                     }
                 }
 
                 x = Random.Range(0f, 10001f) / 10000f;   // preskok v tek ali iz teka
-                if (!ovca.GetComponent<GinelliOvca>().tek
-                    && (Mathf.Max(Mathf.Abs(ovca.transform.position.x), Mathf.Abs(ovca.transform.position.z)) < 48f
-                    || (ovca.transform.position.x > 45f && Mathf.Abs(ovca.transform.position.x) < 20f)))
+                if (!GetComponent<GinelliOvca>().tek
+                    && (Mathf.Max(Mathf.Abs(- terrain.center.x + transform.position.x), Mathf.Abs(- terrain.center.z + transform.position.z)) < 48f
+                    || (- terrain.center.x + transform.position.x > 45f && Mathf.Abs(- terrain.center.x + transform.position.x) < 20f)))
                 {
                     float p012 = Mathf.Pow(l1 * (1 + alpha * tecejo) / dR, delta) / t012;
                     p012 = 1 - Mathf.Exp(-p012);
                     if (x < p012 * 100)
                     {
-                        ovca.GetComponent<GinelliOvca>().tek = true;
-                        ovca.GetComponent<GinelliOvca>().hoja = false;
+                        GetComponent<GinelliOvca>().tek = true;
+                        GetComponent<GinelliOvca>().hoja = false;
                     }
                 }
                 else
@@ -150,29 +140,29 @@ public class ObnasanjeOvce : MonoBehaviour
                     p20 = (l2 < 1e-4f) ? 1f : 1 - Mathf.Exp(-p20);
                     if (x < p20)
                     {
-                        ovca.GetComponent<GinelliOvca>().tek = false;
-                        ovca.GetComponent<GinelliOvca>().ustavljanje = true;
+                        GetComponent<GinelliOvca>().tek = false;
+                        GetComponent<GinelliOvca>().ustavljanje = true;
                     }
                 }
 
                 Vector2 beg = new Vector2(0f, 0f);   // smer bega stran od ovcarjev in preskok v tek
-                foreach (GameObject ovcar in ovcarji)
+                foreach (GameObject ovcar in terrain.sheepardList)
                 {
                     Vector2 razdalja = position - new Vector2(ovcar.transform.position.x, ovcar.transform.position.z);
                     if (razdalja.magnitude < rs)
                     {
                         beg += razdalja.normalized * Mathf.Pow((razdalja.magnitude - rs) / rs, 2);
-                        ovca.GetComponent<GinelliOvca>().tek = true;
-                        ovca.GetComponent<GinelliOvca>().hoja = false;
-                        ovca.GetComponent<GinelliOvca>().ustavljanje = false;
+                        GetComponent<GinelliOvca>().tek = true;
+                        GetComponent<GinelliOvca>().hoja = false;
+                        GetComponent<GinelliOvca>().ustavljanje = false;
                     }
                 }
 
                 // izracunaj hitrost in smer
-                if (ovca.GetComponent<GinelliOvca>().tek)
+                if (GetComponent<GinelliOvca>().tek)
                 {
-                    speed = v2;
-                    foreach (GameObject o in ovce)
+                    speed = speed * 0.8f + v2 * 0.2f;
+                    foreach (GameObject o in terrain.sheepList)
                     {
                         Vector2 razdalja = new Vector2(o.transform.position.x, o.transform.position.z) - position;
                         if (razdalja.magnitude < rd)  // smer teka poravnaj s smerjo teka bliznjih ovc
@@ -195,12 +185,12 @@ public class ObnasanjeOvce : MonoBehaviour
                     Vector2 step = position + Time.deltaTime * speed * smer;
                     Vector3 p = Vector3.MoveTowards(transform.position, new Vector3(step.x, 0f, step.y), speed);
                     GetComponent<Rigidbody>().MovePosition(p);
-                    ovca.transform.LookAt(p + new Vector3(smer.x, 0f, smer.y));
+                    transform.LookAt(p + new Vector3(smer.x, 0f, smer.y));
                 }
-                else if (ovca.GetComponent<GinelliOvca>().hoja)
+                else if (GetComponent<GinelliOvca>().hoja)
                 {
-                    speed = v1;
-                    foreach (GameObject o in ovce)   // smer hoje poravnaj s smerjo hoje bliznjih ovc
+                        speed = speed * 0.8f + v1 * 0.2f;
+                    foreach (GameObject o in terrain.sheepList)   // smer hoje poravnaj s smerjo hoje bliznjih ovc
                     {
                         if ((position - new Vector2(o.transform.position.x, o.transform.position.z)).magnitude < r0)
                         {
@@ -219,15 +209,15 @@ public class ObnasanjeOvce : MonoBehaviour
                     Vector2 step = position + Time.deltaTime * speed * smer;
                     Vector3 p = Vector3.MoveTowards(transform.position, new Vector3(step.x, 0f, step.y), speed);
                     GetComponent<Rigidbody>().MovePosition(p);
-                    ovca.transform.LookAt(p + new Vector3(smer.x, 0f, smer.y));
+                    transform.LookAt(p + new Vector3(smer.x, 0f, smer.y));
                 }
                 break;
             }
             default:  // Stroembom
             {
-                Vector2 position = new Vector2(ovca.transform.position.x, ovca.transform.position.z);   // pozicija ovce v Vector2
+                Vector2 position = new Vector2(transform.position.x, transform.position.z);   // pozicija ovce v Vector2
                 List<Vector2> points = new List<Vector2>();    // seznam lokacij vseh ovc
-                foreach (GameObject o in ovce)
+                foreach (GameObject o in terrain.sheepList)
                 {
                     Vector2 point = new Vector2(o.transform.position.x, o.transform.position.z);
                     points.Add(new Vector2(point.x, point.y));
@@ -247,7 +237,7 @@ public class ObnasanjeOvce : MonoBehaviour
                     }
                 }
                 Vector2 Rs = new Vector2(0f, 0f);   // izogibanje ovcarjem
-                foreach (GameObject ovcar in ovcarji)
+                foreach (GameObject ovcar in terrain.sheepardList)
                 {
                     Vector2 razdalja = position - new Vector2(ovcar.transform.position.x, ovcar.transform.position.z);
                     if (razdalja.magnitude < rs)
@@ -289,29 +279,30 @@ public class ObnasanjeOvce : MonoBehaviour
                 Vector2 step = position + Time.deltaTime * speed * smer;
                 Vector3 p = Vector3.MoveTowards(transform.position, new Vector3(step.x, 0f, step.y), speed);  // izracun naslednje tocke
                 GetComponent<Rigidbody>().MovePosition(p);
-                ovca.transform.LookAt(p + new Vector3(smer.x, 0f, smer.y));  // smer gledanja
+                transform.LookAt(p + new Vector3(smer.x, 0f, smer.y));  // smer gledanja
                 break;
             }
         }
-        if (ovca.transform.position.y < -0.05f || ovca.transform.position.y > 0.1f)   // ovca ne sme leteti ali riti pod zemljo
+        if (transform.position.y < 0f || transform.position.y > 0.1f)   // ovca ne sme leteti ali riti pod zemljo
         {
-            ovca.transform.position = new Vector3(ovca.transform.position.x, 0f, ovca.transform.position.z);
-            ovca.transform.forward = new Vector3(ovca.transform.forward.x, 0f, ovca.transform.forward.z);  // spotoma ji nastavi se obrnjenost tako da stoji na nogah
+            transform.position = new Vector3(transform.position.x, 0.02f, transform.position.z);
+            transform.forward = new Vector3(transform.forward.x, 0.02f, transform.forward.z);  // spotoma ji nastavi se obrnjenost tako da stoji na nogah
         }
-        if (ovca.GetComponent<Rigidbody>().velocity.magnitude > 5)   // ce gre prehitro jo upocasni, da je ne izstreli
+        if (GetComponent<Rigidbody>().velocity.magnitude > 5)   // ce gre prehitro jo upocasni, da je ne izstreli
         {
-            ovca.GetComponent<Rigidbody>().velocity = ovca.GetComponent<Rigidbody>().velocity.normalized * 5;
+            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 5;
         }
-        if (transform.position.x > 51f)
+        if (transform.position.x > terrain.center.x + 51f)
         {
-            Destroy(gameObject, 3f);
             if (!GetComponent<GinelliOvca>().umira)
-            { StaticClass.casi.Add(StaticClass.timer); GetComponent<GinelliOvca>().umira = true; }
+            { terrain.RemoveSpecificSheep(this.gameObject); GetComponent<GinelliOvca>().umira = true; }
         }
     }    
 
     Vector2 IzogibOgraji(Vector2 lokacija, Vector2 smer)
     {
+        lokacija.x -= terrain.center.x;
+        lokacija.y -= terrain.center.z;
         // ce sem ograji blizje kot r se ji izognem, da ne grem proti njej prevec direktno
         float r = 5f;
         if (Mathf.Abs(lokacija.y) > 50f - r && lokacija.y * smer.y > 0f && Mathf.Abs(smer.x) < 0.9f) {

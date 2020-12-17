@@ -11,8 +11,7 @@ public class OvcarAI1 : MonoBehaviour
 
     public void AI1Start()
     {
-        SimulationManeger.SimulationStart();
-        ComputeParameters(SimulationManeger.DNA.gen);
+        ComputeParameters(transform.parent.GetComponent<Terrain>().sm.DNA.gen);
         GetComponent<OvcarFunkcije>().SetParameters(v1, ra, dc, da, d0, df, e, trajanjeNakljucnegaPremika, casNakljucnegaPremika, nakljucniDodatek,
             pomenRazdalje, pomenDoOvce, dovoljenoSpredaj, dovoljenoZadaj, pomenOvcarjev, protiTockiNazaj, udobnaRazdalja, blizuTocki, dljeCilju, rotiraj, pomenSmeriDrugih);
         GetComponent<OvcarFunkcije>().VoronoiStart();
