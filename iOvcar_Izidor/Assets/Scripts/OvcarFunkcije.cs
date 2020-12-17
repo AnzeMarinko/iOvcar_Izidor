@@ -5,14 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class OvcarFunkcije : MonoBehaviour
 {
-    GameObject ovcar;
     public Vector3 smer;
     Vector3 prejsnaSmer;
-    GameObject[] ovcarji;
+    List<GameObject> ovcarji;
     float v2;  // Hitrost premikanja v stanju iskanja ovc
     Vector3 cilj;   // pozicija staje
-    GameObject tocka;  // pika ki se premika kamor je namenjen pes
-    public GameObject pika;
+    public Vector3 tocka = new Vector3(0f, 0f, 0f);
     float hitrost = 0;
     float casDoNakljucnegaPremika;
     bool zacetekNakljucnegaPremika = false;
@@ -26,31 +24,29 @@ public class OvcarFunkcije : MonoBehaviour
     // Use this for initialization
     public void VoronoiStart()
     {
-        ovcar = GetComponent<Rigidbody>().gameObject;
-        v2 = ovcar.GetComponent<PremakniOvcarja>().vMax;   // hitrost v stanju teka
+        v2 = StaticClass.vMax;   // hitrost v stanju teka
         casDoNakljucnegaPremika = Random.Range(0f, nakljucniDodatek) + casNakljucnegaPremika;   // nakjucen premik naj bo ob nakljucnem casu cez slabo minuto
-        smer = ovcar.transform.rotation.eulerAngles;
+        smer = transform.rotation.eulerAngles;
         prejsnaSmer = smer;
-        ovcarji = GameObject.FindGameObjectsWithTag("Ovcar");
-        cilj = GameObject.FindGameObjectWithTag("Finish").transform.position;
-        tocka = Instantiate(pika, new Vector3(Random.Range(-45f, 45f), -0.5f, Random.Range(-45f, 45f)), Quaternion.identity);
+        ovcarji = transform.parent.GetComponent<Terrain>().sheepardList;
     }
 
     // Update is called once per frame
     public void VoronoiUpdate()
     {
-        GameObject[] ovce = GameObject.FindGameObjectsWithTag("Ovca");
-        ovcarji = GameObject.FindGameObjectsWithTag("Ovcar");
+        List<GameObject> ovce = transform.parent.GetComponent<Terrain>().sheepList;
+        Vector3 center = transform.parent.GetComponent<Terrain>().center;
+        cilj = center + new Vector3(60f, 0f, 0f);
         casDoNakljucnegaPremika -= Time.deltaTime;
-        if (ovce.Length > 0)
+        if (ovce.Count > 0)
         {
             Vector3 GCM = new Vector3(0f, 0f, 0f);   // skupno povprecje pozicij ovc
             foreach (GameObject ovca in ovce)
             {
                 GCM += ovca.transform.position;
             }
-            GCM /= ovce.Length;
-            float fN = F(ovce.Length);   // najvecja dovoljena velikost crede (polmer)
+            GCM /= ovce.Count;
+            float fN = F(ovce.Count);   // najvecja dovoljena velikost crede (polmer)
 
             Vector3 pobeglaOvca = new Vector3(0f, 0f, 0f);   // lokacija pobegle ovce in njena razdalja do GCM
             float doPobegle = 0;
@@ -60,7 +56,7 @@ public class OvcarFunkcije : MonoBehaviour
             int pobeglih = 0;
             foreach (GameObject ovca in ovce)
             {
-                float doOvce = (ovcar.transform.position - ovca.transform.position).magnitude;
+                float doOvce = (transform.position - ovca.transform.position).magnitude;
                 if (doOvce < da)
                 {
                     preblizu = true;    // ce mora pes zaokroziti okrog kaksne ovce ker ji je preblizu
@@ -73,7 +69,7 @@ public class OvcarFunkcije : MonoBehaviour
                 }
                 // mera za dolocanje katero ovco je treba pripeljati blizje (razdalja do GCM bolj pomembna kot do ovcarja a tudi ta ni nepomembna)
                 float mera = Mathf.Pow(razdalja, pomenRazdalje) / Mathf.Pow(doOvce, pomenDoOvce);
-                if (ovca.GetComponent<GinelliOvca>().voronoiPes == ovcar && razdalja > fN && (cilj - ovca.transform.position).magnitude > (GCM - cilj).magnitude - dovoljenoSpredaj && mera > doPobegle)
+                if (ovca.GetComponent<GinelliOvca>().voronoiPes == this.gameObject && razdalja > fN && (cilj - ovca.transform.position).magnitude > (GCM - cilj).magnitude - dovoljenoSpredaj && mera > doPobegle)
                 {
                     // pes vodi proti GCM le ovce v njegovi Voronoievi celici, ki so od cilja dlje kot gcm
                     // ko ima celico prazno ali nobena ovca v njegovi celici ni pobegla, vodi celo credo, kot da je zbrana
@@ -82,7 +78,7 @@ public class OvcarFunkcije : MonoBehaviour
                     pobeglaOvca = ovca.transform.position;
                 }
             }
-            if (doCentra > fN && Mathf.Pow(ovcarji.Length, pomenOvcarjev) * pobeglih > ovce.Length * dovoljenoZadaj)   // ce je pobeglih ovc vec kot 15% / #ovcarjev^2
+            if (doCentra > fN && Mathf.Pow(ovcarji.Count, pomenOvcarjev) * pobeglih > ovce.Count * dovoljenoZadaj)   // ce je pobeglih ovc vec kot 15% / #ovcarjev^2
             {
                 soZbrane = false;
             }
@@ -103,7 +99,7 @@ public class OvcarFunkcije : MonoBehaviour
             {
                 if (zacetekNakljucnegaPremika)
                 {
-                    Pc = new Vector3(Random.Range(-48f, 48f), -0.5f, Random.Range(-48f, 48f));
+                    Pc = new Vector3(Random.Range(-48f, 48f), 0f, Random.Range(-48f, 48f));
                     smerNakljucnegaPremika = Pc;
                     zacetekNakljucnegaPremika = false;
                 }
@@ -115,26 +111,26 @@ public class OvcarFunkcije : MonoBehaviour
             else if (!soZbrane)
             {
                 // ovcar se postavi zadaj za pobeglo ovco glede na credo
-                Pc = pobeglaOvca + (pobeglaOvca - GCM).normalized * dc;
+                Pc = pobeglaOvca + (pobeglaOvca - GCM).normalized * dc - center;
             }
             else
             {
                 // ovcar se postavi zadaj za credo glede na stajo
-                Pd = GCM + (GCM - cilj).normalized * (fN + ra);
+                Pd = GCM + (GCM - cilj).normalized * (fN + ra) - center;
             }
             // tocka znotraj ograje
-            tocka.transform.position = new Vector3(Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).x)), 0f, Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).z))) * 0.05f + tocka.transform.position * 0.95f;
+            tocka = (center + new Vector3(Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).x)), 0f, Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).z)))) * 0.05f + tocka * 0.95f;
 
-            float premikNazaj = (ovcar.transform.position - cilj).magnitude - (tocka.transform.position - cilj).magnitude;
+            float premikNazaj = (transform.position - cilj).magnitude - (tocka - cilj).magnitude;
             if (premikNazaj < 0)
             {
-                smer = (ovcar.transform.position - cilj) * Mathf.Sqrt(-premikNazaj) + (tocka.transform.position - ovcar.transform.position) * protiTockiNazaj;
+                smer = (transform.position - cilj) * Mathf.Sqrt(-premikNazaj) + (tocka - transform.position) * protiTockiNazaj;
             }
-            else smer = tocka.transform.position - ovcar.transform.position;
+            else smer = tocka - transform.position;
 
             foreach (GameObject izbran in ovcarji)   // ovcarji naj se med seboj izogibajo in drzijo razdaljo
             {
-                Vector3 razdalja = izbran.transform.position - ovcar.transform.position;
+                Vector3 razdalja = izbran.transform.position - transform.position;
                 if (razdalja.magnitude > 1e-3f)
                 {
                     smer -= razdalja.normalized * udobnaRazdalja / (razdalja.magnitude + 1f);
@@ -143,15 +139,15 @@ public class OvcarFunkcije : MonoBehaviour
             smer = smer.normalized;
 
             // ne zaokrozi, ce je skoraj na tocki
-            if ((ovcar.transform.position - tocka.transform.position).magnitude < blizuTocki ||
-                (ovcar.transform.position - GCM).magnitude > (GCM - tocka.transform.position).magnitude * dljeCilju) { }  // ce sem blizu tocki ali dlje od GCM kot tocka ne zaokrozim
+            if ((transform.position - tocka).magnitude < blizuTocki ||
+                (transform.position - GCM).magnitude > (GCM - tocka).magnitude * dljeCilju) { }  // ce sem blizu tocki ali dlje od GCM kot tocka ne zaokrozim
             else if (preblizu)
             {  // https://math.stackexchange.com/questions/274712/calculate-on-which-side-of-a-straight-line-is-a-given-point-located
                 Vector3 rotLevo = new Vector3(Mathf.Cos(rotiraj) * smer.x - Mathf.Sin(rotiraj) * smer.z,
                     0f, Mathf.Cos(rotiraj) * smer.z + Mathf.Sin(rotiraj) * smer.x);
                 Vector3 rotDesno = new Vector3(Mathf.Cos(-rotiraj) * smer.x - Mathf.Sin(-rotiraj) * smer.z,
                     0f, Mathf.Cos(-rotiraj) * smer.z + Mathf.Sin(-rotiraj) * smer.x);
-                float dGCM = (GCM.x - ovcar.transform.position.x) * smer.z - (GCM.z - ovcar.transform.position.z) * smer.x;
+                float dGCM = (GCM.x - transform.position.x) * smer.z - (GCM.z - transform.position.z) * smer.x;
                 float dRotLevo = rotLevo.x * smer.z - rotLevo.z * smer.x;
                 if (dGCM * dRotLevo < 0)  // GCM on the other side as rotation in left
                 {
@@ -164,7 +160,7 @@ public class OvcarFunkcije : MonoBehaviour
             // bolj naj uposteva blizje ovcarje (tudi sebe)
             foreach (GameObject o in ovcarji)
             {
-                Vector3 razdalja = ovcar.transform.position - o.transform.position;
+                Vector3 razdalja = transform.position - o.transform.position;
                 float oProtiOvcarju = razdalja.normalized.x * o.GetComponent<OvcarFunkcije>().smer.normalized.x +
                     razdalja.normalized.z * o.GetComponent<OvcarFunkcije>().smer.normalized.z;
                 // bolj kot gre o proti ovcarju, blize je ta stevilka 1, ce gre direktno stran pa bolj -1
@@ -185,7 +181,7 @@ public class OvcarFunkcije : MonoBehaviour
             prejsnaSmer = smer;
 
             // nsatavi hitrost glede na razdaljo do staje ali tocke
-            if ((ovcar.transform.position - cilj).magnitude < df || (ovcar.transform.position - tocka.transform.position).magnitude < d0)  // blizu cilja ali ovcam
+            if ((transform.position - cilj).magnitude < df || (transform.position - tocka).magnitude < d0)  // blizu cilja ali ovcam
             {
                 hitrost = hitrost * 0.9f + v1 * 0.1f;
             }
@@ -193,17 +189,17 @@ public class OvcarFunkcije : MonoBehaviour
             {
                 hitrost = hitrost * 0.9f + v2 * 0.1f;
             }
-            smer = IzogibOgraji(transform.position, smer);
-            Vector3 step = ovcar.transform.position + Time.deltaTime * hitrost * smer;
+            smer = IzogibOgraji(- center + transform.position, smer);
+            Vector3 step = transform.position + Time.deltaTime * hitrost * smer;
             Vector3 p = Vector3.MoveTowards(transform.position, step, hitrost);
-            if (p.x > 49f) { GetComponent<Rigidbody>().MovePosition(new Vector3(49f, 0f, p.z)); }  // da se ne zatakne v stajo, ker ne zna ven
+            if (p.x > center.x  + 49f) { GetComponent<Rigidbody>().MovePosition(center + new Vector3(49f, 0f, p.z)); }  // da se ne zatakne v stajo, ker ne zna ven
             else { GetComponent<Rigidbody>().MovePosition(p); }
-            ovcar.transform.LookAt(p + smer);
+            transform.LookAt(p + smer);
         }
-        if (ovcar.transform.position.y < 0f || ovcar.transform.position.y > 0.03f)  // tudi pes naj ne leti, rije ali se vrti na raznju
+        if (transform.position.y < 0f || transform.position.y > 0.05f)  // tudi pes naj ne leti, rije ali se vrti na raznju
         {
-            ovcar.transform.position = new Vector3(ovcar.transform.position.x, 0f, ovcar.transform.position.z);
-            ovcar.transform.forward = new Vector3(ovcar.transform.forward.x, 0f, ovcar.transform.forward.z);
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+            transform.forward = new Vector3(transform.forward.x, 0f, transform.forward.z);
         }
 
     }

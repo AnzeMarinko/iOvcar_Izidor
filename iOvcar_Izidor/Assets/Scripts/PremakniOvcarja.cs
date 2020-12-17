@@ -7,7 +7,6 @@ using UnityEngine;
 public class PremakniOvcarja : MonoBehaviour
 {
     public OvcarEnum.ObnasanjePsa obnasanjeOvcarja;   // nacin vodenja ovcarja nastavljen v gui
-    public float vMax = StaticClass.vMax;  // Najvisja hitrost premikanja ovcarjev (torej GetComponent<Rigidbody>().velocity.magnitude < 15)
 
     // pozeni pravi start glede na vodenje ovcarja
     void Start()

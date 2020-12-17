@@ -15,8 +15,9 @@ public class DNA
     public int ponovitev = 0;
     float minFit = 10000f;
     public List<float> fits = new List<float>();
+    int maxGeneracij;
 
-    public DNA(int gene, GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2)
+    public DNA(int gene, GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2, int mG)
     {
         generacija = gene;
         nOvc = n1;
@@ -26,7 +27,8 @@ public class DNA
         for (int i = 0; i < 21; i++) gen[i] = Random.Range(0f, 10001f) / 10000f;
         fitness = 0;
         casi = new List<float>();
-}
+        maxGeneracij = mG;
+    }
 
     public float GetFitness(float maxCas, float timer, float GCM, int ovce)
     {
@@ -38,7 +40,7 @@ public class DNA
         fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2);
         fitness += 1 / (GCM + 100f + ovce);
         fits.Add(fitness);
-        fitness = (ponovitev > 0 && StaticClass.kombinacija.obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && Evolucija.generation != SimulationManeger.maxGeneracij + 1)
+        fitness = (ponovitev > 0 && obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && generacija != maxGeneracij + 1)
             ? Mathf.Min(minFit, fitness) : fitness;
         minFit = fitness;
         float mean = 0;
@@ -53,7 +55,7 @@ public class DNA
     public string GenStr()
     {
         string gN;
-        if (generacija < SimulationManeger.maxGeneracij + 1 && StaticClass.kombinacija.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI1)
+        if (generacija < maxGeneracij + 1 && obnasanjePsa == OvcarEnum.ObnasanjePsa.AI1)
         {
             gN = "Generacija " + generacija + ", Fitness " + fits[ponovitev - 1] + ", Gen ";
         } else
@@ -69,7 +71,7 @@ public class DNA
 
     public DNA Crossover(DNA partner)
     {
-        DNA child = new DNA(generacija + 1, modelGibanja, nOvc, obnasanjePsa, nOvcarjev);
+        DNA child = new DNA(generacija + 1, modelGibanja, nOvc, obnasanjePsa, nOvcarjev, maxGeneracij);
         for (int i = 0; i < gen.Length; i++)
         {
             child.gen[i] = Random.Range(0f, 10001f) / 10000f > 0.5f ? gen[i] : partner.gen[i];

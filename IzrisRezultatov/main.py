@@ -11,6 +11,7 @@ import numpy as np
 #  doprinos dodatnega psa (razlika v porabljenem času ipd. v primerjavi z enim psom manj
 #  porazdelitev, min, max in povprečje parametra in fitnessa skozi čas (po generacijah)
 #  kako se je parameter spreminjal pri najboljšem skozi čas
+#  relativno odstopanje od povprečja
 
 
 colors = list(TABLEAU_COLORS)  # barve za locevanje med stevili ovc in ovcarjev
