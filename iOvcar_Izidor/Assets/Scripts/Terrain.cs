@@ -109,14 +109,16 @@ public class Terrain : MonoBehaviour
 
     private void Update()
     {
+        cumulativeRewardText.fontSize = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? 50f : 25f;
+        cumulativeRewardText.fontStyle = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? FontStyles.Bold : FontStyles.Normal;
         score = nOvc - sheepList.Count;
         // Update the cumulative reward text
-        cumulativeRewardText.text = (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? ovcarAgent.GetCumulativeReward().ToString("0.00") + "\n" : "") +
-            string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)) + "\n\n" +
+        cumulativeRewardText.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)) +
+            (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? ovcarAgent.GetCumulativeReward().ToString("0.00") + "\n" : "\n\n" +
             "Ovce: " + score + " / " + nOvc +
             "\n" + sm.DNA.modelGibanja.ToString() + ", " + sm.DNA.nOvcarjev + " " + sm.DNA.obnasanjePsa.ToString() +
             "\nGeneracija: " + (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 ? "Final" : sm.evolucija.generation.ToString()) + ",\nposkus: " + (sm.osebek + 1) + " (" + (sm.DNA.ponovitev + 1) +
-            ")\nMax. fitness v " + (sm.evolucija.generation - 1) + ". generaciji:\n" + sm.evolucija.maxFitness + "\n   Nad 1: " + sm.evolucija.steviloUspesnih;
+            ")\nMax. fitness v " + (sm.evolucija.generation - 1) + ". generaciji:\n" + sm.evolucija.maxFitness + "\n   Nad 1: " + sm.evolucija.steviloUspesnih);
         if (sheepList.Count == 0 || timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
             string dirName = "Rezultati/Rezultati" + "-" + obnasanjeOvcarja.ToString();

@@ -23,11 +23,6 @@ public class PremakniOvcarja : MonoBehaviour
                     GetComponent<OvcarAI1>().AI1Start();
                     break;
                 }
-            case OvcarEnum.ObnasanjePsa.AI2:
-                {
-                    GetComponent<OvcarAI2>().AI2Start();
-                    break;
-                }
             default: break;
         }
     }
@@ -45,11 +40,6 @@ public class PremakniOvcarja : MonoBehaviour
             case OvcarEnum.ObnasanjePsa.AI1:
                 {
                     GetComponent<OvcarAI1>().AI1Update();
-                    break;
-                }
-            case OvcarEnum.ObnasanjePsa.AI2:
-                {
-                    GetComponent<OvcarAI2>().AI2Update();
                     break;
                 }
             default: break;

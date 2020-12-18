@@ -9,8 +9,6 @@ public class OvcarAgent : Agent
 {
     public float moveSpeed = 5f;
     public float turnSpeed = 180f;
-    public GameObject heartPrefab;
-    public GameObject regurgitatedFishPrefab;
 
     private Terrain terrain;
     new private Rigidbody rigidbody;
@@ -125,18 +123,6 @@ public class OvcarAgent : Agent
     {
         if (!isFull) return; // Nothing to regurgitate
         isFull = false;
-
-        // Spawn regurgitated fish
-        GameObject regurgitatedFish = Instantiate<GameObject>(regurgitatedFishPrefab);
-        regurgitatedFish.transform.parent = transform.parent;
-        regurgitatedFish.transform.position = staja;
-        Destroy(regurgitatedFish, 4f);
-
-        // Spawn heart
-        GameObject heart = Instantiate<GameObject>(heartPrefab);
-        heart.transform.parent = transform.parent;
-        heart.transform.position = staja + Vector3.up;
-        Destroy(heart, 4f);
 
         AddReward(1f);
 

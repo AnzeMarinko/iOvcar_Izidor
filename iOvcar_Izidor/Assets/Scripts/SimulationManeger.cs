@@ -22,7 +22,11 @@ public class SimulationManeger
     {
         zacetek = true;
         if (SceneManager.GetActiveScene().name == "testScene")
-        { obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi); obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1); }
+        {
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2); 
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1);
+        }
         else
         {
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);

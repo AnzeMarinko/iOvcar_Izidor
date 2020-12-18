@@ -469,7 +469,8 @@ MonoBehaviour:
   timer: 0
   ovcaGO: {fileID: 3698624625586939356, guid: 9cf998d37834a9048b0937eddae8532b, type: 3}
   ovcarGO: {fileID: 6195183683334364057, guid: 4e960c6b9b1efcb4ebf208da1d522d4f, type: 3}
-  ovcarGOML: {fileID: 0}
+  ovcarGOML: {fileID: 6914850704291146381, guid: 178e60b70eeb8b149a01b39aa25cc4a0,
+    type: 3}
   kameraGO: {fileID: 5014267330574818082, guid: 4621bca61cc62044d9bdfc5732f7be1a,
     type: 3}
   napisGO: {fileID: 1369654043507416486, guid: de28edc6495c8294f823728efa86d7e3, type: 3}
@@ -861,7 +862,7 @@ GameObject:
   - component: {fileID: 4663742407028275174}
   m_Layer: 0
   m_Name: ograja
-  m_TagString: Untagged
+  m_TagString: Fire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
