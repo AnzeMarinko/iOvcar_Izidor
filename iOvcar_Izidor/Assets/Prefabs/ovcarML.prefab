@@ -5637,6 +5637,7 @@ GameObject:
   - component: {fileID: 6914850704291380973}
   - component: {fileID: 6914850704300660401}
   - component: {fileID: 4895930738342009605}
+  - component: {fileID: 478010239891298119}
   - component: {fileID: 1613051772606736440}
   - component: {fileID: 3496811545696193522}
   - component: {fileID: -7908033445289428159}
@@ -5699,9 +5700,20 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 10000
-  moveSpeed: 5
-  turnSpeed: 180
+  MaxStep: 24000
+--- !u!114 &478010239891298119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6914850704291146381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64932799d4c89eb4c933309931a2f51f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obnasanjeOvcarja: 0
 --- !u!54 &1613051772606736440
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5747,13 +5759,13 @@ MonoBehaviour:
   m_BrainParameters:
     VectorObservationSize: 16
     NumStackedVectorObservations: 1
-    VectorActionSize: 0300000005000000
+    VectorActionSize: 0500000009000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
-  m_BehaviorName: Ovcar
+  m_BehaviorType: 0
+  m_BehaviorName: iOvcarML
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -5777,13 +5789,13 @@ MonoBehaviour:
   - Finish
   - Fire
   - Untagged
-  m_RaysPerDirection: 3
-  m_MaxRayDegrees: 70
+  m_RaysPerDirection: 15
+  m_MaxRayDegrees: 90
   m_SphereCastRadius: 0.5
-  m_RayLength: 20
+  m_RayLength: 50
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 3
   m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
