@@ -75,6 +75,9 @@ public class Terrain : MonoBehaviour
         if (timer < maxCas) sm.DNA.casi.Add(timer);
         sheepList.Remove(sheepObject);
         Destroy(sheepObject);
+        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
+            foreach (GameObject oa in sheepardList)
+                oa.GetComponent<OvcarAgent>().AddReward(maxCas - timer);
     }
 
     private void RemoveAllSheep()
@@ -118,8 +121,11 @@ public class Terrain : MonoBehaviour
             ZapisiRezultate();
             ResetTerrain();
             if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
-                foreach(GameObject oa in sheepardList)
-                    oa.GetComponent<OvcarAgent>().EndEpisode();
+                foreach (GameObject oa in sheepardList)
+                {
+                    oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow(maxCas - timer, 3) * 100);
+                    oa.GetComponent<OvcarAgent>().EndEpisode(); 
+                }
         }
         else
         {
@@ -167,14 +173,21 @@ public class Terrain : MonoBehaviour
         using (StreamWriter sw = File.AppendText(fileName))
         //    Appends text at the end of an existing file
         {
-            Vector3 GCM = new Vector3(0f, 0f, 0f);
-            foreach (GameObject ovca in sheepList)
+            if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
             {
-                GCM += ovca.transform.position;
+                // Rezultate piši le ko se na koncu testira
             }
-            sm.DNA.GetFitness(maxCas, timer, (GCM - new Vector3(65f, 0f, 0f)).magnitude, nOvc);
-            sw.WriteLine(sm.DNA.GenStr());
-            sm.DNA.casi = new List<float>();
+            else
+            {
+                Vector3 GCM = new Vector3(0f, 0f, 0f);
+                foreach (GameObject ovca in sheepList)
+                {
+                    GCM += ovca.transform.position;
+                }
+                sm.DNA.GetFitness(maxCas, timer, (GCM - new Vector3(65f, 0f, 0f)).magnitude, nOvc);
+                sw.WriteLine(sm.DNA.GenStr());
+                sm.DNA.casi = new List<float>();
+            }
         }
     }
 }

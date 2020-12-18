@@ -27,9 +27,13 @@ public class SimulationManeger
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1);
         }
-        else
+        else if (SceneManager.GetActiveScene().name == "trainingScene")
         {
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
+        }
+        else
+        {
+            // vprasaj za novo kombinacijo
         }
     }
 

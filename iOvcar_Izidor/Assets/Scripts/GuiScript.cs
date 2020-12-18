@@ -19,7 +19,7 @@ using UnityEngine.SceneManagement;
  *   beleženja rezultatov požene), zraven gumbi za izbiro kombinacije (obnašanje psa možno ročno, AI1-Opt,
  *   Voronoi, AI2-Opt (brez gena), naključen gen, osnoven - gre lahko poljubno pred čredo, zbira vse ...) in
  *   gumb za uporabo nastavitev
- *   Torej na izbiro učenje, testiranje in zgolj prikaz (uporabljaj StaticClass)
+ *   Torej na izbiro učenje, testiranje (v tem primeru si zapisuj rezultate tudi za AI2) in zgolj prikaz (uporabljaj StaticClass)
  *   ko želi novo kombinacijo je ne prebere ampak ustavi čas in te vpraša za nastavitev nove kombinacije ali ponovitev prejšnje
  * 
  * Unity ML agents
@@ -37,6 +37,8 @@ public class GuiScript : MonoBehaviour
     string scena;
     float cas = 0;
     SimulationManeger sm;
+    float pavzaOd = 0;
+    float trajanjePavz = 0;
 
     public void Start()
     {
@@ -47,7 +49,7 @@ public class GuiScript : MonoBehaviour
 
     void Update()
     {
-        cas = Time.realtimeSinceStartup;
+        cas = Time.realtimeSinceStartup - trajanjePavz;
         if (Input.GetKey(KeyCode.Escape)) Application.Quit();
         if (Input.GetKey(KeyCode.P)) Time.timeScale = Time.timeScale > 0 ? 0f : 10f;
         sm = GameObject.FindGameObjectWithTag("Terrain").GetComponent<Terrain>().sm;
@@ -55,7 +57,17 @@ public class GuiScript : MonoBehaviour
 
     private void OnGUI()   // v zgornjem levem kotu napisi nekaj lastnosti simulacije in dodaj nekaj gumbov
     {
-        if (GUI.Button(new Rect(3, 0, 60, 20), Time.timeScale > 0 ? "Premor" : "Naprej")) { Time.timeScale = Time.timeScale > 0 ? 0f : 10f; }
+        if (GUI.Button(new Rect(3, 0, 60, 20), Time.timeScale > 0 ? "Premor" : "Naprej"))
+        {
+            Time.timeScale = Time.timeScale > 0 ? 0f : 10f;
+            if (Time.timeScale > 0)
+            {
+                trajanjePavz += Time.realtimeSinceStartup - pavzaOd;
+            } else
+            {
+                pavzaOd = Time.realtimeSinceStartup;
+            }
+        }
         if (GUI.Button(new Rect(120, 0, 60, 20), "Izhod")) { Application.Quit(); }
         GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR v0.3\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 360), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
             sm.DNA.nOvc + " " + sm.DNA.modelGibanja.ToString() + "\n" + sm.DNA.nOvcarjev + " " + sm.DNA.obnasanjePsa.ToString());
