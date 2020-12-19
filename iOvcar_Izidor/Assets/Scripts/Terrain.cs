@@ -31,7 +31,6 @@ public class Terrain : MonoBehaviour
 
     public void ResetTerrain()
     {
-        sm.SimulationStart();
         sm.SimulationUpdate();
         nOvc = sm.DNA.nOvc;
         nOvcarjev = sm.DNA.nOvcarjev;
@@ -75,9 +74,9 @@ public class Terrain : MonoBehaviour
         if (timer < maxCas) sm.DNA.casi.Add(timer);
         sheepList.Remove(sheepObject);
         Destroy(sheepObject);
-        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
+        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 && timer < maxCas)
             foreach (GameObject oa in sheepardList)
-                oa.GetComponent<OvcarAgent>().AddReward(maxCas - timer);
+                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc);
     }
 
     private void RemoveAllSheep()
@@ -101,6 +100,7 @@ public class Terrain : MonoBehaviour
         cumulativeRewardText = Instantiate(napisGO, transform.position + new Vector3(40f, 11f, 27f), Quaternion.Euler(25f, 0f, 0f), transform).GetComponent<TextMeshPro>();
         kamera = Instantiate(kameraGO, transform.position + new Vector3(0f, 100f, 0f), Quaternion.Euler(90f, 0f, 0f), transform);
         sm = new SimulationManeger();
+        sm.SimulationStart();
         ResetTerrain();
     }
 
@@ -119,13 +119,14 @@ public class Terrain : MonoBehaviour
         if (sheepList.Count == 0 || timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
             ZapisiRezultate();
-            ResetTerrain();
             if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
                 foreach (GameObject oa in sheepardList)
                 {
-                    oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow(maxCas - timer, 3) * 100);
-                    oa.GetComponent<OvcarAgent>().EndEpisode(); 
+                    if (sheepList.Count == 0)
+                        oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow(maxCas - timer, 2) * 10);
+                    oa.GetComponent<OvcarAgent>().EndEpisode();
                 }
+            ResetTerrain();
         }
         else
         {
@@ -150,34 +151,34 @@ public class Terrain : MonoBehaviour
 
     public void ZapisiRezultate()
     {
-        string dirName = "Rezultati/Rezultati" + "-" + obnasanjeOvcarja.ToString();
-        if (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 || sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
+        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
         {
-            dirName += "-Final";
+            // Rezultate piši le ko se na koncu testira
         }
-        if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
-        string fileName = dirName + "/" + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev
-            + ".txt";
-
-        if (!File.Exists(fileName))
+        else
         {
-            // Create a file to write to.
-            using (StreamWriter sw = File.CreateText(fileName))
+            string dirName = "Rezultati/Rezultati" + "-" + obnasanjeOvcarja.ToString();
+            if (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 || sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
             {
-                sw.WriteLine("\t" + nOvc + modelGibanja.ToString() + " ovc\n\t" + nOvcarjev +
-                " " + obnasanjeOvcarja.ToString() + " ovcarjev");
+                dirName += "-Final";
             }
-        }
+            if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
+            string fileName = dirName + "/" + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev
+                + ".txt";
 
-        // This text is always added, making the file longer over time
-        using (StreamWriter sw = File.AppendText(fileName))
-        //    Appends text at the end of an existing file
-        {
-            if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
+            if (!File.Exists(fileName))
             {
-                // Rezultate piši le ko se na koncu testira
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(fileName))
+                {
+                    sw.WriteLine("\t" + nOvc + modelGibanja.ToString() + " ovc\n\t" + nOvcarjev +
+                    " " + obnasanjeOvcarja.ToString() + " ovcarjev");
+                }
             }
-            else
+
+            // This text is always added, making the file longer over time
+            using (StreamWriter sw = File.AppendText(fileName))
+            //    Appends text at the end of an existing file
             {
                 Vector3 GCM = new Vector3(0f, 0f, 0f);
                 foreach (GameObject ovca in sheepList)

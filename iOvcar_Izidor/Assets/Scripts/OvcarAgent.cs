@@ -8,8 +8,8 @@ using System.Linq;
 
 public class OvcarAgent : Agent
 {
-    readonly float[] moveSpeed = { 0, StaticClass.vMax / 3f, StaticClass.vMax * 2f/3f, StaticClass.vMax };
-    readonly float[] turnSpeed = { -45f, -20f, -5f, 0f, 5f, 20f, 45f };
+    readonly float[] moveSpeed = { StaticClass.vMax / 3f, StaticClass.vMax * 2f/3f, StaticClass.vMax };
+    readonly float[] turnSpeed = { -40f, -10f, 0f, 10f, 40f };
 
     private Terrain terrain;
     new private Rigidbody rigidbody;
@@ -30,13 +30,14 @@ public class OvcarAgent : Agent
         // Convert the second action to turning left or right
         float turn = turnSpeed[actionBuffers.DiscreteActions[1]];
         // Apply movement
-        rigidbody.MovePosition(transform.position + transform.forward * forwardAmount * Time.fixedDeltaTime);
-        transform.Rotate(transform.up * turn * Time.fixedDeltaTime);
+        rigidbody.MovePosition(transform.position + transform.forward * forwardAmount * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+        transform.forward = new Vector3(transform.forward.x, 0f, transform.forward.z);
         if (transform.position.y < 0f || transform.position.y > 0.05f)  // tudi pes naj ne leti, rije ali se vrti na raznju
         {
             transform.position = new Vector3(transform.position.x, 0.01f, transform.position.z);
-            transform.forward = new Vector3(transform.forward.x, 0.01f, transform.forward.z);
         }
+        transform.Rotate(transform.up * turn * Time.deltaTime);
 
         float doNajblizje = 1000;
         Vector3 GCM = new Vector3(0f, 0f, 0f);
@@ -46,17 +47,18 @@ public class OvcarAgent : Agent
             GCM += o.transform.position;
         }
         float razprsenost = 0;
+        if (terrain.sheepList.Count > 0) GCM /= terrain.sheepList.Count;
         foreach (GameObject o in terrain.sheepList)
         {
             razprsenost += Mathf.Pow((GCM - o.transform.position).magnitude, 2);
         }
-        AddReward(- doNajblizje / 10000f);   // majhna nagrada za blizu vsaj kaksni ovci
+        AddReward((1000f - Mathf.Pow(doNajblizje, 2)) / 1000000f * Time.deltaTime - Time.deltaTime / 2);   // majhna nagrada za blizu vsaj kaksni ovci
         if (terrain.sheepList.Count > 0)
         {
-            AddReward(- Mathf.Sqrt(razprsenost / terrain.sheepList.Count) / 500);     // vecja nagrada ce je creda bolj skupaj
-            AddReward(-(GCM / terrain.sheepList.Count - staja).magnitude / 50f);     // se vecja nagrada ce je creda blizu staji
+            AddReward((2500 - razprsenost / terrain.sheepList.Count) / 5000 * Time.deltaTime);     // vecja nagrada ce je creda bolj skupaj
+            // AddReward((50f - (GCM - staja).magnitude) / 500f * Time.deltaTime);     // se vecja nagrada ce je creda blizu staji
         }
-        // v terrain se izvedejo tudi nagrade za oce ko pridejo v stajo
+        // v terrain se izvedejo tudi nagrade za ovce ko pridejo v stajo
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -66,17 +68,17 @@ public class OvcarAgent : Agent
         if (Input.GetKey(KeyCode.W))
         {
             // move forward
-            forwardAction = 3;
+            forwardAction = 2;
         }
         if (Input.GetKey(KeyCode.A))
         {
             // turn left
-            turnAction = 1;
+            turnAction = 0;
         }
         else if (Input.GetKey(KeyCode.D))
         {
             // turn right
-            turnAction = 5;
+            turnAction = 4;
         }
 
         // Put the actions into the array
@@ -91,19 +93,17 @@ public class OvcarAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        List<Vector3> razdaljeDoOvc = new List<Vector3>();
-        foreach (GameObject o in terrain.sheepList) razdaljeDoOvc.Add(o.transform.position - transform.position);
-        razdaljeDoOvc = razdaljeDoOvc.OrderBy(order => order.magnitude).ToList();  // urejen seznam razdalij do ovc
-        List<Vector3> razdaljeDoOvcarjev = new List<Vector3>();
-        foreach (GameObject o in terrain.sheepardList) razdaljeDoOvcarjev.Add(o.transform.position - transform.position);
-        razdaljeDoOvcarjev = razdaljeDoOvcarjev.OrderBy(order => order.magnitude).ToList();  // urejen seznam razdalij do ovcarjev
-        
         Vector3 GCM = new Vector3(0f, 0f, 0f);
-        int velikostCelice = 0;
+        Vector3 najdljeStaji = new Vector3(0f, 0f, 0f);
+        float razdalja = 0f;
         foreach (GameObject o in terrain.sheepList)
         {
+            if ((staja - o.transform.position).magnitude > razdalja)
+            {
+                razdalja = (staja - o.transform.position).magnitude;
+                najdljeStaji = o.transform.position - transform.position;
+            }
             GCM += o.transform.position;
-            if (o.GetComponent<GinelliOvca>().voronoiPes == this.gameObject) velikostCelice++;
         }
         if (terrain.sheepList.Count > 0)
         {
@@ -111,54 +111,32 @@ public class OvcarAgent : Agent
         }
         sensor.AddObservation((GCM - transform.position).normalized);  // 1 Vector3 = 3 values
         sensor.AddObservation((GCM - transform.position).magnitude);  // 1 float = 1 value
-        sensor.AddObservation(velikostCelice);  // 1 float = 1 value
 
         sensor.AddObservation(terrain.sheepList.Count);  // 1 float = 1 value
         sensor.AddObservation(terrain.sheepardList.Count);  // 1 float = 1 value
 
+        List<Vector3> razdaljeDoOvc = new List<Vector3>();
+        foreach (GameObject o in terrain.sheepList) razdaljeDoOvc.Add(o.transform.position - GCM);
+        razdaljeDoOvc = razdaljeDoOvc.OrderBy(order => - order.magnitude).ToList();  // urejen seznam razdalij ovc do crede padajoc
+        List<Vector3> razdaljeDoOvcarjev = new List<Vector3>();
+        foreach (GameObject o in terrain.sheepardList) razdaljeDoOvcarjev.Add(o.transform.position - transform.position);
+        razdaljeDoOvcarjev = razdaljeDoOvcarjev.OrderBy(order => order.magnitude).ToList();  // urejen seznam razdalij do ovcarjev
+
         for (int i = 0; i < 5; i++)       // 5 Vector3, 5 float = 20 values
         {
-            if (i >= terrain.sheepList.Count)
-            { 
-                sensor.AddObservation(razdaljeDoOvc[0].normalized);
-                sensor.AddObservation(razdaljeDoOvc[0].magnitude);
-            }
-            else
-            {
-                sensor.AddObservation(razdaljeDoOvc[i].normalized);
-                sensor.AddObservation(razdaljeDoOvc[i].magnitude);
-            }
-        }
-        for (int i = 1; i < 3; i++)       // 2 Vector3, 2 float = 8 values
-        {
-            if (i >= terrain.sheepardList.Count)
-            {
-                sensor.AddObservation(razdaljeDoOvcarjev[0].normalized);
-                sensor.AddObservation(razdaljeDoOvcarjev[0].magnitude);
-            }
-            else
-            {
-                sensor.AddObservation(razdaljeDoOvcarjev[i].normalized);
-                sensor.AddObservation(razdaljeDoOvcarjev[i].magnitude);
-            }
+            sensor.AddObservation(razdaljeDoOvc[i >= terrain.sheepList.Count ? 0 : i].normalized);
+            sensor.AddObservation(razdaljeDoOvc[i >= terrain.sheepList.Count ? 0 : i].magnitude);
         }
         // Direction penguin is facing (1 Vector3 = 3 values)
         sensor.AddObservation(transform.forward);
 
-        // staja glede na ovcarja, GCM, najblizje in najbolj oddaljene ovce)
-        sensor.AddObservation((transform.position - staja).normalized);  // 1 Vector3 = 3 values
-        sensor.AddObservation((transform.position - staja).magnitude);  // 1 float = 1 value
         sensor.AddObservation((GCM - staja).normalized);  // 1 Vector3 = 3 values
         sensor.AddObservation((GCM - staja).magnitude);  // 1 float = 1 value
 
-        List<Vector3> razdaljeDoStaje = new List<Vector3>();
-        foreach (GameObject o in terrain.sheepList) razdaljeDoStaje.Add(o.transform.position - staja);
-        razdaljeDoStaje = razdaljeDoStaje.OrderBy(order => order.magnitude).ToList();  // urejen seznam razdalij do ovc
-        sensor.AddObservation(razdaljeDoStaje[0].normalized);  // 1 Vector3 = 3 values
-        sensor.AddObservation(razdaljeDoStaje[0].magnitude);  // 1 float = 1 value
-        sensor.AddObservation(razdaljeDoStaje[terrain.sheepList.Count - 1].normalized);  // 1 Vector3 = 3 values
-        sensor.AddObservation(razdaljeDoStaje[terrain.sheepList.Count - 1].magnitude);  // 1 float = 1 value
+        sensor.AddObservation(najdljeStaji.normalized);  // 1 Vector3 = 3 values
+        sensor.AddObservation(najdljeStaji.magnitude);  // 1 float = 1 value
+        sensor.AddObservation(razdalja);  // 1 float = 1 value
 
-        // (3 + 1 + 1) + (1 + 1) + (20 + 8) + 3 + (3 + 1 + 3 + 1 + 3 + 1 + 3 + 1) = 54 total values
+        // (3 + 1) + (1 + 1) + 20 + 3 + (3 + 1 + 3 + 1 + 1) = 38 total values
     }
 }

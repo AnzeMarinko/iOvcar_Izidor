@@ -5757,9 +5757,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 54
+    VectorObservationSize: 38
     NumStackedVectorObservations: 1
-    VectorActionSize: 0500000009000000
+    VectorActionSize: 0300000005000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 0}
@@ -5789,10 +5789,10 @@ MonoBehaviour:
   - Finish
   - Fire
   - Untagged
-  m_RaysPerDirection: 15
-  m_MaxRayDegrees: 90
+  m_RaysPerDirection: 30
+  m_MaxRayDegrees: 100
   m_SphereCastRadius: 0.5
-  m_RayLength: 50
+  m_RayLength: 70
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 3

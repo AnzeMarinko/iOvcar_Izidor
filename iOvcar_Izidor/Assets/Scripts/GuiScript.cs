@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 /* TODO:
  * 
  * 
+ * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji
  * guiscript s tipkami, meniji in menjavo scene
  * optimalne gene mora tudi znati prebrati in iz njih ekstrapolirati za nove kombinacije
  * spreminjajoči AI1 - spreminjanje optimalnega gena glede na naučene kombinacije
@@ -43,7 +44,7 @@ public class GuiScript : MonoBehaviour
     public void Start()
     {
         scena = SceneManager.GetActiveScene().name;
-        Time.timeScale = 0f;
+        Time.timeScale = 10f;
         Time.maximumDeltaTime = 0.1f;
     }
 
@@ -59,7 +60,7 @@ public class GuiScript : MonoBehaviour
     {
         if (GUI.Button(new Rect(3, 0, 60, 20), Time.timeScale > 0 ? "Premor" : "Naprej"))
         {
-            Time.timeScale = Time.timeScale > 0 ? 0f : 10f;
+            // Time.timeScale = Time.timeScale > 0 ? 0f : 10f;
             if (Time.timeScale > 0)
             {
                 trajanjePavz += Time.realtimeSinceStartup - pavzaOd;
@@ -69,7 +70,7 @@ public class GuiScript : MonoBehaviour
             }
         }
         if (GUI.Button(new Rect(120, 0, 60, 20), "Izhod")) { Application.Quit(); }
-        GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR v0.3\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 360), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
+        GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR v0.3\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
             sm.DNA.nOvc + " " + sm.DNA.modelGibanja.ToString() + "\n" + sm.DNA.nOvcarjev + " " + sm.DNA.obnasanjePsa.ToString());
         if (GUI.Button(new Rect(3, 110, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
         { GetComponent<Camera>().depth *= -1; }
