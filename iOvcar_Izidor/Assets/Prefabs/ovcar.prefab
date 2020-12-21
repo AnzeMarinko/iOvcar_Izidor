@@ -9890,7 +9890,6 @@ GameObject:
   - component: {fileID: 4720581736683571006}
   - component: {fileID: 2812356526409490306}
   - component: {fileID: 5866246449082139575}
-  - component: {fileID: 3394695774314245294}
   - component: {fileID: 4217868690808781542}
   m_Layer: 0
   m_Name: ovcar
@@ -9908,7 +9907,7 @@ Transform:
   m_GameObject: {fileID: 6195183683334364057}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 6195183683334787049}
   - {fileID: 6195183683334787063}
@@ -9963,8 +9962,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obnasanjeOvcarja: 0
-  vMax: 7.5
-  terrain: {fileID: 0}
 --- !u!114 &4720581736683571006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10003,19 +10000,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smer: {x: 0, y: 0, z: 0}
   tocka: {x: 0, y: 0, z: 0}
---- !u!114 &3394695774314245294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6195183683334364057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ed50baf4e73e8a41bff797a099a5645, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  smer: {x: 0, y: 0, z: 0}
 --- !u!136 &4217868690808781542
 CapsuleCollider:
   m_ObjectHideFlags: 0
