@@ -9,7 +9,6 @@ using System.IO;
 
 public class Terrain : MonoBehaviour
 {
-    public OvcarAgent ovcarAgent;
     private TextMeshPro cumulativeRewardText;
     public List<GameObject> sheepList;
     public List<GameObject> sheepardList;
@@ -32,7 +31,6 @@ public class Terrain : MonoBehaviour
 
     public void ResetTerrain()
     {
-        sm.SimulationStart();
         sm.SimulationUpdate();
         nOvc = sm.DNA.nOvc;
         nOvcarjev = sm.DNA.nOvcarjev;
@@ -76,11 +74,9 @@ public class Terrain : MonoBehaviour
         if (timer < maxCas) sm.DNA.casi.Add(timer);
         sheepList.Remove(sheepObject);
         Destroy(sheepObject);
-    }
-
-    public int SheepRemaining
-    {
-        get { return sheepList.Count; }
+        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 && timer < maxCas && score > 2)
+            foreach (GameObject oa in sheepardList)
+                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc * 100);
     }
 
     private void RemoveAllSheep()
@@ -104,20 +100,62 @@ public class Terrain : MonoBehaviour
         cumulativeRewardText = Instantiate(napisGO, transform.position + new Vector3(40f, 11f, 27f), Quaternion.Euler(25f, 0f, 0f), transform).GetComponent<TextMeshPro>();
         kamera = Instantiate(kameraGO, transform.position + new Vector3(0f, 100f, 0f), Quaternion.Euler(90f, 0f, 0f), transform);
         sm = new SimulationManeger();
+        sm.SimulationStart();
         ResetTerrain();
     }
 
     private void Update()
     {
+        cumulativeRewardText.fontSize = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? 50f : 25f;
+        cumulativeRewardText.fontStyle = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? FontStyles.Bold : FontStyles.Normal;
         score = nOvc - sheepList.Count;
         // Update the cumulative reward text
-        cumulativeRewardText.text = (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? ovcarAgent.GetCumulativeReward().ToString("0.00") + "\n" : "") +
-            string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)) + "\n\n" +
+        cumulativeRewardText.text = string.Format("{0:0}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)) +
+            (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? " (" + (sheepardList[0].GetComponent<OvcarAgent>().CompletedEpisodes + 1) +
+            ")\n:: " + sheepardList[0].GetComponent<OvcarAgent>().GetCumulativeReward().ToString("0.00") + " ::\nV staji: " + score + " / " + nOvc : "\n\n" +
             "Ovce: " + score + " / " + nOvc +
-            "\n" + sm.DNA.modelGibanja.ToString() + ", " + sm.DNA.nOvcarjev + " " + sm.DNA.obnasanjePsa.ToString() +
             "\nGeneracija: " + (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 ? "Final" : sm.evolucija.generation.ToString()) + ",\nposkus: " + (sm.osebek + 1) + " (" + (sm.DNA.ponovitev + 1) +
-            ")\nMax. fitness v " + (sm.evolucija.generation - 1) + ". generaciji:\n" + sm.evolucija.maxFitness + "\n   Nad 1: " + sm.evolucija.steviloUspesnih;
+            ")\nMax. fitness v " + (sm.evolucija.generation - 1) + ". generaciji:\n" + sm.evolucija.maxFitness + "\n   Nad 1: " + sm.evolucija.steviloUspesnih);
         if (sheepList.Count == 0 || timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
+        {
+            ZapisiRezultate();
+            if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
+                foreach (GameObject oa in sheepardList)
+                {
+                    if (sheepList.Count == 0)
+                        oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow(maxCas - timer, 2) * 1000000);
+                    oa.GetComponent<OvcarAgent>().EndEpisode();
+                }
+            ResetTerrain();
+        }
+        else
+        {
+            timer += Time.deltaTime;
+            Vector3 GCM = new Vector3(0f, 0f, 0f);
+            foreach (GameObject ovca in sheepList)
+            {
+                GCM += ovca.transform.position;
+            }
+            GCM /= sheepList.Count;
+            float razdalja = 0f;
+            foreach (GameObject ovca in sheepList)
+            {
+                razdalja += (ovca.transform.position - GCM).magnitude;
+            }
+            razdalja /= sheepList.Count;
+            razdalja *= 8;
+            razdalja = Mathf.Min(Mathf.Max(razdalja, 25f), 75f);
+            kamera.transform.position = new Vector3(GCM.x, razdalja / Mathf.Tan(Mathf.PI / 12), GCM.z) * 0.05f + kamera.transform.position * 0.95f;
+        }
+    }
+
+    public void ZapisiRezultate()
+    {
+        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
+        {
+            // Rezultate piši le ko se na koncu testira
+        }
+        else
         {
             string dirName = "Rezultati/Rezultati" + "-" + obnasanjeOvcarja.ToString();
             if (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 || sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
@@ -151,26 +189,6 @@ public class Terrain : MonoBehaviour
                 sw.WriteLine(sm.DNA.GenStr());
                 sm.DNA.casi = new List<float>();
             }
-            ResetTerrain();
-        }
-        else
-        {
-            timer += Time.deltaTime;
-            Vector3 GCM = new Vector3(0f, 0f, 0f);
-            foreach (GameObject ovca in sheepList)
-            {
-                GCM += ovca.transform.position;
-            }
-            GCM /= sheepList.Count;
-            float razdalja = 0f;
-            foreach (GameObject ovca in sheepList)
-            {
-                razdalja += (ovca.transform.position - GCM).magnitude;
-            }
-            razdalja /= sheepList.Count;
-            razdalja *= 8;
-            razdalja = Mathf.Min(Mathf.Max(razdalja, 25f), 75f);
-            kamera.transform.position = new Vector3(GCM.x, razdalja / Mathf.Tan(Mathf.PI / 12), GCM.z) * 0.05f + kamera.transform.position * 0.95f;
         }
     }
 }

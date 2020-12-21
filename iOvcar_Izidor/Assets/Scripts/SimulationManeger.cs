@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class SimulationManeger
 {
     public int steviloPonovitev = 40;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
-    public int[] nOvc1 = { 5, 10, 25, 50, 75, 100 };
+    public int[] nOvc1 = { 25, 5, 10, 25, 50, 75, 100 };
     public int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
     public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom, GinelliOvca.ModelGibanja.Stroembom };
     public List<OvcarEnum.ObnasanjePsa> obnasanjeOvcarja = new List<OvcarEnum.ObnasanjePsa>();  //, OvcarEnum.ObnasanjePsa.AI2 };
@@ -22,10 +22,18 @@ public class SimulationManeger
     {
         zacetek = true;
         if (SceneManager.GetActiveScene().name == "testScene")
-        { obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi); obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1); }
-        else
+        {
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2); 
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1);
+        }
+        else if (SceneManager.GetActiveScene().name == "trainingScene")
         {
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
+        }
+        else
+        {
+            // vprasaj za novo kombinacijo
         }
     }
 
@@ -44,12 +52,15 @@ public class SimulationManeger
 
     void ZamenjajKombinacijo()
     {
-        ZapisiGen(DNA.modelGibanja, DNA.nOvc, DNA.obnasanjePsa, DNA.nOvcarjev, DNA.gen);
-        VrniKombinacijo();
-        if (0 == kombinacije.ToArray().Length) Application.Quit();
-        evolucija = new Evolucija(kombinacije[0].modelGibanja, kombinacije[0].nOvc, kombinacije[0].obnasanjePsa, kombinacije[0].nOvcarjev);
-        DNA = evolucija.population[0];
-        osebek = 0;
+        if (DNA.obnasanjePsa != OvcarEnum.ObnasanjePsa.AI2)
+        {
+            ZapisiGen(DNA.modelGibanja, DNA.nOvc, DNA.obnasanjePsa, DNA.nOvcarjev, DNA.gen);
+            VrniKombinacijo();
+            if (0 == kombinacije.ToArray().Length) Application.Quit();
+            evolucija = new Evolucija(kombinacije[0].modelGibanja, kombinacije[0].nOvc, kombinacije[0].obnasanjePsa, kombinacije[0].nOvcarjev);
+            DNA = evolucija.population[0];
+            osebek = 0;
+        }
     }
 
     public void SimulationUpdate()
