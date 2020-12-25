@@ -22,7 +22,7 @@ public class Terrain : MonoBehaviour
     public GameObject ovcarGO;
     public GameObject ovcarGOML;
     int score = 0;  // rezultat za izpis
-    readonly float maxCas = 180f;  // casovna omejitev simulacije
+    float maxCas = 180f;  // casovna omejitev simulacije
     public GameObject kameraGO;
     private GameObject kamera;
     public GameObject napisGO;
@@ -39,6 +39,10 @@ public class Terrain : MonoBehaviour
         score = 0;
         timer = 0;
         RemoveAllSheep();
+        if (obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2)
+        {
+            maxCas = 480f;
+        }
         if (sheepardList.Count == 0 || obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2)
         { foreach (GameObject o in sheepardList) Destroy(o);
             sheepardList = new List<GameObject>();
@@ -54,9 +58,9 @@ public class Terrain : MonoBehaviour
     void AddSheep()
     {
         float phi = Random.Range(0f, 360f);  // dodaj ovco nekam na sredino
-        Vector2 loc = Random.insideUnitCircle * 20;
+        Vector2 loc = Random.insideUnitCircle * 20f;
         GameObject o = Instantiate(ovcaGO, transform.position + new Vector3(loc.x + 70f, 0f, loc.y + 70f), Quaternion.Euler(0f, phi, 0f), this.transform);
-        // o.GetComponent<GinelliOvca>().model = modelGibanja;
+        o.GetComponent<GinelliOvca>().model = modelGibanja;
         o.transform.SetParent(this.transform);
         sheepList.Add(o);
     }
@@ -76,7 +80,7 @@ public class Terrain : MonoBehaviour
         Destroy(sheepObject);
         if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 && timer < maxCas && score > 2)
             foreach (GameObject oa in sheepardList)
-                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc * 100);
+                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc * 10);
     }
 
     private void RemoveAllSheep()
@@ -123,7 +127,7 @@ public class Terrain : MonoBehaviour
                 foreach (GameObject oa in sheepardList)
                 {
                     if (sheepList.Count == 0)
-                        oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow(maxCas - timer, 2) * 1000000);
+                        oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow(maxCas - timer, 2) * 10000);
                     oa.GetComponent<OvcarAgent>().EndEpisode();
                 }
             ResetTerrain();

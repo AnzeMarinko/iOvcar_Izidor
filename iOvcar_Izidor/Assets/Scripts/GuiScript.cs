@@ -44,8 +44,8 @@ public class GuiScript : MonoBehaviour
     public void Start()
     {
         scena = SceneManager.GetActiveScene().name;
-        Time.timeScale = 10f;
-        Time.maximumDeltaTime = 0.1f;
+        Time.timeScale = 50f;
+        Time.maximumDeltaTime = 0.02f;
     }
 
     void Update()
