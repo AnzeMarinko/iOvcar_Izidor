@@ -44,12 +44,30 @@ class Poskus:
 
 folder = "../iOvcar_Izidor/iOvcar-IZIDOR/Rezultati/"  # mapa z rezultati
 maxT = 180
-files = [folder + subfolder + "/" + file for subfolder in os.listdir(folder) for file in os.listdir(folder + subfolder)]
-data = [Poskus(file) for file in files]
+files = [folder + subfolder + "/" + file for subfolder in os.listdir(folder)
+         if ".txt" not in subfolder for file in os.listdir(folder + subfolder)]
+data = {(d.final, d.ovce, d.novc, d.ovcarji, d.novcarjev): (d.casi, d.geni, d.fitness) for d in
+        [Poskus(file) for file in files]}
+
 
 # uporabljeni parametri
-prop = [(poskus.ovce, poskus.novc, poskus.ovcarji, poskus.novcarjev) for poskus in data]
-gins = sorted(list({p[0] for p in prop}))
-novcs = sorted(list({r[1] for r in prop}))
-vods = sorted(list({o[2] for o in prop}))
-novcars = sorted(list({p[3] for p in prop}))
+gins = sorted(list({p[1] for p in data.keys()}))
+novcs = sorted(list({r[2] for r in data.keys()}))
+vods = sorted(list({o[3] for o in data.keys()}))
+novcars = sorted(list({p[4] for p in data.keys()}))
+
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import axes3d
+
+
+for i in range(len(data[(True, "Ginelli", 5, "AI1", 1)][1]["OptGen"][0])):
+    x, y = np.meshgrid(novcars, novcs)
+    z = np.array([[data.get((True, "Ginelli", n1, "AI1", n2),
+                            (0, {"OptGen": [[0] * (i+1)]}))[1]["OptGen"][0][i] for n2 in novcars] for n1 in novcs])
+    ax = plt.subplot(1, 1, 1, projection="3d")
+    ax.plot_surface(x, y, z)
+    ax.set_ylabel(f"Število ovc")
+    ax.set_xlabel(f"Število ovčarjev")
+    ax.set_zlabel(i)
+    plt.show()

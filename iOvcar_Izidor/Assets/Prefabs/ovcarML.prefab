@@ -5758,13 +5758,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 27
-    NumStackedVectorObservations: 2
-    VectorActionSize: 050000000300000002000000
+    VectorObservationSize: 19
+    NumStackedVectorObservations: 1
+    VectorActionSize: 0200000005000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 0}
-  m_InferenceDevice: 0
+  m_InferenceDevice: 1
   m_BehaviorType: 0
   m_BehaviorName: iOvcarML
   TeamId: 0
@@ -5789,14 +5789,14 @@ MonoBehaviour:
   - Ovcar
   - Finish
   - Fire
-  m_RaysPerDirection: 10
-  m_MaxRayDegrees: 145
-  m_SphereCastRadius: 7
-  m_RayLength: 50
+  m_RaysPerDirection: 4
+  m_MaxRayDegrees: 45
+  m_SphereCastRadius: 3
+  m_RayLength: 30
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 3
-  m_ObservationStacks: 5
+  m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
   m_StartVerticalOffset: 0
@@ -5813,7 +5813,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 5
+  DecisionPeriod: 7
   TakeActionsBetweenDecisions: 1
 --- !u!114 &-2376905867336154067
 MonoBehaviour:
