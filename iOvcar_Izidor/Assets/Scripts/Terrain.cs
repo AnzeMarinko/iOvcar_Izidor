@@ -80,7 +80,7 @@ public class Terrain : MonoBehaviour
         Destroy(sheepObject);
         if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 && timer < maxCas && score > 2)
             foreach (GameObject oa in sheepardList)
-                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc * 10);
+                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc * 10f);
     }
 
     private void RemoveAllSheep()
@@ -127,7 +127,7 @@ public class Terrain : MonoBehaviour
                 foreach (GameObject oa in sheepardList)
                 {
                     if (sheepList.Count == 0)
-                        oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow(maxCas - timer, 2) * 10000);
+                        oa.GetComponent<OvcarAgent>().AddReward(0f);   //  (maxCas - timer) * 100);
                     oa.GetComponent<OvcarAgent>().EndEpisode();
                 }
             ResetTerrain();

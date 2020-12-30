@@ -7,25 +7,21 @@ using UnityEngine.SceneManagement;
 
 /* TODO:
  * 
- * 
- * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji
- * guiscript s tipkami, meniji in menjavo scene
- * optimalne gene mora tudi znati prebrati in iz njih ekstrapolirati za nove kombinacije
- * spreminjajoči AI1 - spreminjanje optimalnega gena glede na naučene kombinacije
- *   (ko se zmanjša št. ovc spremeni parametre),
- * na podlagi kombinacije izračunaj parametre (predvidi tudi za nenaučeno - več ovc (150 in 200) ipd.)
- * testiraj predvidene gene (in tudi za najbližjo kombinacijo) in preizkusi ali je dosti slabše kot, če ga naučiš za točno to kombinacijo
- *   s tem vidiš ali je model overfitan s parametri samo za določeno kombinacijo (ne sme biti pretirano počasnejši za več ovc)
  * drsniki za ročno nastavljanje poljubnih parametrov (gumb, ki ustavi igro in ti ponudi izbiro in brez
  *   beleženja rezultatov požene), zraven gumbi za izbiro kombinacije (obnašanje psa možno ročno, AI1-Opt,
  *   Voronoi, AI2-Opt (brez gena), naključen gen, osnoven - gre lahko poljubno pred čredo, zbira vse ...) in
  *   gumb za uporabo nastavitev
  *   Torej na izbiro učenje, testiranje (v tem primeru si zapisuj rezultate tudi za AI2) in zgolj prikaz (uporabljaj StaticClass)
  *   ko želi novo kombinacijo je ne prebere ampak ustavi čas in te vpraša za nastavitev nove kombinacije ali ponovitev prejšnje
+ * guiscript s tipkami, meniji in menjavo scene
  * 
- * Unity ML agents
- * Evalvacija posameznih pristopov (ročno razviti psi, umetna inteligenca).
- * Odstrani izris in pospeši, uredi kodo, datoteke, lastnosti projekta
+ * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji
+ * optimalne gene mora tudi znati prebrati in iz njih interpolira za nove kombinacije
+ * testiraj predvidene gene (in tudi za najbližjo kombinacijo) in preizkusi ali je dosti slabše kot, če ga naučiš za točno to kombinacijo
+ *   s tem vidiš ali je model overfitan s parametri samo za določeno kombinacijo (ne sme biti pretirano počasnejši za več ovc)
+ * 
+ * 
+ * uredi kodo, datoteke, lastnosti projekta
  * 
  *      Dodatne ideje kot predlogi za nadaljnje delo:
  * Ovire ali drugačna oblika polja ali npr. voda kjer ovce nočejo hoditi

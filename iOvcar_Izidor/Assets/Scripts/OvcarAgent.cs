@@ -15,10 +15,8 @@ public class OvcarAgent : Agent
     float exRazprsenost = 10f;
     float exRazdalja = 50f;
     float exBlizu = 30f;
-    float minHitrost = 2f / 3f;
-    float razdelitevHitrosti = 2f;
-    float maxKot = 2f;
-    float razdelitevKota = 5f;
+    int razdelitevHitrosti = 3;
+    int razdelitevKota = 3;
 
     public override void Initialize()
     {
@@ -31,12 +29,13 @@ public class OvcarAgent : Agent
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         // Convert the first action to forward movement
-        float forwardAmount = (actionBuffers.DiscreteActions[0] / (razdelitevHitrosti - 1f) * (minHitrost - 1f) + 1f) * StaticClass.vMax;
+        float forwardAmount = (1f - actionBuffers.DiscreteActions[0] / (razdelitevHitrosti - 1f) / 3f) * StaticClass.vMax;
         // Convert the second action to turning left or right
-        float turn = (actionBuffers.DiscreteActions[1] / (razdelitevKota - 1f) - 0.5f) * 360f * maxKot / 10f;
+        float turn = actionBuffers.DiscreteActions[1] / (razdelitevKota - 1f) * 72f;
+        float side = actionBuffers.DiscreteActions[2] > 0.5f ? 1f : -1f;
         // Apply movement
         rigidbody.velocity = new Vector3(0f, 0f, 0f);
-        transform.Rotate(transform.up * turn * Time.deltaTime);
+        transform.Rotate(transform.up * turn * side * Time.deltaTime);
         transform.forward = new Vector3(transform.forward.x, 0f, transform.forward.z);
         rigidbody.MovePosition(transform.position + transform.forward * forwardAmount * Time.deltaTime);
         if (transform.position.y < 0f || transform.position.y > 0.05f)  // tudi pes naj ne leti, rije ali se vrti na raznju
@@ -45,7 +44,7 @@ public class OvcarAgent : Agent
         }
 
         Vector3 GCM = new Vector3(0f, 0f, 0f);
-        float najblizja = 50f;
+        float najblizja = 200f;
         foreach (GameObject o in terrain.sheepList)
         {
             najblizja = Mathf.Min(najblizja, (o.transform.position - transform.position).magnitude);
@@ -57,15 +56,15 @@ public class OvcarAgent : Agent
         {
             razprsenost += (GCM - o.transform.position).magnitude;
         }
-        AddReward(- Time.deltaTime / 100f);   // majhna nagrada za blizu vsaj kaksni ovci
+        AddReward(- Time.deltaTime / 10f);   // majhna nagrada za blizu vsaj kaksni ovci
         if (terrain.sheepList.Count > 0 && terrain.timer > 0.05f)
         {
-            if (najblizja > 5f)
-                AddReward(Mathf.Max(0f, exBlizu - najblizja) / 100f);
+            if (najblizja > 10f)
+                AddReward((exBlizu - najblizja) / (exBlizu - najblizja > 0f ? 1000f : 200f));
             else if (razprsenost > 5f)
-                AddReward(Mathf.Max(0f, exRazprsenost - razprsenost / terrain.sheepList.Count) / 100f);
+                AddReward((exRazprsenost - razprsenost / terrain.sheepList.Count) / 1000f);
             else
-                AddReward(Mathf.Max(0f, exRazdalja - (GCM - staja).magnitude) / 10f);
+                AddReward((exRazdalja - (GCM - staja).magnitude) / 10f);
         }
         exRazprsenost = razprsenost / terrain.sheepList.Count;
         exRazdalja = (GCM - staja).magnitude;
@@ -75,174 +74,43 @@ public class OvcarAgent : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
+        int hitrost = 0;
+        Vector3 smer = new Vector3(0f, 0f, 0f);
+        float[] obs = Observe();
         // Stroembom 10, AI1 1 Opt
         float[] zm = StaticClass.zgornjeMeje;
         float[] sm = StaticClass.spodnjeMeje;
-        float[] gen = { 0.8709f, 0.5468f, 0.7486f, 0.3398f, 0.3559f, 0.3024f, 0.184f, 0.3836f, 0.2992f, 0.2832f, 0.7336f, 0.2673f,
-            0.0587f, 0.4105f, 0.5105f, 0.562f, 0.0303f, 0.6609f, 0.9649f, 0.7463f, 0.9061f }; 
 
-        int i = 0;
-        float v1 = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float ra = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float dc = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float da = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float d0 = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float df = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float e = sm[i] + (zm[i] - sm[i]) * gen[i]; i += 4;
-        float pomenRazdalje = sm[0] + (zm[0] - sm[0]) * gen[0];
-        float pomenDoOvce = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float dovoljenoSpredaj = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float dovoljenoZadaj = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float pomenOvcarjev = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float protiTockiNazaj = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float udobnaRazdalja = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float blizuTocki = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float dljeCilju = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float rotiraj = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        float pomenSmeriDrugih = sm[i] + (zm[i] - sm[i]) * gen[i];
-
+        float d0 = sm[5] + (zm[5] - sm[5]) * 0.3024f;
+        float df = sm[6] + (zm[6] - sm[6]) * 0.184f;
         Vector3 center = transform.parent.GetComponent<Terrain>().center;
-        Vector3 smer = new Vector3(0f, 0f, 0f);
-        Vector3 prejsnaSmer = transform.forward.normalized;
-        float hitrost = 0f;
-        if (terrain.sheepList.Count > 0)
+        if (obs[0] > 0)
         {
-            Vector3 GCM = new Vector3(0f, 0f, 0f);   // skupno povprecje pozicij ovc
-            foreach (GameObject ovca in terrain.sheepList)
-            {
-                GCM += ovca.transform.position;
-            }
-            GCM /= terrain.sheepList.Count;
-            float fN = ra * Mathf.Sqrt(terrain.sheepList.Count);   // najvecja dovoljena velikost crede (polmer)
-
-            Vector3 pobeglaOvca = new Vector3(0f, 0f, 0f);   // lokacija pobegle ovce in njena razdalja do GCM
-            float doPobegle = 0;
-            float doCentra = 0;
-            bool soZbrane = true;
-            bool preblizu = false;
-            int pobeglih = 0;
-            foreach (GameObject ovca in terrain.sheepList)
-            {
-                float doOvce = (transform.position - ovca.transform.position).magnitude;
-                if (doOvce < da)
-                {
-                    preblizu = true;    // ce mora pes zaokroziti okrog kaksne ovce ker ji je preblizu
-                    // print("preblizu ovci -> zaokrozi");
-                }
-                float razdalja = (GCM - ovca.transform.position).magnitude;
-                if (razdalja > fN)
-                {
-                    pobeglih++;
-                }
-                // mera za dolocanje katero ovco je treba pripeljati blizje (razdalja do GCM bolj pomembna kot do ovcarja a tudi ta ni nepomembna)
-                float mera = Mathf.Pow(razdalja, pomenRazdalje) / Mathf.Pow(doOvce, pomenDoOvce);
-                if (ovca.GetComponent<GinelliOvca>().voronoiPes == this.gameObject && razdalja > fN && (staja - ovca.transform.position).magnitude > (GCM - staja).magnitude - dovoljenoSpredaj && mera > doPobegle)
-                {
-                    // pes vodi proti GCM le ovce v njegovi Voronoievi celici, ki so od cilja dlje kot gcm
-                    // ko ima celico prazno ali nobena ovca v njegovi celici ni pobegla, vodi celo credo, kot da je zbrana
-                    doCentra = razdalja;
-                    doPobegle = mera;
-                    pobeglaOvca = ovca.transform.position;
-                }
-            }
-            if (doCentra > fN && Mathf.Pow(terrain.sheepardList.Count, pomenOvcarjev) * pobeglih > terrain.sheepList.Count * dovoljenoZadaj)   // ce je pobeglih ovc vec kot 15% / #ovcarjev^2
-            {
-                soZbrane = false;
-            }
-
-            Vector3 Pc = new Vector3(0f, 0f, 0f);   // tocka za zbiranje ovc v credo ali nakljucni premik
-            Vector3 Pd = new Vector3(0f, 0f, 0f);   // tocka za vodenje crede
-            if (!soZbrane)
-            {
-                // ovcar se postavi zadaj za pobeglo ovco glede na credo
-                Pc = pobeglaOvca + (pobeglaOvca - GCM).normalized * dc - center;
-            }
-            else
-            {
-                // ovcar se postavi zadaj za credo glede na stajo
-                Pd = GCM + (GCM - staja).normalized * (fN + ra) - center;
-            }
-            // tocka znotraj ograje
-            Vector3 tocka = (center + new Vector3(Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).x)), 0f, Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).z))));
-
-            float premikNazaj = (transform.position - staja).magnitude - (tocka - staja).magnitude;
-            if (premikNazaj < 0)
-            {
-                smer = (transform.position - staja) * Mathf.Sqrt(-premikNazaj) + (tocka - transform.position) * protiTockiNazaj;
-            }
-            else smer = tocka - transform.position;
-
-            foreach (GameObject izbran in terrain.sheepardList)   // ovcarji naj se med seboj izogibajo in drzijo razdaljo
-            {
-                Vector3 razdalja = izbran.transform.position - transform.position;
-                if (razdalja.magnitude > 1e-3f)
-                {
-                    smer -= razdalja.normalized * udobnaRazdalja / (razdalja.magnitude + 1f);
-                }
-            }
-            smer = smer.normalized;
-
-            // ne zaokrozi, ce je skoraj na tocki
-            if ((transform.position - tocka).magnitude < blizuTocki ||
-                (transform.position - GCM).magnitude > (GCM - tocka).magnitude * dljeCilju) { }  // ce sem blizu tocki ali dlje od GCM kot tocka ne zaokrozim
-            else if (preblizu)
-            {  // https://math.stackexchange.com/questions/274712/calculate-on-which-side-of-a-straight-line-is-a-given-point-located
-                Vector3 rotLevo = new Vector3(Mathf.Cos(rotiraj) * smer.x - Mathf.Sin(rotiraj) * smer.z,
-                    0f, Mathf.Cos(rotiraj) * smer.z + Mathf.Sin(rotiraj) * smer.x);
-                Vector3 rotDesno = new Vector3(Mathf.Cos(-rotiraj) * smer.x - Mathf.Sin(-rotiraj) * smer.z,
-                    0f, Mathf.Cos(-rotiraj) * smer.z + Mathf.Sin(-rotiraj) * smer.x);
-                float dGCM = (GCM.x - transform.position.x) * smer.z - (GCM.z - transform.position.z) * smer.x;
-                float dRotLevo = rotLevo.x * smer.z - rotLevo.z * smer.x;
-                if (dGCM * dRotLevo < 0)  // GCM on the other side as rotation in left
-                {
-                    smer = rotLevo;  // zaokrozi okrog (izberi tisti vektor ki res zaokrozi
-                }
-                else { smer = rotDesno; }
-            }
-
-            Vector3 smerPsov = new Vector3(0f, 0f, 0f);  // ovcar naj si zeli, da gredo skupaj v povprecju proti cilju
-            // bolj naj uposteva blizje ovcarje (tudi sebe)
-            foreach (GameObject o in terrain.sheepardList)
-            {
-                Vector3 razdalja = transform.position - o.transform.position;
-                float oProtiOvcarju = razdalja.normalized.x * o.GetComponent<OvcarAgent>().rigidbody.velocity.normalized.x +
-                    razdalja.normalized.z * o.GetComponent<OvcarAgent>().rigidbody.velocity.normalized.z;
-                // bolj kot gre o proti ovcarju, blize je ta stevilka 1, ce gre direktno stran pa bolj -1
-                float ovcarProtiO = -razdalja.normalized.x * smer.normalized.x - razdalja.normalized.z * smer.normalized.z;
-                // bolj kot gre drug proti meni, bolj naj jaz ne grem proti njemu, ce je blizu
-                float factor = Mathf.Max(oProtiOvcarju, ovcarProtiO); // ce gre vsaj eden proti drugemu, si zeli iti stran
-                smerPsov += razdalja.normalized / (razdalja.magnitude + 1f) * factor;
-            }
-            if (smerPsov.magnitude > 1e-7f) smerPsov = smerPsov.normalized;
-            smer += smerPsov * pomenSmeriDrugih;
-
+            bool soZbrane = obs[1] < 0.7f;
+            Vector3 tocka = center + new Vector3(!soZbrane ? obs[8] : obs[10], 0f, !soZbrane ? obs[9] : obs[11]);
+            smer = tocka - transform.position;
             if (smer.magnitude > 1e-7) smer = smer.normalized;
-
-            float phi = e * Random.Range(-Mathf.PI / 3f, Mathf.PI / 3f);  // dodaj sum
-            smer = (1f - e) * smer + e * new Vector3(Mathf.Cos(phi), 0f, Mathf.Sin(phi));
-            if (smer.magnitude > 1e-7) smer = smer.normalized;
-            smer = smer * 0.05f + prejsnaSmer * 0.95f;
+            smer = smer * 0.05f + transform.forward.normalized * 0.95f;
             smer = smer.normalized;
 
             // nsatavi hitrost glede na razdaljo do staje ali tocke
-            if ((transform.position - staja).magnitude < df || (transform.position - tocka).magnitude < d0)  // blizu cilja ali ovcam
+            if (obs[7] < df || obs[2] < d0 + 3f)  // blizu cilja ali ovcam
             {
-                hitrost = razdelitevHitrosti - 1f;
+                hitrost = razdelitevHitrosti - 1;
             }
             else
             {
-                hitrost = 0f;
+                hitrost = 0;
             }
         }
-        float kot = Mathf.Max(0f, Mathf.Min(razdelitevKota - 1f, Mathf.FloorToInt((Vector3.Angle(prejsnaSmer, smer) / maxKot *
-            (prejsnaSmer.x * smer.z - smer.x * prejsnaSmer.z < 0 ? 0.5f : -0.5f) + 0.5f) *
-            (razdelitevKota - 1f))));
-        float forwardAction;
-        float turnAction;
+        float kot = Mathf.Min(1f, Vector3.Angle(transform.forward.normalized, smer) / 3f) * (razdelitevKota - 1f);
+        int forwardAction;
+        int turnAction = 1;
+        int sideAction;
         if (Input.GetKey(KeyCode.W))
         {
             // move forward
-            forwardAction = 1;
+            forwardAction = 0;
         } else
         {
             forwardAction = hitrost;
@@ -250,20 +118,22 @@ public class OvcarAgent : Agent
         if (Input.GetKey(KeyCode.A))
         {
             // turn left
-            turnAction = 0f;
+            sideAction = 0;
         }
         else if (Input.GetKey(KeyCode.D))
         {
             // turn right
-            turnAction = 1f;
+            sideAction = 1;
         }
         else
         {
-            turnAction = kot;
+            turnAction = Mathf.FloorToInt(kot);
+            sideAction = transform.forward.normalized.x * smer.z - smer.x * transform.forward.normalized.z < 0 ? 1 : 0;
         }
         // Put the actions into the array
-        actionsOut.DiscreteActions.Array[0] = Mathf.FloorToInt(forwardAction);
-        actionsOut.DiscreteActions.Array[1] = Mathf.FloorToInt(turnAction);
+        actionsOut.DiscreteActions.Array[0] = forwardAction;
+        actionsOut.DiscreteActions.Array[1] = turnAction;
+        actionsOut.DiscreteActions.Array[2] = sideAction;
     }
 
     public override void OnEpisodeBegin()
@@ -271,6 +141,19 @@ public class OvcarAgent : Agent
     }
 
     public override void CollectObservations(VectorSensor sensor)
+    {
+        float[] obs = Observe();
+        for (int observation=0; observation<obs.Length; observation++)
+            if (observation < 8 || observation > 11) sensor.AddObservation(obs[observation]);  // 1 float = 1 value
+        // 16 float = 16 total values
+    }
+
+    float kotSmeri(Vector3 smer)
+    {
+        return Mathf.Atan2(smer.z, smer.x);
+    }
+
+    float[] Observe()
     {
         Vector3 center = transform.parent.GetComponent<Terrain>().center;
         Vector3 GCM = new Vector3(0f, 0f, 0f);   // skupno povprecje pozicij ovc
@@ -280,7 +163,6 @@ public class OvcarAgent : Agent
         }
         Vector3 pobeglaOvca = new Vector3(1f, 0f, 0f);   // lokacija pobegle ovce in njena razdalja do GCM
         float doCentra = 0f;
-        Vector3 najblizja = new Vector3(0f, 0f, 0f);
         float doNajblizje = 1000f;
         foreach (GameObject ovca in terrain.sheepList)
         {
@@ -288,7 +170,6 @@ public class OvcarAgent : Agent
             float razdalja = (GCM - ovca.transform.position).magnitude;
             if (doOvce < doNajblizje)
             {
-                najblizja = transform.position - ovca.transform.position;
                 doNajblizje = doOvce;
             }
             if (ovca.GetComponent<GinelliOvca>().voronoiPes == this.gameObject && (GCM - staja).magnitude > doCentra)
@@ -299,7 +180,6 @@ public class OvcarAgent : Agent
         }
         Vector3 najblizjiPes = new Vector3(1f, 0f, 0f);
         float doNajblizjega = 10000f;
-        Vector3 smerNajblizjega = new Vector3(1f, 0f, 0f);
         foreach (GameObject o in terrain.sheepardList)
         {
             Vector3 razdalja = transform.position - o.transform.position;
@@ -307,7 +187,6 @@ public class OvcarAgent : Agent
             {
                 najblizjiPes = razdalja;
                 doNajblizjega = razdalja.magnitude;
-                smerNajblizjega = o.transform.forward;
             }
         }
         Vector3 Pc = pobeglaOvca + (pobeglaOvca - GCM).normalized * 3f - center;
@@ -315,34 +194,24 @@ public class OvcarAgent : Agent
         float kot = kotSmeri(transform.forward);
 
         float[] obs = {
-            terrain.sheepList.Count, 
-            terrain.sheepardList.Count,
-            doCentra, 
+            terrain.sheepList.Count,
+            doCentra,
+            doNajblizje,
+            kotSmeri(transform.forward) - kot,
             kotSmeri((pobeglaOvca - transform.position)) - kot,
             (pobeglaOvca - transform.position).magnitude,
             kotSmeri(transform.position - staja) - kot,
-            kotSmeri(Pc - transform.position) - kot, 
+            (transform.position - staja).magnitude,
+            Pc.x, Pc.z, Pd.x, Pd.z,  // 8-11
+            kotSmeri(Pc - transform.position) - kot,
             (Pc - transform.position).magnitude,
-            kotSmeri(Pd - transform.position) - kot, 
+            kotSmeri(Pd - transform.position) - kot,
             (Pd - transform.position).magnitude,
             kotSmeri(GCM - transform.position) - kot,
-            (GCM - transform.position).magnitude, 
-            kotSmeri(staja - GCM) - kot, 
-            (staja - GCM).magnitude,
+            (GCM - transform.position).magnitude,
             kotSmeri(najblizjiPes) - kot,
-            doNajblizjega, 
-            kotSmeri(smerNajblizjega) - kot,
-            kotSmeri(najblizja) - kot,
-            doNajblizje
+            doNajblizjega
         };
-        foreach (float observation in obs)
-            sensor.AddObservation(observation);  // 1 float = 1 value
-        // 19 float = 19 total values
+        return obs;
     }
-
-    float kotSmeri(Vector3 smer)
-    {
-        return Mathf.Atan2(smer.z, smer.x);
-    }
-
 }

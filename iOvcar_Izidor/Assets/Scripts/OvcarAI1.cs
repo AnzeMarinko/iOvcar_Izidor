@@ -39,7 +39,7 @@ public class OvcarAI1 : MonoBehaviour
         trajanjeNakljucnegaPremika = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
         casNakljucnegaPremika = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
         nakljucniDodatek = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
-        pomenRazdalje = sm[0] + (zm[0] - sm[0]) * gen[0];
+        pomenRazdalje = sm[i] + (zm[i] - sm[i]) * gen[i];
         pomenDoOvce = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
         dovoljenoSpredaj = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;
         dovoljenoZadaj = sm[i] + (zm[i] - sm[i]) * gen[i]; i++;

@@ -5659,7 +5659,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6914850704291146381}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 22.9}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 6914850704291380989}
@@ -5758,9 +5758,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 19
+    VectorObservationSize: 16
     NumStackedVectorObservations: 1
-    VectorActionSize: 0200000005000000
+    VectorActionSize: 030000000300000002000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 0}
@@ -5787,11 +5787,10 @@ MonoBehaviour:
   m_DetectableTags:
   - Ovca
   - Ovcar
-  - Finish
   - Fire
-  m_RaysPerDirection: 4
+  m_RaysPerDirection: 3
   m_MaxRayDegrees: 45
-  m_SphereCastRadius: 3
+  m_SphereCastRadius: 4
   m_RayLength: 30
   m_RayLayerMask:
     serializedVersion: 2
@@ -5813,7 +5812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 7
+  DecisionPeriod: 5
   TakeActionsBetweenDecisions: 1
 --- !u!114 &-2376905867336154067
 MonoBehaviour:
@@ -5829,7 +5828,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Record: 0
   NumStepsToRecord: 0
-  DemonstrationName: Stroembom5-opt1
+  DemonstrationName: Stroembom1-1
   DemonstrationDirectory: C:\Users\HP\Desktop\MagistrskoDelo2020\iOvcar_Izidor\iOvcar_Izidor\Assets/Demonstrations
 --- !u!1 &6914850704291146385
 GameObject:
