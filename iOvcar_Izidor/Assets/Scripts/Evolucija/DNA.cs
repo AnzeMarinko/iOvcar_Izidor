@@ -15,7 +15,7 @@ public class DNA
     public int ponovitev = 0;
     float minFit = 10000f;
     public List<float> fits = new List<float>();
-    int maxGeneracij;
+    public int maxGeneracij;
 
     public DNA(int gene, GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2, int mG)
     {
@@ -25,6 +25,7 @@ public class DNA
         modelGibanja = gin;
         obnasanjePsa = vod;
         for (int i = 0; i < 21; i++) gen[i] = Random.Range(0f, 10001f) / 10000f;
+        if (vod == OvcarEnum.ObnasanjePsa.Voronoi) gen = StaticClass.rocniGen;
         fitness = 0;
         casi = new List<float>();
         maxGeneracij = mG;

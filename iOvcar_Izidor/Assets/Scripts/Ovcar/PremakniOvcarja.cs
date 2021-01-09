@@ -15,12 +15,13 @@ public class PremakniOvcarja : MonoBehaviour
         {
             case OvcarEnum.ObnasanjePsa.Voronoi:
                 {
-                    GetComponent<OvcarVoronoi>().VoronoiStart();
+                    GetComponent<OvcarFunkcije>().VoronoiStart();
                     break;
                 }
             case OvcarEnum.ObnasanjePsa.AI1:
                 {
-                    GetComponent<OvcarAI1>().AI1Start();
+                    StaticClass.ComputeParameters(transform.parent.GetComponent<Terrain>().sm.DNA.gen);
+                    GetComponent<OvcarFunkcije>().VoronoiStart();
                     break;
                 }
             default: break;
@@ -34,12 +35,12 @@ public class PremakniOvcarja : MonoBehaviour
         {
             case OvcarEnum.ObnasanjePsa.Voronoi:
                 {
-                    GetComponent<OvcarVoronoi>().VoronoiUpdate();
+                    GetComponent<OvcarFunkcije>().VoronoiUpdate();
                     break;
                 }
             case OvcarEnum.ObnasanjePsa.AI1:
                 {
-                    GetComponent<OvcarAI1>().AI1Update();
+                    GetComponent<OvcarFunkcije>().VoronoiUpdate();
                     break;
                 }
             default: break;

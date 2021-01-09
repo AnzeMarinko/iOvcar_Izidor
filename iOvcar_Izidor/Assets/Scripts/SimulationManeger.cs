@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class SimulationManeger
 {
     public int steviloPonovitev = 40;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
-    public int[] nOvc1 = { 1, 5, 10, 25, 50, 75, 100 };
+    public int[] nOvc1 = { 5, 10, 25, 50, 75, 100 };
     public int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
     public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
     public List<OvcarEnum.ObnasanjePsa> obnasanjeOvcarja = new List<OvcarEnum.ObnasanjePsa>();  //, OvcarEnum.ObnasanjePsa.AI2 };
@@ -20,10 +20,11 @@ public class SimulationManeger
 
     public SimulationManeger()
     {
+        StaticClass.ComputeGen();
         zacetek = true;
         if (SceneManager.GetActiveScene().name == "testScene")
         {
-            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2); 
+            // obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1);
         }
@@ -118,31 +119,10 @@ public class SimulationManeger
                 // glava z imeni in mejami parametrov
                 using (StreamWriter sw = File.CreateText(fileName))
                 {
-                    string[] imena = {"Hitrost v stanju vodenja",
-                        "Faktor za dovoljeno velikost črede",
-                        "Razdalja za zbiranje",
-                        "Razdalja za zaznavo ovc na poti",
-                        "Razdalja za upočasnitve v bližini ovc",
-                        "Razdalja za upočasnitev v bližini cilja",
-                        "Relativna moč šuma",
-                        "Trajanje nakljucnega premika",
-                        "Fiksen čas do naključnega premika",
-                        "Razpon naključnega dodatnega časa",
-                        "Pomen oddaljenosti pobegle ovce od črede",
-                        "Pomen oddaljenosti pobegle ovce od ovčarja",
-                        "Ovčar bližje cilju kot čreda",
-                        "Največji delež ignoriranih ovc",
-                        "Vpliv števila ovčarjev na delež ignoriranih ovc",
-                        "Odpor pred pred stanjem bližje cilju kot točka",
-                        "Udobna razdalja med ovčarji",
-                        "Razdalja za upočasnitev v bližini točke",
-                        "Odpor pred pred stanjem bližje čredi kot točka",
-                        "Zaokroževanje blizu ovc",
-                        "Pomen smeri drugih ovčarjev" };
                     float[] zm = StaticClass.zgornjeMeje;
                     float[] sm = StaticClass.spodnjeMeje;
                     string glava = "";
-                    for (int i = 0; i < imena.Length; i++) glava += "" + imena[i] + ": (" + sm[i] + "-" + zm[i] + ")\n";
+                    for (int i = 0; i < StaticClass.imena.Length; i++) glava += "" + StaticClass.imena[i] + ": (" + sm[i] + "-" + zm[i] + ")\n";
                     sw.WriteLine(glava);
                 }
             }

@@ -22,7 +22,7 @@ public class Terrain : MonoBehaviour
     public GameObject ovcarGO;
     public GameObject ovcarGOML;
     int score = 0;  // rezultat za izpis
-    float maxCas = 180f;  // casovna omejitev simulacije
+    float maxCas = 240f;  // casovna omejitev simulacije
     public GameObject kameraGO;
     private GameObject kamera;
     public GameObject napisGO;
@@ -114,12 +114,12 @@ public class Terrain : MonoBehaviour
         cumulativeRewardText.fontStyle = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? FontStyles.Bold : FontStyles.Normal;
         score = nOvc - sheepList.Count;
         // Update the cumulative reward text
-        cumulativeRewardText.text = string.Format("{0:0}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)) +
+        cumulativeRewardText.text = Time.timeScale > 0 ? string.Format("{0:0}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)) +
             (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? " (" + (sheepardList[0].GetComponent<OvcarAgent>().CompletedEpisodes + 1) +
             ")\n:: " + sheepardList[0].GetComponent<OvcarAgent>().GetCumulativeReward().ToString("0.00") + " ::\nV staji: " + score + " / " + nOvc : "\n\n" +
             "Ovce: " + score + " / " + nOvc +
             "\nGeneracija: " + (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 ? "Final" : sm.evolucija.generation.ToString()) + ",\nposkus: " + (sm.osebek + 1) + " (" + (sm.DNA.ponovitev + 1) +
-            ")\nMax. fitness v " + (sm.evolucija.generation - 1) + ". generaciji:\n" + sm.evolucija.maxFitness + "\n   Nad 1: " + sm.evolucija.steviloUspesnih);
+            ")\nMax. fitness v " + (sm.evolucija.generation - 1) + ". generaciji:\n" + sm.evolucija.maxFitness + "\n   Nad 1: " + sm.evolucija.steviloUspesnih) : "";
         if (sheepList.Count == 0 || timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
             ZapisiRezultate();
