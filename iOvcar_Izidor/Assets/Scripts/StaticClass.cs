@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class StaticClass
 {
+    public static string modelName = "";
     public static float v1 = (5 - 1) / 3f;  // Hitrost premikanja v stanju vodenja ovc
     public static float ra = 2 / 3f;   // Faktor za dovoljeno velikost crede
     public static float dc = 10 / 3f;  // Razdalja za zbiranje ovc v credo
@@ -47,21 +48,20 @@ public static class StaticClass
                         "Zaokroževanje blizu ovc",
                         "Pomen smeri drugih ovčarjev" };
 
-
+    readonly public static float[] rocniParametri = { 5 / 3f, 2 / 3f, 10 / 3f, 20 / 3f, 10 / 3f, 5 / 3f, 0.3f, 3f, 60f, 20f, 2f, 1f, 2f, 0.15f, 2f, 2f, 20f, 12f, 0.95f, Mathf.PI / 6f, 0.1f };
+    readonly public static float[] originalniParametri = { 5 / 3f, 2 / 3f, 10 / 3f, 20 / 3f, 10 / 3f, 5 / 3f, 0.3f, 0f, 60f, 0f, 1f, 0f, 40f, 0f, 2f, 50f, 0f, 0f, 0f, Mathf.PI / 6f, 0f };
     public static float vMax = 7.5f / 3f;
-    public static float[] zgornjeMeje = { vMax, 1f, 4f, 10f, 5f, 3f, 0.5f, 5f, 90f, 30f, 3f, 3f, 40f, 0.5f, 3f, 5f, 40f, 30f, 2f, Mathf.PI / 3f, 1f };
-    public static float[] spodnjeMeje = { 0f, 1f / 3f, 1f, 0f, 0f, 0f, 0.01f, 0f, 10f, 0f, -1f, -1f, -10f, 0f, 0f, 0f, 5f, 0f, 0f, 0f, -1f };
-    public static float[] faktor = { 3f, 1f, 3f, 3f, 3f, 3f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 3f, 3f, 1f, 1f, 1f };
-    public static string[] enote = { "m/s", "", "m", "m", "m", "m", "", "s", "s", "s", "", "", "", "", "", "", "m", "m", "", "rad/s", "" };
+    public static float[] zgornjeMeje = { vMax, 1f, 4f, 10f, 5f, 3f, 0.5f, 5f, 90f, 30f, 3f, 3f, 40f, 0.5f, 3f, 50f, 40f, 30f, 2f, Mathf.PI / 3f, 1f };
+    public static float[] spodnjeMeje = { 0f, 1f / 3f, 1f, 0f, 0f, 0f, 0.01f, 0f, 10f, 0f, -1f, -1f, -10f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, -1f };
+    public static float[] faktor = { 3f, 3f, 3f, 3f, 3f, 3f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 3f, 3f, 1f, 1f, 1f };
+    public static string[] enote = { "m/s", "m", "m", "m", "m", "m", "", "s", "s", "s", "", "", "", "", "", "", "m", "m", "", "rad/s", "" };
     public static float[] rocniGen = new float[21];
+    public static float[] originalenGen = new float[21];
 
     public static void ComputeGen()
     {
-        float[] par = {v1, ra, dc, da, d0, df, e, trajanjeNakljucnegaPremika, casNakljucnegaPremika, nakljucniDodatek,
-            pomenRazdalje, pomenDoOvce, dovoljenoSpredaj, dovoljenoZadaj, pomenOvcarjev, protiTockiNazaj, udobnaRazdalja, blizuTocki, dljeCilju, rotiraj, pomenSmeriDrugih };
-        float[] gen = new float[par.Length];
-        for (int i = 0; i < par.Length; i++) gen[i] = (par[i] - spodnjeMeje[i]) / (zgornjeMeje[i] - spodnjeMeje[i]);
-        rocniGen = gen;
+        for (int i = 0; i < 21; i++) rocniGen[i] = (rocniParametri[i] - spodnjeMeje[i]) / (zgornjeMeje[i] - spodnjeMeje[i]);
+        for (int i = 0; i < 21; i++) originalenGen[i] = (originalniParametri[i] - spodnjeMeje[i]) / (zgornjeMeje[i] - spodnjeMeje[i]);
     }
 
     public static void SetParameters(float p1, float p2, float p3, float p4, float p5, float p6, float p7, float p8, float p9, float p10,

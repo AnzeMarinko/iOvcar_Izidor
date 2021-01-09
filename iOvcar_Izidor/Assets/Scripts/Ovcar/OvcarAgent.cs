@@ -9,7 +9,7 @@ using System.Linq;
 public class OvcarAgent : Agent
 {
     private Terrain terrain;
-    new private Rigidbody rigidbody;
+    private Rigidbody rigidbody;
     private Vector3 staja;
 
     float exRazprsenost = 10f;

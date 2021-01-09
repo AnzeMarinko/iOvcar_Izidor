@@ -161,13 +161,13 @@ public class Terrain : MonoBehaviour
         }
         else
         {
-            string dirName = "Rezultati/Rezultati" + "-" + obnasanjeOvcarja.ToString();
+            string dirName = "Rezultati/Rezultati" + "-" + StaticClass.modelName + obnasanjeOvcarja.ToString();
             if (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 || sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
             {
                 dirName += "-Final";
             }
             if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
-            string fileName = dirName + "/" + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev
+            string fileName = dirName + "/" + StaticClass.modelName + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev
                 + ".txt";
 
             if (!File.Exists(fileName))
@@ -176,7 +176,7 @@ public class Terrain : MonoBehaviour
                 using (StreamWriter sw = File.CreateText(fileName))
                 {
                     sw.WriteLine("\t" + nOvc + modelGibanja.ToString() + " ovc\n\t" + nOvcarjev +
-                    " " + obnasanjeOvcarja.ToString() + " ovcarjev");
+                    " " + StaticClass.modelName + obnasanjeOvcarja.ToString() + " ovcarjev");
                 }
             }
 

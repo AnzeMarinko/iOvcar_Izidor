@@ -8,14 +8,8 @@ using UnityEngine.UI;
 
 /* TODO:
  * 
- * tipka za menjavo scene, tipke za nastavljanje genov in kombinacij (tudi tipka za pripravo testov in genetskega algoritma brez ustavljanja)
- * drsniki za ročno nastavljanje poljubnih parametrov (gumb, ki ustavi igro in ti ponudi izbiro in brez
- *   beleženja rezultatov požene), zraven gumbi za izbiro kombinacije (obnašanje psa možno ročno, AI1-Opt,
- *   Voronoi, AI2-Opt (brez gena), naključen gen, osnoven - gre lahko poljubno pred čredo, zbira vse ...) in
- *   gumb za uporabo nastavitev, gen lahko vmes spreminjaš
- *   Torej na izbiro učenje, testiranje (v tem primeru si zapisuj rezultate tudi za AI2) in zgolj prikaz (uporabljaj StaticClass)
- *   ko želi novo kombinacijo je ne prebere ampak ustavi čas in te vpraša za nastavitev nove kombinacije ali ponovitev prejšnje
- * guiscript s tipkami, meniji in menjavo scene
+ * preberi gen iz datoteke in ga nastavi
+ * AI2 naj ne izračuna kam naj se obrne ampak raje kar smer (absolutno in ne relativno glede nanj)
  * 
  * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji
  * optimalne gene mora tudi znati prebrati in iz njih interpolira za nove kombinacije
@@ -53,6 +47,7 @@ public class GuiScript : MonoBehaviour
     Text[] texts = new Text[21];
     Text[] imena = new Text[21];
     public Dropdown modelOvc;
+    public InputField imeModela;
 
 
     public void Start()
@@ -72,6 +67,9 @@ public class GuiScript : MonoBehaviour
             textGen15, textGen16, textGen17, textGen18, textGen19, textGen20, textGen21 };
         for (int i = 0; i < 21; i++) imena[i].text = StaticClass.imena[i];
         terrain = GameObject.FindGameObjectWithTag("Terrain").GetComponent<Terrain>();
+        terrain.sm = new SimulationManeger();
+        terrain.sm.SimulationStart();
+        terrain.ResetTerrain();
         sm = terrain.sm;
         for (int i = 0; i < 21; i++) sliders[i].value = sm.DNA.gen[i];
         for (int i = 0; i < 21; i++) SetGen(i);
@@ -79,6 +77,9 @@ public class GuiScript : MonoBehaviour
         nSOvcarjev.value = sm.DNA.nOvcarjev;
         nOvc.text = "" + sm.DNA.nOvc;
         nOvcarjev.text = "" + sm.DNA.nOvcarjev;
+        nSOvc.value = sm.DNA.nOvc;
+        nSOvcarjev.value = sm.DNA.nOvcarjev;
+        modelOvc.value = GinelliOvca.ModelGibanja.Ginelli == sm.DNA.modelGibanja ? 0 : GinelliOvca.ModelGibanja.Stroembom == sm.DNA.modelGibanja ? 1 : 2;
     }
 
     void Update()
@@ -90,9 +91,12 @@ public class GuiScript : MonoBehaviour
 
     public void ClickUporabi()
     {
-        terrain.ResetTerrain();
+        StaticClass.modelName = imeModela.text + "-";
         GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
-        sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value, OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 100);
+        float[] gen = sm.DNA.gen;
+        sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value, OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
+        sm.DNA.gen = gen;
+        terrain.ResetTerrain();
         Time.timeScale = 10f;
         canvas.enabled = !canvas.enabled;
     }
@@ -111,7 +115,7 @@ public class GuiScript : MonoBehaviour
         sm.DNA.gen[i] = gen;
         StaticClass.ComputeParameters(sm.DNA.gen);
         float val = StaticClass.spodnjeMeje[i] + (StaticClass.zgornjeMeje[i] - StaticClass.spodnjeMeje[i]) * gen;
-        texts[i].text = (Mathf.FloorToInt(val * 100 * StaticClass.faktor[i]) / 100f).ToString() + " " + StaticClass.enote[i];
+        texts[i].text = (Mathf.RoundToInt(val * 100 * StaticClass.faktor[i]) / 100f).ToString() + " " + StaticClass.enote[i];
     }
 
     public void SetRandomGen()
@@ -129,6 +133,9 @@ public class GuiScript : MonoBehaviour
             if (Time.timeScale > 0)
             {
                 trajanjePavz += Time.realtimeSinceStartup - pavzaOd;
+                nSOvc.value = sm.DNA.nOvc;
+                nSOvcarjev.value = sm.DNA.nOvcarjev;
+                modelOvc.value = GinelliOvca.ModelGibanja.Ginelli == sm.DNA.modelGibanja ? 0 : GinelliOvca.ModelGibanja.Stroembom == sm.DNA.modelGibanja ? 1 : 2;
             } else
             {
                 pavzaOd = Time.realtimeSinceStartup;
