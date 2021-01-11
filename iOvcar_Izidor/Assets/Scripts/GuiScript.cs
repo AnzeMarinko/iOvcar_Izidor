@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using UnityEngine;
@@ -8,16 +9,17 @@ using UnityEngine.UI;
 
 /* TODO:
  * 
- * preberi gen iz datoteke in ga nastavi
+ * uredi kodo, pomoč, datoteke, lastnosti projekta
+ * pisanje magistrske, pridobivanje rezultatov za Voronoi in AI1
+ * 
  * AI2 naj ne izračuna kam naj se obrne ampak raje kar smer (absolutno in ne relativno glede nanj)
  * 
- * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji
+ * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji (mozno spreminjanje stevila ovcarjev)
  * optimalne gene mora tudi znati prebrati in iz njih interpolira za nove kombinacije
  * testiraj predvidene gene (in tudi za najbližjo kombinacijo) in preizkusi ali je dosti slabše kot, če ga naučiš za točno to kombinacijo
  *   s tem vidiš ali je model overfitan s parametri samo za določeno kombinacijo (ne sme biti pretirano počasnejši za več ovc)
  * 
- * 
- * uredi kodo, datoteke, lastnosti projekta
+ * uredi kodo, pomoč, datoteke, lastnosti projekta
  * 
  *      Dodatne ideje kot predlogi za nadaljnje delo:
  * Ovire ali drugačna oblika polja ali npr. voda kjer ovce nočejo hoditi
@@ -48,12 +50,16 @@ public class GuiScript : MonoBehaviour
     Text[] imena = new Text[21];
     public Dropdown modelOvc;
     public InputField imeModela;
+    public Toggle zgodovina;
+    public Toggle MLAgents;
+    public Canvas pomoc;
+    public Text pomocText;
 
 
     public void Start()
     {
         scena = SceneManager.GetActiveScene().name;
-        Time.timeScale = 50f;
+        Time.timeScale = 10f;
         Time.maximumDeltaTime = 0.02f;
         canvas.enabled = false;
         sliders = new Slider[21] { sliderGen1, sliderGen2, sliderGen3, sliderGen4, sliderGen5, sliderGen6,
@@ -79,6 +85,8 @@ public class GuiScript : MonoBehaviour
         nOvcarjev.text = "" + sm.DNA.nOvcarjev;
         nSOvc.value = sm.DNA.nOvc;
         nSOvcarjev.value = sm.DNA.nOvcarjev;
+        StaticClass.zgodovina = zgodovina.isOn;
+        pomoc.enabled = false;
         modelOvc.value = GinelliOvca.ModelGibanja.Ginelli == sm.DNA.modelGibanja ? 0 : GinelliOvca.ModelGibanja.Stroembom == sm.DNA.modelGibanja ? 1 : 2;
     }
 
@@ -91,14 +99,16 @@ public class GuiScript : MonoBehaviour
 
     public void ClickUporabi()
     {
-        StaticClass.modelName = imeModela.text + "-";
+        StaticClass.modelName = (imeModela.text.Length > 0 ? "-" : "") + imeModela.text + "-manual-";
         GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
         float[] gen = sm.DNA.gen;
-        sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value, OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
+        sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value,
+            MLAgents.enabled ? OvcarEnum.ObnasanjePsa.AI2 : OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
         sm.DNA.gen = gen;
         terrain.ResetTerrain();
         Time.timeScale = 10f;
         canvas.enabled = !canvas.enabled;
+        pomoc.enabled = false;
     }
 
     public void SetNumbers()
@@ -122,6 +132,64 @@ public class GuiScript : MonoBehaviour
     {
         for (int i = 0; i < 21; i++) sliders[i].value = Random.value;
         for (int i = 0; i < 21; i++) SetGen(i);
+    }
+
+    public void SetVoronoiGen()
+    {
+        for (int i = 0; i < 21; i++) sliders[i].value = StaticClass.rocniGen[i];
+        for (int i = 0; i < 21; i++) SetGen(i);
+    }
+
+    public void SetOptimalGen()
+    {
+        GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
+        GinelliOvca.ModelGibanja gin = modelGibanja1[modelOvc.value];
+        int n1 = (int)nSOvc.value;
+        OvcarEnum.ObnasanjePsa vod = OvcarEnum.ObnasanjePsa.AI1;
+        int n2 = (int)nSOvcarjev.value;
+        string fileName = "Rezultati/geni.txt";
+        if (File.Exists(fileName))
+        {
+            string[] geni = File.ReadAllLines(fileName);
+            float najblizje = 1000f;
+            foreach(string line in geni)
+            {
+                if (line.Length < 80) continue;
+                string[] kombinacija = line.Split(' ');
+                float razdalja = ( kombinacija[0].Contains(gin.ToString()) ? 1f : 100f) *
+                    (Mathf.Abs(int.Parse(kombinacija[1]) - n1) + 1f) *
+                    (kombinacija[2].Contains(vod.ToString()) ? 1f : 100f) *
+                    (Mathf.Abs(int.Parse(kombinacija[3]) - n2) + 1f);
+                if (najblizje == 0f) break;
+                else if (razdalja < najblizje)
+                {
+                    najblizje = razdalja;
+                    string[] gen = kombinacija[4].Split(';');
+                    for (int i = 0; i < 21; i++) sliders[i].value = float.Parse(gen[i], CultureInfo.InvariantCulture.NumberFormat);
+                    for (int i = 0; i < 21; i++) SetGen(i);
+                }
+            }
+        }
+    }
+
+    public void Hist()
+    {
+        StaticClass.zgodovina = zgodovina.isOn;
+    }
+
+    public void MLA()
+    {
+        foreach (Slider s in sliders) s.enabled = !s.enabled;
+    }
+
+    public void Help(int text)
+    {
+        pomoc.enabled = true;
+        string[] texts = new string[2] {
+            "Dodatno (o meni, povezave, gradivo)",
+            "Pomoč (Napotki za uporabo)" };
+        if (text < 2) pomocText.text = texts[text];
+        else pomoc.enabled = false;
     }
 
     private void OnGUI()   // v zgornjem levem kotu napisi nekaj lastnosti simulacije in dodaj nekaj gumbov

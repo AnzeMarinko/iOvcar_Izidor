@@ -49,8 +49,16 @@ public class Terrain : MonoBehaviour
             for (int i = 0; i < nOvcarjev; i++) { AddDog(); } }
         else
         {
-            foreach (GameObject o in sheepardList) o.transform.position = transform.position +
-                    new Vector3(Random.Range(-45f, 45f) + 70f, 0f, Random.Range(-45f, 45f) + 70f);
+            int i = 0;
+            foreach (GameObject o in sheepardList)
+            {
+                if (i < nOvcarjev)
+                    o.transform.position = transform.position +
+                        new Vector3(Random.Range(-45f, 45f) + 70f, 0f, Random.Range(-45f, 45f) + 70f);
+                else { Destroy(o); sheepardList.Remove(o); }
+                i++;
+            }
+            for (int j = i; j < nOvcarjev; j++) { AddDog(); }
         }
         for (int i = 0; i < nOvc; i++) { AddSheep(); }  // postavi ovce in pse na polje
     }
@@ -159,9 +167,9 @@ public class Terrain : MonoBehaviour
         {
             // Rezultate piši le ko se na koncu testira
         }
-        else
+        else if (StaticClass.zgodovina)
         {
-            string dirName = "Rezultati/Rezultati" + "-" + StaticClass.modelName + obnasanjeOvcarja.ToString();
+            string dirName = "Rezultati/Rezultati" + StaticClass.modelName + obnasanjeOvcarja.ToString();
             if (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 || sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
             {
                 dirName += "-Final";
