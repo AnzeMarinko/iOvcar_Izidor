@@ -56,17 +56,16 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ml-agents": {
-      "version": "1.6.0-preview",
+      "version": "file:C:/Users/HP/Desktop/MagistrskoDelo2020/ml-agents-release_10/com.unity.ml-agents",
       "depth": 0,
-      "source": "registry",
+      "source": "local",
       "dependencies": {
         "com.unity.barracuda": "1.1.2-preview",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
         "com.unity.modules.physics": "1.0.0",
         "com.unity.modules.physics2d": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
+      }
     },
     "com.unity.test-framework": {
       "version": "1.1.16",

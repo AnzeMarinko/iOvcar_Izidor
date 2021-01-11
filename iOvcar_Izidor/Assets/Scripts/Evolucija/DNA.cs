@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class DNA
@@ -70,7 +69,7 @@ public class DNA
         return gN;
     }
 
-    public DNA Crossover(DNA partner)
+    public DNA Crossover(DNA partner)  // krizanje dveh genov
     {
         DNA child = new DNA(generacija + 1, modelGibanja, nOvc, obnasanjePsa, nOvcarjev, maxGeneracij);
         for (int i = 0; i < gen.Length; i++)
@@ -80,7 +79,7 @@ public class DNA
         return child;
     }
 
-    public void Mutate()
+    public void Mutate()  // mutacija gena
     {
         float mutationRate = 0.01f;
         for (int i = 0; i < gen.Length; i++)

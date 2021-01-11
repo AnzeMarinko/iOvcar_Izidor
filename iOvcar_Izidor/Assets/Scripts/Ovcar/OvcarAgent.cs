@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
-using System.Linq;
 
 public class OvcarAgent : Agent
 {
     private Terrain terrain;
-    private Rigidbody rigidbody;
     private Vector3 staja;
 
     float exRazprsenost = 10f;
@@ -23,10 +19,9 @@ public class OvcarAgent : Agent
         base.Initialize();
         terrain = GetComponentInParent<Terrain>();
         staja = terrain.center + new Vector3(60f, 0f, 0f);
-        rigidbody = GetComponent<Rigidbody>();
     }
 
-    public override void OnActionReceived(ActionBuffers actionBuffers)
+    public override void OnActionReceived(ActionBuffers actionBuffers)  // izvedi akcijo in daj nagrado
     {
         // Convert the first action to forward movement
         float forwardAmount = (1f - actionBuffers.DiscreteActions[0] / (razdelitevHitrosti - 1f) / 3f) * StaticClass.vMax;
@@ -34,10 +29,10 @@ public class OvcarAgent : Agent
         float turn = actionBuffers.DiscreteActions[1] / (razdelitevKota - 1f) * 72f;
         float side = actionBuffers.DiscreteActions[2] > 0.5f ? 1f : -1f;
         // Apply movement
-        rigidbody.velocity = new Vector3(0f, 0f, 0f);
+        GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
         transform.Rotate(transform.up * turn * side * Time.deltaTime);
         transform.forward = new Vector3(transform.forward.x, 0f, transform.forward.z);
-        rigidbody.MovePosition(transform.position + transform.forward * forwardAmount * Time.deltaTime);
+        GetComponent<Rigidbody>().MovePosition(transform.position + transform.forward * forwardAmount * Time.deltaTime);
         if (transform.position.y < 0f || transform.position.y > 0.05f)  // tudi pes naj ne leti, rije ali se vrti na raznju
         {
             transform.position = new Vector3(transform.position.x, 0.01f, transform.position.z);
@@ -72,12 +67,11 @@ public class OvcarAgent : Agent
         // v terrain se izvedejo tudi nagrade za ovce ko pridejo v stajo
     }
 
-    public override void Heuristic(in ActionBuffers actionsOut)
+    public override void Heuristic(in ActionBuffers actionsOut)   // glede na okolico sam oceni, katera akcija bi bila dobra
     {
-        int hitrost = 0;
+        int hitrost = 0;  // izracunaj na poenostavljen voronoi model
         Vector3 smer = new Vector3(0f, 0f, 0f);
         float[] obs = Observe();
-        // Stroembom 10, AI1 1 Opt
         float[] zm = StaticClass.zgornjeMeje;
         float[] sm = StaticClass.spodnjeMeje;
 
@@ -93,7 +87,7 @@ public class OvcarAgent : Agent
             smer = smer * 0.05f + transform.forward.normalized * 0.95f;
             smer = smer.normalized;
 
-            // nsatavi hitrost glede na razdaljo do staje ali tocke
+            // nastavi hitrost glede na razdaljo do staje ali tocke
             if (obs[7] < df || obs[2] < d0 + 3f)  // blizu cilja ali ovcam
             {
                 hitrost = razdelitevHitrosti - 1;
@@ -153,7 +147,7 @@ public class OvcarAgent : Agent
         return Mathf.Atan2(smer.z, smer.x);
     }
 
-    float[] Observe()
+    float[] Observe()  // izracunaj razne informacije, ki jih bo potem poznal
     {
         Vector3 center = transform.parent.GetComponent<Terrain>().center;
         Vector3 GCM = new Vector3(0f, 0f, 0f);   // skupno povprecje pozicij ovc

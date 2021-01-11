@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -24,7 +23,7 @@ public class Evolucija
         generation = 1;
     }
 
-    public void Reproduce()
+    public void Reproduce()  // razmnozevanje odvisno od uspesnosti
     {
         List<DNA> Order = new List<DNA>();
         foreach (DNA d in population)

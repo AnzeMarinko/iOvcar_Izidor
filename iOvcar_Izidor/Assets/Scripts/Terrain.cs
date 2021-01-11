@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Unity.MLAgents;
 using TMPro;
-using System;
 using Random = UnityEngine.Random;
 using System.IO;
 
@@ -41,9 +38,9 @@ public class Terrain : MonoBehaviour
         RemoveAllSheep();
         if (obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2)
         {
-            maxCas = 480f;
+            maxCas = 480f;  // vec casa za ucenje
         }
-        if (sheepardList.Count == 0 || obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2)
+        if (sheepardList.Count == 0 || obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2)  // zamenjaj pse
         { foreach (GameObject o in sheepardList) Destroy(o);
             sheepardList = new List<GameObject>();
             for (int i = 0; i < nOvcarjev; i++) { AddDog(); } }
@@ -143,7 +140,7 @@ public class Terrain : MonoBehaviour
         else
         {
             timer += Time.deltaTime;
-            Vector3 GCM = new Vector3(0f, 0f, 0f);
+            Vector3 GCM = new Vector3(0f, 0f, 0f);  // premikaj sprehodno kamero s credo
             foreach (GameObject ovca in sheepList)
             {
                 GCM += ovca.transform.position;

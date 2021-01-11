@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +9,7 @@ public class SimulationManeger
     public int[] nOvc1 = { 5, 10, 25, 50, 75, 100 };
     public int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
     public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom };
-    public List<OvcarEnum.ObnasanjePsa> obnasanjeOvcarja = new List<OvcarEnum.ObnasanjePsa>();  //, OvcarEnum.ObnasanjePsa.AI2 };
+    public List<OvcarEnum.ObnasanjePsa> obnasanjeOvcarja = new List<OvcarEnum.ObnasanjePsa>();
 
     public DNA DNA;
     public List<DNA> kombinacije = new List<DNA>();
@@ -22,7 +21,7 @@ public class SimulationManeger
     {
         StaticClass.ComputeGen();
         zacetek = true;
-        if (SceneManager.GetActiveScene().name == "testScene")
+        if (SceneManager.GetActiveScene().name == "testScene")   // nastavi seznam modelov za testiranje
         {
             // obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
@@ -32,15 +31,11 @@ public class SimulationManeger
         {
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
         }
-        else
-        {
-            // vprasaj za novo kombinacijo
-        }
     }
 
     public void SimulationStart()
     {
-        if (zacetek)
+        if (zacetek)  // nastavi parametre
         {
             VrniKombinacijo();
             if (0 == kombinacije.ToArray().Length) Application.Quit();
@@ -53,7 +48,7 @@ public class SimulationManeger
 
     void ZamenjajKombinacijo()
     {
-        if (DNA.obnasanjePsa != OvcarEnum.ObnasanjePsa.AI2)
+        if (DNA.obnasanjePsa != OvcarEnum.ObnasanjePsa.AI2)  // zamenjaj parametre
         {
             ZapisiGen(DNA.modelGibanja, DNA.nOvc, DNA.obnasanjePsa, DNA.nOvcarjev, DNA.gen);
             VrniKombinacijo();
@@ -66,7 +61,7 @@ public class SimulationManeger
 
     public void SimulationUpdate()
     {
-        if (DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
+        if (DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)  // naslednji poskus (glede na trenutno stevilko poskusa, model psa, generacijo ...)
         {
             if (DNA.ponovitev == steviloPonovitev) ZamenjajKombinacijo();
             else
@@ -111,7 +106,7 @@ public class SimulationManeger
 
     void ZapisiGen(GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2, float[] gen)
     {
-        if (vod != OvcarEnum.ObnasanjePsa.AI2)
+        if (vod != OvcarEnum.ObnasanjePsa.AI2)  // zapisi gen po zadnji generaciji
         {
             string fileName = "Rezultati/geni.txt";
             if (!File.Exists(fileName))

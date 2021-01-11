@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-// enum za izbiranje med nekaj moznimi vodenji ovcarjev
+﻿// enum za izbiranje med nekaj moznimi vodenji ovcarjev
 public class OvcarEnum
 {
     public enum ObnasanjePsa

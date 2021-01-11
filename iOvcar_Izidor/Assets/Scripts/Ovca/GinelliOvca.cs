@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 // lastnosti gibanja ovc, kadar so po Ginelliju
 public class GinelliOvca : MonoBehaviour

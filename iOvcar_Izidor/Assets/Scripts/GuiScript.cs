@@ -1,20 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /* TODO:
  * 
- * uredi kodo, pomoč, datoteke, lastnosti projekta
+ * grafi za Voronoi in AI1
  * pisanje magistrske, pridobivanje rezultatov za Voronoi in AI1
  * 
  * AI2 naj ne izračuna kam naj se obrne ampak raje kar smer (absolutno in ne relativno glede nanj)
  * 
- * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji (mozno spreminjanje stevila ovcarjev)
+ * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji (mozno spreminjanje stevila ovcarjev in tudi spreminjanje ovcarjev v ovcarML in obratno
+ * oz. naj bo to en prefab in so te funkcije heuristika in AI2 pomeni interferenco, ostala dva pa hevristiko)
  * optimalne gene mora tudi znati prebrati in iz njih interpolira za nove kombinacije
  * testiraj predvidene gene (in tudi za najbližjo kombinacijo) in preizkusi ali je dosti slabše kot, če ga naučiš za točno to kombinacijo
  *   s tem vidiš ali je model overfitan s parametri samo za določeno kombinacijo (ne sme biti pretirano počasnejši za več ovc)
@@ -29,13 +26,12 @@ using UnityEngine.UI;
 
 public class GuiScript : MonoBehaviour
 {
-    string scena;
     float cas = 0;
     SimulationManeger sm;
     Terrain terrain;
     float pavzaOd = 0;
     float trajanjePavz = 0;
-    public Canvas canvas;
+    public Canvas canvas;  // uporabniski vmesnik, sliderji, besedila ...
     public Slider sliderGen1, sliderGen2, sliderGen3, sliderGen4, sliderGen5, sliderGen6,
             sliderGen7, sliderGen8, sliderGen9, sliderGen10, sliderGen11, sliderGen12, sliderGen13, sliderGen14,
             sliderGen15, sliderGen16, sliderGen17, sliderGen18, sliderGen19, sliderGen20, sliderGen21, nSOvc, nSOvcarjev;
@@ -58,7 +54,7 @@ public class GuiScript : MonoBehaviour
 
     public void Start()
     {
-        scena = SceneManager.GetActiveScene().name;
+        // scena = SceneManager.GetActiveScene().name;
         Time.timeScale = 10f;
         Time.maximumDeltaTime = 0.02f;
         canvas.enabled = false;
@@ -86,6 +82,7 @@ public class GuiScript : MonoBehaviour
         nSOvc.value = sm.DNA.nOvc;
         nSOvcarjev.value = sm.DNA.nOvcarjev;
         StaticClass.zgodovina = zgodovina.isOn;
+        StaticClass.ComputeGen();
         pomoc.enabled = false;
         modelOvc.value = GinelliOvca.ModelGibanja.Ginelli == sm.DNA.modelGibanja ? 0 : GinelliOvca.ModelGibanja.Stroembom == sm.DNA.modelGibanja ? 1 : 2;
     }
@@ -103,7 +100,7 @@ public class GuiScript : MonoBehaviour
         GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
         float[] gen = sm.DNA.gen;
         sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value,
-            MLAgents.enabled ? OvcarEnum.ObnasanjePsa.AI2 : OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
+            MLAgents.isOn ? OvcarEnum.ObnasanjePsa.AI2 : OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
         sm.DNA.gen = gen;
         terrain.ResetTerrain();
         Time.timeScale = 10f;
@@ -111,7 +108,7 @@ public class GuiScript : MonoBehaviour
         pomoc.enabled = false;
     }
 
-    public void SetNumbers()
+    public void SetNumbers()  // nastavi stevilo ovc in ovcarjev
     {
         sm.DNA.nOvc = (int) nSOvc.value;
         sm.DNA.nOvcarjev = (int) nSOvcarjev.value;
@@ -136,11 +133,12 @@ public class GuiScript : MonoBehaviour
 
     public void SetVoronoiGen()
     {
+        StaticClass.ComputeGen();
         for (int i = 0; i < 21; i++) sliders[i].value = StaticClass.rocniGen[i];
         for (int i = 0; i < 21; i++) SetGen(i);
     }
 
-    public void SetOptimalGen()
+    public void SetOptimalGen()  // preberi iz datoteke najboljsi gen po evoluciji
     {
         GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
         GinelliOvca.ModelGibanja gin = modelGibanja1[modelOvc.value];
@@ -182,12 +180,17 @@ public class GuiScript : MonoBehaviour
         foreach (Slider s in sliders) s.enabled = !s.enabled;
     }
 
-    public void Help(int text)
+    public void Help(int text)  // besedilo v oknu z dodatnim ali pomocjo
     {
         pomoc.enabled = true;
         string[] texts = new string[2] {
-            "Dodatno (o meni, povezave, gradivo)",
-            "Pomoč (Napotki za uporabo)" };
+            // dodatno:
+            "<b>Dodatno</b>\n" +
+            "\nProgram je nastal v  študijskem letu 2020/2021 za potrebe magistrskega dela." +
+            "\nAvtor:    <i>Anže Marinko</i>" +
+            "\nVeč informacij o magistrski nalogi.",
+            // pomoc:
+            "<b>Pomoč</b>\n\n Informacije o programu." };
         if (text < 2) pomocText.text = texts[text];
         else pomoc.enabled = false;
     }
@@ -212,7 +215,7 @@ public class GuiScript : MonoBehaviour
         if (GUI.Button(new Rect(120, 0, 60, 20), "Izhod")) { Application.Quit(); }
         if (Time.timeScale > 0)
         {
-            GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR v0.3" + scena + "\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
+            GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
             sm.DNA.nOvc + " " + sm.DNA.modelGibanja.ToString() + "\n" + sm.DNA.nOvcarjev + " " + sm.DNA.obnasanjePsa.ToString());
             if (GUI.Button(new Rect(3, 110, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
             { GetComponent<Camera>().depth *= -1; }
