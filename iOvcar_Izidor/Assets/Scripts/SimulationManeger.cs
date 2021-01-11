@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SimulationManeger
 {
-    public int steviloPonovitev = 40;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
+    public int steviloPonovitev = 50;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
     public int[] nOvc1 = { 5, 10, 25, 50, 75, 100 };
     public int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
     public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom };
@@ -98,8 +98,8 @@ public class SimulationManeger
                     foreach (OvcarEnum.ObnasanjePsa vod in obnasanjeOvcarja)
                     {
                         string name = "/" + gin.ToString() + "_" + n1 + "-" + vod.ToString() + "_" + n2 + ".txt";
-                        if (!File.Exists("Rezultati/Rezultati" + "-" + vod.ToString() + name) &&
-                            !File.Exists("Rezultati/Rezultati" + "-" + vod.ToString() + "-Final" + name))
+                        if (!File.Exists("Rezultati/Rezultati-" + vod.ToString() + name) &&
+                            !File.Exists("Rezultati/Rezultati-" + vod.ToString() + "-Final" + name))
                             kombinacije.Add(new DNA(1, gin, n1, vod, n2, 0));
                     }
     }

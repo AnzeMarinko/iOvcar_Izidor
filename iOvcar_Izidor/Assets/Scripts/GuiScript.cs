@@ -55,8 +55,8 @@ public class GuiScript : MonoBehaviour
     public void Start()
     {
         // scena = SceneManager.GetActiveScene().name;
-        Time.timeScale = 10f;
-        Time.maximumDeltaTime = 0.02f;
+        Time.timeScale = 20f;
+        Time.maximumDeltaTime = 0.05f;
         canvas.enabled = false;
         sliders = new Slider[21] { sliderGen1, sliderGen2, sliderGen3, sliderGen4, sliderGen5, sliderGen6,
             sliderGen7, sliderGen8, sliderGen9, sliderGen10, sliderGen11, sliderGen12, sliderGen13, sliderGen14,
@@ -96,7 +96,7 @@ public class GuiScript : MonoBehaviour
 
     public void ClickUporabi()
     {
-        StaticClass.modelName = (imeModela.text.Length > 0 ? "-" : "") + imeModela.text + "-manual-";
+        StaticClass.modelName = (imeModela.text.Length > 0 ? "-" : "") + imeModela.text + "manual-";
         GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
         float[] gen = sm.DNA.gen;
         sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value,

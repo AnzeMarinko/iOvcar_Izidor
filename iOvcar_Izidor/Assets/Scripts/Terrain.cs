@@ -166,7 +166,7 @@ public class Terrain : MonoBehaviour
         }
         else if (StaticClass.zgodovina)
         {
-            string dirName = "Rezultati/Rezultati" + StaticClass.modelName + obnasanjeOvcarja.ToString();
+            string dirName = "Rezultati/Rezultati-" + StaticClass.modelName + obnasanjeOvcarja.ToString();
             if (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 || sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
             {
                 dirName += "-Final";
