@@ -33,12 +33,13 @@ public class DNA
     public float GetFitness(float maxCas, float timer, float GCM, int ovce)
     {
         fitness = 0;
+        if (timer < maxCas)
         foreach (float cas in casi)
         {
             fitness += Mathf.Pow((maxCas - cas) / maxCas * 2, casi.ToArray().Length == nOvc ? 2 : 1);
         }
-        fitness *= (Mathf.Pow((maxCas - timer) / maxCas * 2, 2) + 1e-7f) / nOvc;
-        fitness += 1 / (GCM + 1f + ovce);
+        fitness *= Mathf.Pow((maxCas - timer) / maxCas * 2, 2) / nOvc;
+        fitness += 1 / (GCM + 100f + ovce);
         fits.Add(fitness);
         fitness = (ponovitev > 0 && obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && generacija != maxGeneracij + 1)
             ? Mathf.Min(minFit, fitness) : fitness;
