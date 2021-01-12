@@ -6,7 +6,7 @@ public class Evolucija
 {
     // ta datoteka naj nadzoruje evolucijo
     public readonly int populationSize = 50;
-    public int maxGeneracij = 27;
+    public int maxGeneracij = 30;
     public int zadnjeGeneracije = 3;  // stevilo generacij, ko se izvaja po tri poskuse in se vzame minimal fitness ali mean fitness
 
     public float maxFitness = 0;
@@ -38,8 +38,7 @@ public class Evolucija
             currentBest = Mathf.Max(d.fits[0], currentBest);
             steviloUspesnih += d.fitness > 1f ? 1 : 0;
         }
-        bestGen = currentBest > maxFitness ? generation : bestGen;
-        maxFitness = Mathf.Max(currentBest, maxFitness);
+        maxFitness = currentBest;
         List<int> matingPool = new List<int>();
         List<DNA> Sorted = Order.OrderBy(order => order.fitness).ToList();
         if (generation == maxGeneracij)

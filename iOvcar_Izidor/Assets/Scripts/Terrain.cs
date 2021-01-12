@@ -191,6 +191,8 @@ public class Terrain : MonoBehaviour
                 {
                     GCM += ovca.transform.position;
                 }
+                if (sheepList.Count > 0) GCM /= sheepList.Count; else GCM = new Vector3(65f, 0f, 0f);
+                GCM -= center;
                 sm.DNA.GetFitness(maxCas, timer, (GCM - new Vector3(65f, 0f, 0f)).magnitude, nOvc);
                 sw.WriteLine(sm.DNA.GenStr());
                 sm.DNA.casi = new List<float>();
