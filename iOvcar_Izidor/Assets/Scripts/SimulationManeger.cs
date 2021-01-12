@@ -117,7 +117,7 @@ public class SimulationManeger
                     float[] zm = StaticClass.zgornjeMeje;
                     float[] sm = StaticClass.spodnjeMeje;
                     string glava = "";
-                    for (int i = 0; i < StaticClass.imena.Length; i++) glava += "" + StaticClass.imena[i] + ": (" + sm[i] + " - " + zm[i] + ")\n";
+                    for (int i = 0; i < StaticClass.imena.Length; i++) glava += "" + StaticClass.imena[i] + ": (" + (sm[i] * StaticClass.faktor[i]) + " - " + (zm[i] * StaticClass.faktor[i]) + " " + StaticClass.enote[i] + ")\n";
                     sw.WriteLine(glava);
                 }
             }

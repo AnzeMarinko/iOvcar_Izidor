@@ -50,8 +50,8 @@ public static class StaticClass
     readonly public static float[] rocniParametri = { 5 / 3f, 2 / 3f, 10 / 3f, 20 / 3f, 10 / 3f, 5 / 3f, 0.3f, 3f, 60f, 20f, 2f, 1f, 2f, 0.15f, 2f, 2f, 20f, 12f, 0.95f, Mathf.PI / 6f, 0.1f };
     public static float vMax = 7.5f / 3f;
     // meje za parametre za genetski algoritem
-    public static float[] zgornjeMeje = { vMax, 1f, 4f, 10f, 5f, 3f, 0.5f, 5f, 90f, 30f, 3f, 3f, 40f, 0.5f, 3f, 50f, 40f, 30f, 2f, Mathf.PI / 3f, 1f };
-    public static float[] spodnjeMeje = { 0f, 1f / 3f, 1f, 0f, 0f, 0f, 0.01f, 0f, 10f, 0f, -1f, -1f, -10f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, -1f };
+    public static float[] zgornjeMeje = { vMax, 5f, 10f, 20f, 10f, 10f, 0.5f, 10f, 90f, 30f, 3f, 3f, 40f, 0.5f, 5f, 50f, 40f, 30f, 2f, Mathf.PI / 3f, 0.5f };
+    public static float[] spodnjeMeje = { 0f, 0.2f, 0.5f, 0f, 0f, 0f, 0.01f, 0f, 10f, 0f, -1f, -1f, -10f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, -0.5f };
     // faktor za prostorske vrednosti
     public static float[] faktor = { 3f, 3f, 3f, 3f, 3f, 3f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 3f, 3f, 1f, 1f, 1f };
     public static string[] enote = { "m/s", "m", "m", "m", "m", "m", "", "s", "s", "s", "", "", "", "", "", "", "m", "m", "", "rad/s", "" };

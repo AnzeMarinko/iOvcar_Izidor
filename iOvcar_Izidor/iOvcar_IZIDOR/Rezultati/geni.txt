@@ -1,0 +1,26 @@
+Hitrost v stanju vodenja: (0 - 7,5 m/s)
+Faktor za dovoljeno velikost črede: (0,6 - 15 m)
+Razdalja za zbiranje: (1,5 - 30 m)
+Razdalja za zaznavo ovc na poti: (0 - 60 m)
+Razdalja za upočasnitve v bližini ovc: (0 - 30 m)
+Razdalja za upočasnitev v bližini cilja: (0 - 30 m)
+Relativna moč šuma: (0,01 - 0,5 )
+Trajanje nakljucnega premika: (0 - 10 s)
+Fiksen čas do naključnega premika: (10 - 90 s)
+Razpon naključnega dodatnega časa: (0 - 30 s)
+Pomen oddaljenosti pobegle ovce od črede: (-1 - 3 )
+Pomen oddaljenosti pobegle ovce od ovčarja: (-1 - 3 )
+Ovčar bližje cilju kot čreda: (-10 - 40 )
+Največji delež ignoriranih ovc: (0 - 0,5 )
+Vpliv števila ovčarjev na delež ignoriranih ovc: (0 - 5 )
+Odpor pred stanjem bližje cilju kot točka: (0 - 50 )
+Udobna razdalja med ovčarji: (0 - 120 m)
+Razdalja za upočasnitev v bližini točke: (0 - 90 m)
+Odpor pred pred stanjem bližje čredi kot točka: (0 - 2 )
+Zaokroževanje blizu ovc: (0 - 1,047198 rad/s)
+Pomen smeri drugih ovčarjev: (-0,5 - 0,5 )
+
+Stroembom 5 Voronoi 1 0,6667;0,0972;0,2982;0,3333;0,3333;0,1667;0,5918;0,3;0,625;0,6667;0,75;0,5;0,24;0,3;0,4;0,04;0,5;0,4;0,475;0,5;0,6;
+Ginelli 5 Voronoi 1 0,6667;0,0972;0,2982;0,3333;0,3333;0,1667;0,5918;0,3;0,625;0,6667;0,75;0,5;0,24;0,3;0,4;0,04;0,5;0,4;0,475;0,5;0,6;
+PopravljenStroembom 5 Voronoi 1 0,6667;0,0972;0,2982;0,3333;0,3333;0,1667;0,5918;0,3;0,625;0,6667;0,75;0,5;0,24;0,3;0,4;0,04;0,5;0,4;0,475;0,5;0,6;
+Stroembom 10 Voronoi 1 0,6667;0,0972;0,2982;0,3333;0,3333;0,1667;0,5918;0,3;0,625;0,6667;0,75;0,5;0,24;0,3;0,4;0,04;0,5;0,4;0,475;0,5;0,6;

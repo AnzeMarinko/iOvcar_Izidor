@@ -6,7 +6,7 @@ public class Evolucija
 {
     // ta datoteka naj nadzoruje evolucijo
     public readonly int populationSize = 50;
-    public int maxGeneracij = 24;
+    public int maxGeneracij = 27;
     public int zadnjeGeneracije = 3;  // stevilo generacij, ko se izvaja po tri poskuse in se vzame minimal fitness ali mean fitness
 
     public float maxFitness = 0;
