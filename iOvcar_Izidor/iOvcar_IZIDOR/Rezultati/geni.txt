@@ -1,0 +1,34 @@
+Hitrost v stanju vodenja: (0 - 7,5 m/s)
+Faktor za dovoljeno velikost črede: (0 - 9 m)
+Razdalja za zbiranje: (0 - 30 m)
+Razdalja za zaznavo ovc na poti: (0 - 60 m)
+Razdalja za upočasnitve v bližini ovc: (0 - 30 m)
+Razdalja za upočasnitev v bližini cilja: (0 - 30 m)
+Relativna moč šuma: (0 - 50 %)
+Trajanje nakljucnega premika: (0 - 10 s)
+Fiksen čas do naključnega premika: (0 - 90 s)
+Razpon naključnega dodatnega časa: (0 - 30 s)
+Pomen oddaljenosti pobegle ovce od črede: (-1 - 4 )
+Pomen oddaljenosti pobegle ovce od ovčarja: (-1 - 4 )
+Ovčar bližje cilju kot čreda: (-5 - 40 )
+Največji delež ignoriranih ovc: (0 - 40 %)
+Vpliv števila ovčarjev na delež ignoriranih ovc: (-1 - 4 )
+Odpor pred stanjem bližje cilju kot točka: (0 - 20 )
+Udobna razdalja med ovčarji: (0 - 120 m)
+Razdalja za upočasnitev v bližini točke: (0 - 60 m)
+Odpor pred pred stanjem bližje čredi kot točka: (0 - 1 )
+Zaokroževanje blizu ovc: (0 - 2 rad/s)
+Pomen smeri drugih ovčarjev: (-1 - 1 )
+
+Stroembom 5 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+Ginelli 5 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+PopravljenStroembom 5 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+Stroembom 10 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+Ginelli 10 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+PopravljenStroembom 10 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+Stroembom 25 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+Ginelli 5 AI1 1 0,7002;0,9495;0,822;0,7608;0,2957;0,3062;0,0445;0,0638;0,6985;0,8786;0,9291;0,7831;0,2035;0,6358;0,829;0,2439;0,8986;0,359;0,3845;0,43;0,5978;
+Ginelli 25 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
+PopravljenStroembom 5 AI1 1 0,8887;0,656;0,7731;0,8804;0,0495;0,968;0,1621;0,0298;0,2853;0,49;0,9032;0,9867;0,2543;0,3875;0,9185;0,7617;0,719;0,4754;0,0623;0,3113;0,7418;
+Stroembom 5 AI1 1 0,6426;0,5463;0,8455;0,651;0,2383;0,2276;0,0464;0,0072;0,3462;0,4889;0,2553;0,6118;0,1924;0,1524;0,1924;0,53;0,1299;0,0392;0,9285;0,3591;0,0144;
+PopravljenStroembom 25 Voronoi 1 0,6667;0,2222;0,3333;0,3333;0,3333;0,1667;0,6;0,3;0,6667;0,6667;0,6;0,4;0,1556;0,375;0,6;0,1;0,5;0,6;0,95;0,2618;0,55;
