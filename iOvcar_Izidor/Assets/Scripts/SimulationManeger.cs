@@ -37,9 +37,11 @@ public class SimulationManeger
     {
         if (zacetek)  // nastavi parametre
         {
+            bool odZadaj = false;
             VrniKombinacijo();
             if (0 == kombinacije.ToArray().Length) Application.Quit();
-            evolucija = new Evolucija(kombinacije[0].modelGibanja, kombinacije[0].nOvc, kombinacije[0].obnasanjePsa, kombinacije[0].nOvcarjev);
+            DNA komb = kombinacije[odZadaj ? kombinacije.ToArray().Length - 1 : 0];
+            evolucija = new Evolucija(komb.modelGibanja, komb.nOvc, komb.obnasanjePsa, komb.nOvcarjev);
             DNA = evolucija.population[0];
             osebek = -1;
             zacetek = false;
