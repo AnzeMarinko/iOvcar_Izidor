@@ -19,7 +19,7 @@ public class Terrain : MonoBehaviour
     public GameObject ovcarGO;
     public GameObject ovcarGOML;
     int score = 0;  // rezultat za izpis
-    float maxCas = 180f;  // casovna omejitev simulacije
+    float maxCas = 240f;  // casovna omejitev simulacije
     public GameObject kameraGO;
     private GameObject kamera;
     public GameObject napisGO;
@@ -36,7 +36,7 @@ public class Terrain : MonoBehaviour
         score = 0;
         timer = 0;
         RemoveAllSheep();
-        maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 480f : 180f;  // vec casa za ucenje
+        maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 480f : 240f;  // vec casa za ucenje
         if (sheepardList.Count == 0 || obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2)  // zamenjaj pse
         { foreach (GameObject o in sheepardList) Destroy(o);
             sheepardList = new List<GameObject>();
