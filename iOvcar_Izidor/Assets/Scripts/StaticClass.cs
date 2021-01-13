@@ -4,7 +4,7 @@ public static class StaticClass
 {
     public static string modelName = "";  // vhodno ime modela za shranjevanje
     public static bool zgodovina = true;  // shranjevanje rezultatov
-    public static float v1 = (5 - 1) / 3f;  // Hitrost premikanja v stanju vodenja ovc
+    public static float v1 = 5f / 3f;  // Hitrost premikanja v stanju vodenja ovc
     public static float ra = 2 / 3f;   // Faktor za dovoljeno velikost crede
     public static float dc = 10 / 3f;  // Razdalja za zbiranje ovc v credo
     public static float da = 20 / 3f;   // Razdalja za zaznavo ovc na poti

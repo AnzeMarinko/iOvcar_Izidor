@@ -163,7 +163,7 @@ public class GuiScript : MonoBehaviour
                 {
                     najblizje = razdalja;
                     string[] gen = kombinacija[4].Split(';');
-                    for (int i = 0; i < 21; i++) sliders[i].value = float.Parse(gen[i], CultureInfo.InvariantCulture.NumberFormat);
+                    for (int i = 0; i < 21; i++) sliders[i].value = float.Parse(gen[i]);
                     for (int i = 0; i < 21; i++) SetGen(i);
                 }
             }

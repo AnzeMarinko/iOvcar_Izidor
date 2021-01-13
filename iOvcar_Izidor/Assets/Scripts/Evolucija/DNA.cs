@@ -24,7 +24,7 @@ public class DNA
         modelGibanja = gin;
         obnasanjePsa = vod;
         for (int i = 0; i < 21; i++) gen[i] = Random.Range(0f, 10001f) / 10000f;
-        if (vod == OvcarEnum.ObnasanjePsa.Voronoi) gen = StaticClass.rocniGen;
+        if (vod == OvcarEnum.ObnasanjePsa.Voronoi) for (int i=0; i<21; i++) gen[i] = StaticClass.rocniGen[i];
         fitness = 0;
         casi = new List<float>();
         maxGeneracij = mG;
@@ -41,13 +41,13 @@ public class DNA
         fitness *= Mathf.Pow((maxCas - timer) / maxCas, 2f) / nOvc * 200f;
         fitness += 1f / (GCM + 100f + ovce);
         fits.Add(fitness);
+        float mean = 0f;
+        foreach (float fit in fits) mean += fit;
+        mean /= (ponovitev + 1);
         fitness = (ponovitev > 0 && obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && generacija != maxGeneracij + 1)
             ? Mathf.Min(minFit, fitness) : fitness;
         minFit = fitness;
-        float mean = 0;
-        foreach (float fit in fits) mean += fit;
-        mean /= (ponovitev + 1);
-        fitness *= mean;
+        if (ponovitev > 0 && obnasanjePsa != OvcarEnum.ObnasanjePsa.Voronoi && generacija != maxGeneracij + 1) fitness *= mean;
         ponovitev++;
         return fitness;
     }
