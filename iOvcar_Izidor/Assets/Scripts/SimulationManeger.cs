@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class SimulationManeger
 {
     public int steviloPonovitev = 100;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
-    public int[] nOvc1 = { 5, 10, 25, 50, 75, 100 };
+    public int[] nOvc1 = { 5, 10, 25, 50, 100 };
     public int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
     public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom };
     public List<OvcarEnum.ObnasanjePsa> obnasanjeOvcarja = new List<OvcarEnum.ObnasanjePsa>();
@@ -37,11 +37,9 @@ public class SimulationManeger
     {
         if (zacetek)  // nastavi parametre
         {
-            bool odZadaj = false;
             VrniKombinacijo();
             if (0 == kombinacije.ToArray().Length) Application.Quit();
-            DNA komb = kombinacije[odZadaj ? kombinacije.ToArray().Length - 1 : 0];
-            evolucija = new Evolucija(komb.modelGibanja, komb.nOvc, komb.obnasanjePsa, komb.nOvcarjev);
+            evolucija = new Evolucija(kombinacije[0].modelGibanja, kombinacije[0].nOvc, kombinacije[0].obnasanjePsa, kombinacije[0].nOvcarjev);
             DNA = evolucija.population[0];
             osebek = -1;
             zacetek = false;

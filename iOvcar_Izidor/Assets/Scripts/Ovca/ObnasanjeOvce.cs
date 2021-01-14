@@ -4,14 +4,14 @@ using UnityEngine;
 public class ObnasanjeOvce : MonoBehaviour
 {
     Vector2 smer;      // njena smer
-    readonly float rd = 15/3f;    // Obmocje zaznavanja sosednjih agentov in ograje
-    readonly float rs = 30/3f;    // Obmocje zaznavanja ovcarja
+    readonly float rd = 15f/3f;    // Obmocje zaznavanja sosednjih agentov in ograje
+    readonly float rs = 30f/3f;    // Obmocje zaznavanja ovcarja
     GinelliOvca.ModelGibanja modelGibanja;  // gibanje po popravljenem Stroembomu
     public Terrain terrain;
 
     // po Stroembomovem modelu:
-    float speed = 5/3f;  // Hitrost premikanja
-    readonly float ra = 2/3f;     // Obmocje preprecevanja trkov
+    float speed = 5f/3f;  // Hitrost premikanja
+    readonly float ra = 2f/3f;     // Obmocje preprecevanja trkov
     readonly float ps = 1f;     // Relativna moc odbojne sile od ovcarja
     readonly float pa = 2f;     // Relativna moc odbijanja med agenti
     readonly float c = 1.05f;   // Relativna moc privlacne sile v credo
@@ -21,15 +21,15 @@ public class ObnasanjeOvce : MonoBehaviour
 
     // po Ginellijevem modelu:
     readonly float v1 = 2.5f / 3f;   // Hitrost premikanja v stanju hoje
-    readonly float v2 = 5 / 3f;     // Hitrost premikanja v stanju teka
+    readonly float v2 = 5f / 3f;     // Hitrost premikanja v stanju teka
     readonly float t01 = 70f;   // Spontani casovni prehod iz mirovanja v hojo
     readonly float t10 = 16f;   // Spontani casovni prehod iz hoje v mirovanje
     float t012;        // Spontani casovni prehod v tek
     float t20;         // Spontani casovni prehod iz teka v mirovanje
     readonly float dR = 31.6f / 3f;  // Karakteristična dolzinska utez za prestop v tek
     readonly float dS = 2.1f / 3f;   // Karakteristicna dolzinska utez za prestop iz teka
-    readonly float re = 1 / 3f;     // Ravnovesna razdalja za izracun pprivlacno/odbojne sile
-    readonly float r0 = 1 / 3f;     // Interakcijska razdalja med hojo
+    readonly float re = 1f / 3f;     // Ravnovesna razdalja za izracun pprivlacno/odbojne sile
+    readonly float r0 = 1f / 3f;     // Interakcijska razdalja med hojo
     readonly float alpha = 15f; // Utez efekta oponasanja
     readonly float beta = 1.8f; // Relativna moc privlacno/odbojne sile
     readonly float delta = 4f;  // Ojacevalni eksponent
@@ -177,7 +177,7 @@ public class ObnasanjeOvce : MonoBehaviour
                         float f_ij = Mathf.Min(1, (d_ij - re) / re);
                         vsotaSmeri += beta * f_ij * razdalja.normalized;
                     }
-                    smer = smer * 0.95f + 0.05f * vsotaSmeri.normalized;
+                    smer = smer * 0.9f + 0.1f * vsotaSmeri.normalized;
                     if (beg.magnitude > 1e-4f) smer += beg.normalized;
                     smer = smer.normalized;
                     smer = IzogibOgraji(position, smer);
@@ -202,7 +202,7 @@ public class ObnasanjeOvce : MonoBehaviour
                     float phi = Random.Range(-eta * Mathf.PI, eta * Mathf.PI);  // dodaj sum
                     angle += phi;
                     vsotaSmeri = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                    smer = smer * 0.95f + 0.05f * vsotaSmeri.normalized;
+                    smer = smer * 0.9f + 0.1f * vsotaSmeri.normalized;
                     smer = smer.normalized;
                     smer = IzogibOgraji(position, smer);
                     Vector2 step = position + Time.deltaTime * speed * smer;
@@ -261,7 +261,7 @@ public class ObnasanjeOvce : MonoBehaviour
                 {
                     case GinelliOvca.ModelGibanja.PopravljenStroembom:
                         {
-                            speed = (Rs.magnitude > 1e-4 ? v2 : v2 / 5) * 0.01f + 0.99f * speed;
+                            speed = (Rs.magnitude > 1e-4 ? v2 : v2 / 5f) * 0.01f + 0.99f * speed;
                             float kot = Mathf.PI / (120f * Mathf.Sqrt(speed / v2));
                             if (Vector3.Dot(smer, staraSmer) < Mathf.Cos(kot))
                             {
@@ -287,9 +287,9 @@ public class ObnasanjeOvce : MonoBehaviour
             transform.position = new Vector3(transform.position.x, 0.02f, transform.position.z);
             transform.forward = new Vector3(transform.forward.x, 0.02f, transform.forward.z);  // spotoma ji nastavi se obrnjenost tako da stoji na nogah
         }
-        if (GetComponent<Rigidbody>().velocity.magnitude > 5)   // ce gre prehitro jo upocasni, da je ne izstreli
+        if (GetComponent<Rigidbody>().velocity.magnitude > 5f / 3f)   // ce gre prehitro jo upocasni, da je ne izstreli
         {
-            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 5;
+            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 5f / 3f;
         }
         if (transform.position.x > terrain.center.x + 51f)
         {

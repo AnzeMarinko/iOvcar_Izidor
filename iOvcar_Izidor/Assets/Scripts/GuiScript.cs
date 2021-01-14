@@ -27,7 +27,6 @@ using UnityEngine.UI;
 public class GuiScript : MonoBehaviour
 {
     float cas = 0;
-    SimulationManeger sm;
     Terrain terrain;
     float pavzaOd = 0;
     float trajanjePavz = 0;
@@ -55,7 +54,7 @@ public class GuiScript : MonoBehaviour
     public void Start()
     {
         // scena = SceneManager.GetActiveScene().name;
-        Time.timeScale = 20f;
+        Time.timeScale = 10f;
         Time.maximumDeltaTime = 0.05f;
         canvas.enabled = false;
         sliders = new Slider[21] { sliderGen1, sliderGen2, sliderGen3, sliderGen4, sliderGen5, sliderGen6,
@@ -71,20 +70,9 @@ public class GuiScript : MonoBehaviour
         terrain = GameObject.FindGameObjectWithTag("Terrain").GetComponent<Terrain>();
         terrain.sm = new SimulationManeger();
         terrain.sm.SimulationStart();
-        terrain.ResetTerrain();
-        sm = terrain.sm;
-        for (int i = 0; i < 21; i++) sliders[i].value = sm.DNA.gen[i];
-        for (int i = 0; i < 21; i++) SetGen(i);
-        nSOvc.value = sm.DNA.nOvc;
-        nSOvcarjev.value = sm.DNA.nOvcarjev;
-        nOvc.text = "" + sm.DNA.nOvc;
-        nOvcarjev.text = "" + sm.DNA.nOvcarjev;
-        nSOvc.value = sm.DNA.nOvc;
-        nSOvcarjev.value = sm.DNA.nOvcarjev;
         StaticClass.zgodovina = zgodovina.isOn;
         StaticClass.ComputeGen();
         pomoc.enabled = false;
-        modelOvc.value = GinelliOvca.ModelGibanja.Ginelli == sm.DNA.modelGibanja ? 0 : GinelliOvca.ModelGibanja.Stroembom == sm.DNA.modelGibanja ? 1 : 2;
     }
 
     void Update()
@@ -98,10 +86,10 @@ public class GuiScript : MonoBehaviour
     {
         StaticClass.modelName = (imeModela.text.Length > 0 ? "-" : "") + imeModela.text + "manual-";
         GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
-        float[] gen = sm.DNA.gen;
-        sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value,
+        float[] gen = terrain.sm.DNA.gen;
+        terrain.sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value,
             MLAgents.isOn ? OvcarEnum.ObnasanjePsa.AI2 : OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
-        sm.DNA.gen = gen;
+        terrain.sm.DNA.gen = gen;
         terrain.ResetTerrain();
         Time.timeScale = 10f;
         canvas.enabled = !canvas.enabled;
@@ -110,17 +98,17 @@ public class GuiScript : MonoBehaviour
 
     public void SetNumbers()  // nastavi stevilo ovc in ovcarjev
     {
-        sm.DNA.nOvc = (int) nSOvc.value;
-        sm.DNA.nOvcarjev = (int) nSOvcarjev.value;
-        nOvc.text = "" + sm.DNA.nOvc;
-        nOvcarjev.text = "" + sm.DNA.nOvcarjev;
+        terrain.sm.DNA.nOvc = (int) nSOvc.value;
+        terrain.sm.DNA.nOvcarjev = (int) nSOvcarjev.value;
+        nOvc.text = "" + terrain.sm.DNA.nOvc;
+        nOvcarjev.text = "" + terrain.sm.DNA.nOvcarjev;
     }
 
     public void SetGen(int i)
     {
         float gen = sliders[i].value;
-        sm.DNA.gen[i] = gen;
-        StaticClass.ComputeParameters(sm.DNA.gen);
+        terrain.sm.DNA.gen[i] = gen;
+        StaticClass.ComputeParameters(terrain.sm.DNA.gen);
         float val = StaticClass.spodnjeMeje[i] + (StaticClass.zgornjeMeje[i] - StaticClass.spodnjeMeje[i]) * gen;
         texts[i].text = (Mathf.RoundToInt(val * 100 * StaticClass.faktor[i]) / 100f).ToString() + " " + StaticClass.enote[i];
     }
@@ -204,19 +192,23 @@ public class GuiScript : MonoBehaviour
             if (Time.timeScale > 0)
             {
                 trajanjePavz += Time.realtimeSinceStartup - pavzaOd;
-                nSOvc.value = sm.DNA.nOvc;
-                nSOvcarjev.value = sm.DNA.nOvcarjev;
-                modelOvc.value = GinelliOvca.ModelGibanja.Ginelli == sm.DNA.modelGibanja ? 0 : GinelliOvca.ModelGibanja.Stroembom == sm.DNA.modelGibanja ? 1 : 2;
             } else
             {
                 pavzaOd = Time.realtimeSinceStartup;
+                for (int i = 0; i < 21; i++) sliders[i].value = terrain.sm.DNA.gen[i];
+                for (int i = 0; i < 21; i++) SetGen(i);
+                nSOvc.value = terrain.sm.DNA.nOvc * 1;
+                nSOvcarjev.value = terrain.sm.DNA.nOvcarjev * 1;
+                nOvc.text = "" + terrain.sm.DNA.nOvc;
+                nOvcarjev.text = "" + terrain.sm.DNA.nOvcarjev;
+                modelOvc.value = GinelliOvca.ModelGibanja.Ginelli == terrain.sm.DNA.modelGibanja ? 0 : GinelliOvca.ModelGibanja.Stroembom == terrain.sm.DNA.modelGibanja ? 1 : 2;
             }
         }
         if (GUI.Button(new Rect(120, 0, 60, 20), "Izhod")) { Application.Quit(); }
         if (Time.timeScale > 0)
         {
             GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
-            sm.DNA.nOvc + " " + sm.DNA.modelGibanja.ToString() + "\n" + sm.DNA.nOvcarjev + " " + sm.DNA.obnasanjePsa.ToString());
+            terrain.sm.DNA.nOvc + " " + terrain.sm.DNA.modelGibanja.ToString() + "\n" + terrain.sm.DNA.nOvcarjev + " " + terrain.sm.DNA.obnasanjePsa.ToString());
             if (GUI.Button(new Rect(3, 110, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
             { GetComponent<Camera>().depth *= -1; }
             if (GUI.Button(new Rect(3, 130, 105, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama

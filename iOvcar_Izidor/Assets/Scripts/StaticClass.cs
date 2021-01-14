@@ -47,7 +47,7 @@ public static class StaticClass
                         "Zaokroževanje blizu ovc",
                         "Pomen smeri drugih ovčarjev" };
     // parametri za Voronoi model
-    readonly public static float[] rocniParametri = { 5 / 3f, 2 / 3f, 10 / 3f, 20 / 3f, 10 / 3f, 5 / 3f, 0.3f, 3f, 60f, 20f, 2f, 1f, 2f, 0.15f, 2f, 2f, 20f, 12f, 0.95f, Mathf.PI / 6f, 0.1f };
+    readonly public static float[] rocniParametri = { 5 / 3f, 2 / 3f, 10 / 3f, 20 / 3f, 10 / 3f, 5 / 3f, 0.3f, 3f, 60f, 20f, 2f, 1f, 2f, 0.15f, 2f, 2f, 10f, 12f, 0.95f, Mathf.PI / 6f, 0.1f };
     public static float vMax = 7.5f / 3f;
     // meje za parametre za genetski algoritem
     readonly public static float[] zgornjeMeje = { vMax, 3f, 10f, 20f, 10f, 10f, 0.5f, 10f, 90f, 30f,  4f,  4f, 40f, 0.4f,  4f, 20f, 40f, 20f, 1f, 2f,  1f };
