@@ -160,7 +160,7 @@ public class ObnasanjeOvce : MonoBehaviour
                 // izracunaj hitrost in smer
                 if (GetComponent<GinelliOvca>().tek)
                 {
-                    speed = speed * 0.8f + v2 * 0.2f;
+                    speed = speed * 0.7f + v2 * 0.3f;
                     foreach (GameObject o in terrain.sheepList)
                     {
                         Vector2 razdalja = new Vector2(o.transform.position.x, o.transform.position.z) - position;
@@ -177,7 +177,7 @@ public class ObnasanjeOvce : MonoBehaviour
                         float f_ij = Mathf.Min(1, (d_ij - re) / re);
                         vsotaSmeri += beta * f_ij * razdalja.normalized;
                     }
-                    smer = smer * 0.9f + 0.1f * vsotaSmeri.normalized;
+                    smer = smer * 0.6f + 0.4f * vsotaSmeri.normalized;
                     if (beg.magnitude > 1e-4f) smer += beg.normalized;
                     smer = smer.normalized;
                     smer = IzogibOgraji(position, smer);
@@ -188,7 +188,7 @@ public class ObnasanjeOvce : MonoBehaviour
                 }
                 else if (GetComponent<GinelliOvca>().hoja)
                 {
-                        speed = speed * 0.8f + v1 * 0.2f;
+                        speed = speed * 0.7f + v1 * 0.3f;
                     foreach (GameObject o in terrain.sheepList)   // smer hoje poravnaj s smerjo hoje bliznjih ovc
                     {
                         if ((position - new Vector2(o.transform.position.x, o.transform.position.z)).magnitude < r0)
@@ -202,7 +202,7 @@ public class ObnasanjeOvce : MonoBehaviour
                     float phi = Random.Range(-eta * Mathf.PI, eta * Mathf.PI);  // dodaj sum
                     angle += phi;
                     vsotaSmeri = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                    smer = smer * 0.9f + 0.1f * vsotaSmeri.normalized;
+                    smer = smer * 0.6f + 0.4f * vsotaSmeri.normalized;
                     smer = smer.normalized;
                     smer = IzogibOgraji(position, smer);
                     Vector2 step = position + Time.deltaTime * speed * smer;

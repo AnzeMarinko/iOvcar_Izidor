@@ -7,8 +7,8 @@ public class SimulationManeger
 {
     public int steviloPonovitev = 100;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
     public int[] nOvc1 = { 5, 10, 25, 50, 100 };
-    public int[] nOvcarjev1 = { 1, 2, 3, 4, 5 };
-    public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.PopravljenStroembom };
+    public int[] nOvcarjev1 = { 1, 2, 3, 4 };
+    public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
     public List<OvcarEnum.ObnasanjePsa> obnasanjeOvcarja = new List<OvcarEnum.ObnasanjePsa>();
 
     public DNA DNA;
