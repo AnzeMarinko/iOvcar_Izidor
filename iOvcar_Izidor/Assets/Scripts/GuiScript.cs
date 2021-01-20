@@ -53,9 +53,7 @@ public class GuiScript : MonoBehaviour
 
     public void Start()
     {
-        // scena = SceneManager.GetActiveScene().name;
-        Time.timeScale = 10f;
-        Time.maximumDeltaTime = 0.05f;
+        Time.timeScale = 20f;
         canvas.enabled = false;
         sliders = new Slider[21] { sliderGen1, sliderGen2, sliderGen3, sliderGen4, sliderGen5, sliderGen6,
             sliderGen7, sliderGen8, sliderGen9, sliderGen10, sliderGen11, sliderGen12, sliderGen13, sliderGen14,
@@ -79,7 +77,7 @@ public class GuiScript : MonoBehaviour
     {
         cas = Time.realtimeSinceStartup - trajanjePavz;
         if (Input.GetKey(KeyCode.Escape)) Application.Quit();
-        if (Input.GetKey(KeyCode.P)) Time.timeScale = Time.timeScale > 0 ? 0f : 10f;
+        if (Input.GetKey(KeyCode.P)) Time.timeScale = Time.timeScale > 0 ? 0f : 20f;
     }
 
     public void ClickUporabi()
@@ -91,7 +89,7 @@ public class GuiScript : MonoBehaviour
             MLAgents.isOn ? OvcarEnum.ObnasanjePsa.AI2 : OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
         terrain.sm.DNA.gen = gen;
         terrain.ResetTerrain();
-        Time.timeScale = 10f;
+        Time.timeScale = 20f;
         canvas.enabled = !canvas.enabled;
         pomoc.enabled = false;
     }
@@ -188,7 +186,7 @@ public class GuiScript : MonoBehaviour
         if (GUI.Button(new Rect(3, 0, 60, 20), Time.timeScale > 0 ? "Meni" : "Nadaljuj"))
         {
             canvas.enabled = !canvas.enabled;
-            Time.timeScale = Time.timeScale > 0 ? 0f : 10f;
+            Time.timeScale = Time.timeScale > 0 ? 0f : 20f;
             if (Time.timeScale > 0)
             {
                 trajanjePavz += Time.realtimeSinceStartup - pavzaOd;

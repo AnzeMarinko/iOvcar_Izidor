@@ -18,7 +18,7 @@ public class OvcarAgent : Agent
     {
         base.Initialize();
         terrain = GetComponentInParent<Terrain>();
-        staja = terrain.center + new Vector3(60f, 0f, 0f);
+        staja = terrain.center + new Vector3(175f, 0f, 0f);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)  // izvedi akcijo in daj nagrado

@@ -47,8 +47,7 @@ public class Terrain : MonoBehaviour
             foreach (GameObject o in sheepardList)
             {
                 if (i < nOvcarjev)
-                    o.transform.position = transform.position +
-                        new Vector3(Random.Range(-45f, 45f) + 70f, 0f, Random.Range(-45f, 45f) + 70f);
+                    o.transform.position = center + new Vector3(Random.Range(-120f, 120f), 0f, Random.Range(-120f, 120f));
                 else { Destroy(o); sheepardList.Remove(o); }
                 i++;
             }
@@ -60,8 +59,8 @@ public class Terrain : MonoBehaviour
     void AddSheep()
     {
         float phi = Random.Range(0f, 360f);  // dodaj ovco nekam na sredino
-        Vector2 loc = Random.insideUnitCircle * 20f;
-        GameObject o = Instantiate(ovcaGO, transform.position + new Vector3(loc.x + 70f, 0f, loc.y + 70f), Quaternion.Euler(0f, phi, 0f), this.transform);
+        Vector2 loc = Random.insideUnitCircle * 50f;
+        GameObject o = Instantiate(ovcaGO, center + new Vector3(loc.x, 0f, loc.y), Quaternion.Euler(0f, phi, 0f), this.transform);
         o.GetComponent<GinelliOvca>().model = modelGibanja;
         o.transform.SetParent(this.transform);
         sheepList.Add(o);
@@ -70,7 +69,7 @@ public class Terrain : MonoBehaviour
     void AddDog()
     {
         float phi = Random.Range(0f, 360f);  // kamorkoli dodaj psa
-        GameObject o = Instantiate(obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2 ? ovcarGO : ovcarGOML, transform.position + new Vector3(Random.Range(-45f, 45f) + 70f, 0f, Random.Range(-45f, 45f) + 70f), Quaternion.Euler(0f, phi, 0f), this.transform);
+        GameObject o = Instantiate(obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2 ? ovcarGO : ovcarGOML, center + new Vector3(Random.Range(-120f, 120f), 0f, Random.Range(-120f, 120f)), Quaternion.Euler(0f, phi, 0f), this.transform);
         o.GetComponent<PremakniOvcarja>().obnasanjeOvcarja = obnasanjeOvcarja;
         sheepardList.Add(o);
     }
@@ -103,7 +102,7 @@ public class Terrain : MonoBehaviour
     private void Start()
     {
         center = transform.position + new Vector3(70f, 0f, 70f);
-        cumulativeRewardText = Instantiate(napisGO, transform.position + new Vector3(40f, 11f, 27f), Quaternion.Euler(25f, 0f, 0f), transform).GetComponent<TextMeshPro>();
+        cumulativeRewardText = Instantiate(napisGO, transform.position + new Vector3(-15f, 30f, -65f), Quaternion.Euler(25f, 0f, 0f), transform).GetComponent<TextMeshPro>();
         kamera = Instantiate(kameraGO, transform.position + new Vector3(0f, 100f, 0f), Quaternion.Euler(90f, 0f, 0f), transform);
         sm = new SimulationManeger();
         sm.SimulationStart();
@@ -112,7 +111,7 @@ public class Terrain : MonoBehaviour
 
     private void Update()
     {
-        cumulativeRewardText.fontSize = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? 50f : 25f;
+        cumulativeRewardText.fontSize = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? 100f : 50f;
         cumulativeRewardText.fontStyle = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? FontStyles.Bold : FontStyles.Normal;
         score = nOvc - sheepList.Count;
         // Update the cumulative reward text
@@ -150,7 +149,7 @@ public class Terrain : MonoBehaviour
             }
             razdalja /= sheepList.Count;
             razdalja *= 8;
-            razdalja = Mathf.Min(Mathf.Max(razdalja, 25f), 75f);
+            razdalja = Mathf.Min(Mathf.Max(razdalja, 75f), 240f);
             kamera.transform.position = new Vector3(GCM.x, razdalja / Mathf.Tan(Mathf.PI / 12), GCM.z) * 0.05f + kamera.transform.position * 0.95f;
         }
     }
@@ -191,9 +190,9 @@ public class Terrain : MonoBehaviour
                 {
                     GCM += ovca.transform.position;
                 }
-                if (sheepList.Count > 0) GCM /= sheepList.Count; else GCM = new Vector3(65f, 0f, 0f);
+                if (sheepList.Count > 0) GCM /= sheepList.Count; else GCM = new Vector3(175f, 0f, 0f);
                 GCM -= center;
-                sm.DNA.GetFitness(maxCas, timer, (GCM - new Vector3(65f, 0f, 0f)).magnitude, nOvc);
+                sm.DNA.GetFitness(maxCas, timer, (GCM - new Vector3(175f, 0f, 0f)).magnitude, nOvc);
                 sw.WriteLine(sm.DNA.GenStr());
                 sm.DNA.casi = new List<float>();
             }

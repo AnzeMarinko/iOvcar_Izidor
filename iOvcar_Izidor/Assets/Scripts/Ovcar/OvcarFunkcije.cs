@@ -31,7 +31,7 @@ public class OvcarFunkcije : MonoBehaviour
     {
         List<GameObject> ovce = transform.parent.GetComponent<Terrain>().sheepList;
         Vector3 center = transform.parent.GetComponent<Terrain>().center;
-        cilj = center + new Vector3(60f, 0f, 0f);
+        cilj = center + new Vector3(175f, 0f, 0f);
         casDoNakljucnegaPremika -= Time.deltaTime;
         if (ovce.Count > 0)
         {
@@ -94,7 +94,7 @@ public class OvcarFunkcije : MonoBehaviour
             {
                 if (zacetekNakljucnegaPremika)
                 {
-                    Pc = new Vector3(Random.Range(-48f, 48f), 0f, Random.Range(-48f, 48f));
+                    Pc = new Vector3(Random.Range(-120f, 0f), 0f, Random.Range(-120f, 120f));
                     smerNakljucnegaPremika = Pc;
                     zacetekNakljucnegaPremika = false;
                 }
@@ -114,7 +114,7 @@ public class OvcarFunkcije : MonoBehaviour
                 Pd = GCM + (GCM - cilj).normalized * (fN + StaticClass.ra) - center;
             }
             // tocka znotraj ograje
-            tocka = (center + new Vector3(Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).x)), 0f, Mathf.Max(-49.8f, Mathf.Min(49.8f, (Pc + Pd).z)))) * 0.05f + tocka * 0.95f;
+            tocka = (center + new Vector3(Mathf.Max(-149.5f, Mathf.Min(149.5f, (Pc + Pd).x)), 0f, Mathf.Max(-149.5f, Mathf.Min(149.5f, (Pc + Pd).z)))) * 0.05f + tocka * 0.95f;
 
             float premikNazaj = (transform.position - cilj).magnitude - (tocka - cilj).magnitude;
             if (premikNazaj < 0)
@@ -187,7 +187,7 @@ public class OvcarFunkcije : MonoBehaviour
             smer = IzogibOgraji(- center + transform.position, smer);
             Vector3 step = transform.position + Time.deltaTime * hitrost * smer;
             Vector3 p = Vector3.MoveTowards(transform.position, step, hitrost);
-            if (p.x > center.x  + 49f) { GetComponent<Rigidbody>().MovePosition(center + new Vector3(49f, 0f, p.z)); }  // da se ne zatakne v stajo, ker ne zna ven
+            if (p.x > center.x  + 149f) { GetComponent<Rigidbody>().MovePosition(center + new Vector3(149f, 0f, p.z)); }  // da se ne zatakne v stajo, ker ne zna ven
             else { GetComponent<Rigidbody>().MovePosition(p); }
             transform.LookAt(p + smer);
         }
@@ -202,25 +202,25 @@ public class OvcarFunkcije : MonoBehaviour
     Vector3 IzogibOgraji(Vector3 lokacija, Vector3 smer)
     {
         // ce sem ograji blizje kot r se ji izognem, da ne grem proti njej prevec direktno
-        float r = 2f;
-        if (Mathf.Abs(lokacija.z) > 50f - r && lokacija.z * smer.z > 0f && Mathf.Abs(smer.x) < 0.9f)
+        float r = 5f;
+        if (Mathf.Abs(lokacija.z) > 150f - r && lokacija.z * smer.z > 0f && Mathf.Abs(smer.x) < 0.9f)
         {
 
-            float kot = (Mathf.Abs(lokacija.z) - 50f - r) *
+            float kot = (Mathf.Abs(lokacija.z) - 150f - r) *
                 Mathf.PI / 30f * (lokacija.z > 0 ? -1f : 1f) *
                     (smer.x > 0 ? -1f : 1f);
             smer = new Vector3(Mathf.Cos(kot) * smer.x - Mathf.Sin(kot) * smer.z,
                 Mathf.Cos(kot) * smer.z + Mathf.Sin(kot) * smer.x);
         }
-        else if (Mathf.Abs(lokacija.x) > 50f - r && lokacija.x * smer.x > 0f && Mathf.Abs(smer.z) < 0.9f)
+        else if (Mathf.Abs(lokacija.x) > 150f - r && lokacija.x * smer.x > 0f && Mathf.Abs(smer.z) < 0.9f)
         {
-            float kot = (Mathf.Abs(lokacija.x) - 50f - r) *
+            float kot = (Mathf.Abs(lokacija.x) - 150f - r) *
                 Mathf.PI / 30f * (lokacija.x > 0 ? -1f : 1f) *
                     (smer.z > 0 ? 1f : -1f);
             smer = new Vector3(Mathf.Cos(kot) * smer.x - Mathf.Sin(kot) * smer.z,
                 Mathf.Cos(kot) * smer.z + Mathf.Sin(kot) * smer.x);
         }
-        if (Mathf.Abs(lokacija.z) > 50f - r && Mathf.Abs(lokacija.x) > 50f - r && lokacija.x * smer.x > 0f && lokacija.z * smer.z > 0f)
+        if (Mathf.Abs(lokacija.z) > 150f - r && Mathf.Abs(lokacija.x) > 150f - r && lokacija.x * smer.x > 0f && lokacija.z * smer.z > 0f)
         {
             float kotKot = Mathf.PI / 3f * ((lokacija.z * lokacija.x) > 0 ? 1f : -1f) *
                 (Mathf.Abs(lokacija.z) < Mathf.Abs(lokacija.x) ? 1f : -1f);

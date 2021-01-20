@@ -4,12 +4,12 @@ public static class StaticClass
 {
     public static string modelName = "";  // vhodno ime modela za shranjevanje
     public static bool zgodovina = true;  // shranjevanje rezultatov
-    public static float v1 = 5f / 3f;  // Hitrost premikanja v stanju vodenja ovc
-    public static float ra = 2 / 3f;   // Faktor za dovoljeno velikost crede
-    public static float dc = 10 / 3f;  // Razdalja za zbiranje ovc v credo
-    public static float da = 20 / 3f;   // Razdalja za zaznavo ovc na poti
-    public static float d0 = 10 / 3f;   // Razdalja za upocasnitve v blizini ovc
-    public static float df = 5 / 3f;   // Razdalja za upocasnitev v blizini cilja
+    public static float v1 = 5f;  // Hitrost premikanja v stanju vodenja ovc
+    public static float ra = 2;   // Faktor za dovoljeno velikost crede
+    public static float dc = 10;  // Razdalja za zbiranje ovc v credo
+    public static float da = 20;   // Razdalja za zaznavo ovc na poti
+    public static float d0 = 10;   // Razdalja za upocasnitve v blizini ovc
+    public static float df = 5;   // Razdalja za upocasnitev v blizini cilja
     public static float e = 0.3f;  // Relativna moc suma
     public static float trajanjeNakljucnegaPremika = 3f;
     public static float casNakljucnegaPremika = 60f;
@@ -47,13 +47,13 @@ public static class StaticClass
                         "Zaokroževanje blizu ovc",
                         "Pomen smeri drugih ovčarjev" };
     // parametri za Voronoi model
-    readonly public static float[] rocniParametri = { 5 / 3f, 2 / 3f, 10 / 3f, 20 / 3f, 10 / 3f, 5 / 3f, 0.3f, 3f, 60f, 20f, 2f, 1f, 2f, 0.15f, 2f, 2f, 10f, 12f, 0.95f, Mathf.PI / 6f, 0.1f };
-    public static float vMax = 7.5f / 3f;
+    readonly public static float[] rocniParametri = { 5f, 2f, 10f, 20f, 10f, 5f, 0.3f, 3f, 60f, 20f, 2f, 1f, 2f, 0.15f, 2f, 2f, 20f, 12f, 0.95f, Mathf.PI / 6f, 0.1f };
+    public static float vMax = 7.5f;
     // meje za parametre za genetski algoritem
-    readonly public static float[] zgornjeMeje = { vMax, 3f, 10f, 20f, 10f, 10f, 0.5f, 10f, 90f, 30f,  4f,  4f, 40f, 0.4f,  4f, 20f, 40f, 20f, 1f, 2f,  1f };
+    readonly public static float[] zgornjeMeje = { vMax, 5f, 30f, 60f, 30f, 30f, 0.5f, 10f, 90f, 30f,  4f,  4f, 50f, 0.4f,  4f, 20f, 40f, 20f, 1f, 2f,  1f };
     readonly public static float[] spodnjeMeje = { 0f,   0f,  0f,  0f,  0f,  0f,   0f,  0f,  0f,  0f, -1f, -1f, -5f,   0f, -1f,  0f,  0f,  0f, 0f, 0f, -1f };
     // faktor za prostorske vrednosti
-    public static float[] faktor = { 3f, 3f, 3f, 3f, 3f, 3f, 100f, 1f, 1f, 1f, 1f, 1f, 1f, 100f, 1f, 1f, 3f, 3f, 1f, 1f, 1f };
+    public static float[] faktor = { 1f, 1f, 1f, 1f, 1f, 1f, 100f, 1f, 1f, 1f, 1f, 1f, 1f, 100f, 1f, 1f, 1f, 1f, 1f, 1f, 1f };
     public static string[] enote = { "m/s", "m", "m", "m", "m", "m", "%", "s", "s", "s", "", "", "", "%", "", "", "m", "m", "", "rad/s", "" };
     public static float[] rocniGen = new float[21];
 

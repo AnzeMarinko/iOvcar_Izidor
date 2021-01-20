@@ -38,7 +38,7 @@ public class DNA
         {
             fitness += (maxCas - cas) / maxCas;
         }
-        fitness *= Mathf.Pow((maxCas - timer) / maxCas, 2f) / nOvc * 142f + 1e-5f;
+        fitness *= Mathf.Pow((maxCas - timer) / maxCas, 2f) / nOvc * 210f + 1e-4f;
         fitness += 1f / (GCM * ovce + 1f + ovce);
         fits.Add(fitness);
         float mean = 0f;
