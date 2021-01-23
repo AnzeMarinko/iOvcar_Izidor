@@ -19,7 +19,7 @@ public class Terrain : MonoBehaviour
     public GameObject ovcarGO;
     public GameObject ovcarGOML;
     int score = 0;  // rezultat za izpis
-    float maxCas = 240f;  // casovna omejitev simulacije
+    float maxCas = 180f;  // casovna omejitev simulacije
     public GameObject kameraGO;
     private GameObject kamera;
     public GameObject napisGO;
@@ -36,11 +36,13 @@ public class Terrain : MonoBehaviour
         score = 0;
         timer = 0;
         RemoveAllSheep();
-        maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 600f : 240f;  // vec casa za ucenje
+        maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 600f : 180f;  // vec casa za ucenje
         if (sheepardList.Count == 0 || obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2)  // zamenjaj pse
-        { foreach (GameObject o in sheepardList) Destroy(o);
+        {
+            foreach (GameObject o in sheepardList) Destroy(o);
             sheepardList = new List<GameObject>();
-            for (int i = 0; i < nOvcarjev; i++) { AddDog(); } }
+            for (int i = 0; i < nOvcarjev; i++) { AddDog(); }
+        }
         else
         {
             int i = 0;
@@ -98,11 +100,11 @@ public class Terrain : MonoBehaviour
         }
         sheepList = new List<GameObject>();
     }
-    
+
     private void Start()
     {
         center = transform.position + new Vector3(70f, 0f, 70f);
-        cumulativeRewardText = Instantiate(napisGO, transform.position + new Vector3(-15f, 30f, -65f), Quaternion.Euler(25f, 0f, 0f), transform).GetComponent<TextMeshPro>();
+        cumulativeRewardText = Instantiate(napisGO, transform.position + new Vector3(-5f, 30f, -65f), Quaternion.Euler(25f, 0f, 0f), transform).GetComponent<TextMeshPro>();
         kamera = Instantiate(kameraGO, transform.position + new Vector3(0f, 100f, 0f), Quaternion.Euler(90f, 0f, 0f), transform);
         sm = new SimulationManeger();
         sm.SimulationStart();

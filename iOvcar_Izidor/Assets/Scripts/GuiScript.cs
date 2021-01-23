@@ -54,6 +54,7 @@ public class GuiScript : MonoBehaviour
     public void Start()
     {
         Time.timeScale = 20f;
+        Time.maximumDeltaTime = 1f / Time.timeScale / 2f;
         canvas.enabled = false;
         sliders = new Slider[21] { sliderGen1, sliderGen2, sliderGen3, sliderGen4, sliderGen5, sliderGen6,
             sliderGen7, sliderGen8, sliderGen9, sliderGen10, sliderGen11, sliderGen12, sliderGen13, sliderGen14,
