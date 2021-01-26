@@ -41,8 +41,8 @@ class Poskus:
                 self.casi[generacija] = self.casi.get(generacija, []) + [list(np.histogram([int(t) for t in cas], maxT, (0, maxT))[0])]
 
 
-folder = "Rezultati/"  # "../iOvcar_Izidor/iOvcar_IZIDOR/Rezultati/"  # mapa z rezultati
-maxT = 240
+folder = "../iOvcar_Izidor/iOvcar_IZIDOR/Rezultati/"  # mapa z rezultati  "Rezultati/"
+maxT = 180
 files = [folder + subfolder + "/" + file for subfolder in os.listdir(folder)
          if ".txt" not in subfolder for file in os.listdir(folder + subfolder)]
 data = {(d.final, d.ovce, d.novc, d.ovcarji, d.novcarjev): (d.casi, d.geni, d.fitness) for d in
