@@ -6,15 +6,9 @@ using UnityEngine.UI;
 /* TODO:
  * 
  * grafi za Voronoi in AI1
- * pisanje magistrske, pridobivanje rezultatov za Voronoi in AI1
  * 
- * AI2 naj ne izračuna kam naj se obrne ampak raje kar smer (absolutno in ne relativno glede nanj)
- * 
- * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji (mozno spreminjanje stevila ovcarjev in tudi spreminjanje ovcarjev v ovcarML in obratno
- * oz. naj bo to en prefab in so te funkcije heuristika in AI2 pomeni interferenco, ostala dva pa hevristiko)
- * optimalne gene mora tudi znati prebrati in iz njih interpolira za nove kombinacije
- * testiraj predvidene gene (in tudi za najbližjo kombinacijo) in preizkusi ali je dosti slabše kot, če ga naučiš za točno to kombinacijo
- *   s tem vidiš ali je model overfitan s parametri samo za določeno kombinacijo (ne sme biti pretirano počasnejši za več ovc)
+ * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji (mozno spreminjanje stevila ovcarjev in modela ovcarjev)
+ * najprej se nauci AI2 iz demonstracij iz opt gena
  * 
  * uredi kodo, pomoč, datoteke, lastnosti projekta
  * 
@@ -145,8 +139,7 @@ public class GuiScript : MonoBehaviour
                     (Mathf.Abs(int.Parse(kombinacija[1]) - n1) + 1f) *
                     (kombinacija[2].Contains(vod.ToString()) ? 1f : 100f) *
                     (Mathf.Abs(int.Parse(kombinacija[3]) - n2) + 1f);
-                if (najblizje == 0f) break;
-                else if (razdalja < najblizje)
+                if (razdalja < najblizje)
                 {
                     najblizje = razdalja;
                     string[] gen = kombinacija[4].Split(';');

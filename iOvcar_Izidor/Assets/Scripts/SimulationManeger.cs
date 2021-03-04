@@ -23,7 +23,7 @@ public class SimulationManeger
         zacetek = true;
         if (SceneManager.GetActiveScene().name == "testScene")   // nastavi seznam modelov za testiranje
         {
-            // obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
+            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1);
         }
@@ -85,6 +85,13 @@ public class SimulationManeger
                 osebek++; DNA = evolucija.population[osebek]; 
             } else
             { evolucija.Reproduce(); DNA = evolucija.population[0]; osebek = 0; }
+        }
+        else
+        {
+            // ucenje AI2  (dodaj se moznost testiranja 100x)
+            DNA.nOvc = Random.Range(5, 101);
+            DNA.nOvcarjev = Random.Range(1, 5);
+            DNA.modelGibanja = modelGibanja1[Random.Range(0, 3)];
         }
     }
 

@@ -11,7 +11,7 @@ public class Terrain : MonoBehaviour
     public List<GameObject> sheepardList;
     int nOvc;
     int nOvcarjev;
-    GinelliOvca.ModelGibanja modelGibanja;
+    public GinelliOvca.ModelGibanja modelGibanja;
     OvcarEnum.ObnasanjePsa obnasanjeOvcarja;
     public float timer = 0;
 
@@ -36,7 +36,7 @@ public class Terrain : MonoBehaviour
         score = 0;
         timer = 0;
         RemoveAllSheep();
-        maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 600f : 180f;  // vec casa za ucenje
+        maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 300f : 180f;  // vec casa za ucenje
         if (sheepardList.Count == 0 || obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2)  // zamenjaj pse
         {
             foreach (GameObject o in sheepardList) Destroy(o);
@@ -83,7 +83,7 @@ public class Terrain : MonoBehaviour
         Destroy(sheepObject);
         if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 && timer < maxCas && score > 2)
             foreach (GameObject oa in sheepardList)
-                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc * 10f);
+                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc);
     }
 
     private void RemoveAllSheep()
@@ -130,7 +130,7 @@ public class Terrain : MonoBehaviour
                 foreach (GameObject oa in sheepardList)
                 {
                     if (sheepList.Count == 0)
-                        oa.GetComponent<OvcarAgent>().AddReward(0f);   //  (maxCas - timer) * 100);
+                        oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) * 3);
                     oa.GetComponent<OvcarAgent>().EndEpisode();
                 }
             ResetTerrain();

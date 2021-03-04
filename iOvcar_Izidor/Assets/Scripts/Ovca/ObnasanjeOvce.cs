@@ -180,7 +180,7 @@ public class ObnasanjeOvce : MonoBehaviour
                         smer = vsotaSmeri.normalized;
                         if (beg.magnitude > 1e-4f) smer += beg.normalized * 0.1f;
                         smer = smer.normalized;
-                        smer = IzogibOgraji(position, smer);
+                        smer = IzogibOgraji(position - new Vector2(terrain.center.x, terrain.center.z), smer);
                         Vector2 step = position + Time.deltaTime * speed * smer;
                         Vector3 p = Vector3.MoveTowards(transform.position, new Vector3(step.x, 0f, step.y), speed);
                         GetComponent<Rigidbody>().MovePosition(p);
@@ -204,7 +204,7 @@ public class ObnasanjeOvce : MonoBehaviour
                         vsotaSmeri = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                         smer = smer * 0.9f + 0.1f * vsotaSmeri.normalized;
                         smer = smer.normalized;
-                        smer = IzogibOgraji(position, smer);
+                        smer = IzogibOgraji(position - new Vector2(terrain.center.x, terrain.center.z), smer);
                         Vector2 step = position + Time.deltaTime * speed * smer;
                         Vector3 p = Vector3.MoveTowards(transform.position, new Vector3(step.x, 0f, step.y), speed);
                         GetComponent<Rigidbody>().MovePosition(p);
@@ -274,7 +274,7 @@ public class ObnasanjeOvce : MonoBehaviour
                             }
                         default: break;
                     }
-                    smer = IzogibOgraji(position, smer);   // izogibanje ograji
+                    smer = IzogibOgraji(position - new Vector2(terrain.center.x, terrain.center.z), smer);   // izogibanje ograji
                     Vector2 step = position + Time.deltaTime * speed * smer;
                     Vector3 p = Vector3.MoveTowards(transform.position, new Vector3(step.x, 0f, step.y), speed);  // izracun naslednje tocke
                     GetComponent<Rigidbody>().MovePosition(p);
@@ -287,15 +287,17 @@ public class ObnasanjeOvce : MonoBehaviour
             transform.position = new Vector3(transform.position.x, 0.02f, transform.position.z);
             transform.forward = new Vector3(transform.forward.x, 0.02f, transform.forward.z);  // spotoma ji nastavi se obrnjenost tako da stoji na nogah
         }
-        if (Mathf.Max(Mathf.Abs(transform.position.x), Mathf.Abs(transform.position.z)) > 149f && (transform.position.x < 0f || Mathf.Abs(transform.position.z) > 50f))
+        if (Mathf.Max(Mathf.Abs(transform.position.x - terrain.center.x), Mathf.Abs(transform.position.z - terrain.center.z)) > 149f &&
+            (transform.position.x - terrain.center.x < 0f || Mathf.Abs(transform.position.z - terrain.center.z) > 50f))
         {
-            transform.position = new Vector3(Mathf.Max(Mathf.Min(transform.position.x, 149f), -149f), 0.02f, Mathf.Max(Mathf.Min(transform.position.z, 149f), -149f));
+            transform.position = new Vector3(Mathf.Max(Mathf.Min(transform.position.x - terrain.center.x, 149f), -149f) + terrain.center.x,
+                0.02f, Mathf.Max(Mathf.Min(transform.position.z - terrain.center.z, 149f), -149f) + terrain.center.z);
         }
         if (GetComponent<Rigidbody>().velocity.magnitude > speed)   // ce gre prehitro jo upocasni, da je ne izstreli
         {
             GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * speed;
         }
-        if (transform.position.x > terrain.center.x + 151f)
+        if (transform.position.x - terrain.center.x > 151f)
         {
             if (!GetComponent<GinelliOvca>().umira)
             { terrain.RemoveSpecificSheep(this.gameObject); GetComponent<GinelliOvca>().umira = true; }
