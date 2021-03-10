@@ -8,7 +8,7 @@ public class Terrain : MonoBehaviour
 {
     private TextMeshPro cumulativeRewardText;
     public List<GameObject> sheepList;
-    public List<GameObject> sheepardList;
+    public List<GameObject> sheepardList = new List<GameObject>();
     int nOvc;
     int nOvcarjev;
     public GinelliOvca.ModelGibanja modelGibanja;
@@ -19,7 +19,7 @@ public class Terrain : MonoBehaviour
     public GameObject ovcarGO;
     public GameObject ovcarGOML;
     int score = 0;  // rezultat za izpis
-    float maxCas = 180f;  // casovna omejitev simulacije
+    public float maxCas = 180f;  // casovna omejitev simulacije
     public GameObject kameraGO;
     private GameObject kamera;
     public GameObject napisGO;
@@ -37,25 +37,16 @@ public class Terrain : MonoBehaviour
         timer = 0;
         RemoveAllSheep();
         maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 300f : 180f;  // vec casa za ucenje
-        if (sheepardList.Count == 0 || obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2)  // zamenjaj pse
+        int i = 0;
+        foreach (GameObject o in sheepardList)
         {
-            foreach (GameObject o in sheepardList) Destroy(o);
-            sheepardList = new List<GameObject>();
-            for (int i = 0; i < nOvcarjev; i++) { AddDog(); }
+            if (i < nOvcarjev)
+                o.transform.position = center + new Vector3(Random.Range(-120f, 120f), 0f, Random.Range(-120f, 120f));
+            else { Destroy(o); sheepardList.Remove(o); }
+            i++;
         }
-        else
-        {
-            int i = 0;
-            foreach (GameObject o in sheepardList)
-            {
-                if (i < nOvcarjev)
-                    o.transform.position = center + new Vector3(Random.Range(-120f, 120f), 0f, Random.Range(-120f, 120f));
-                else { Destroy(o); sheepardList.Remove(o); }
-                i++;
-            }
-            for (int j = i; j < nOvcarjev; j++) { AddDog(); }
-        }
-        for (int i = 0; i < nOvc; i++) { AddSheep(); }  // postavi ovce in pse na polje
+        for (int j = i; j < nOvcarjev; j++) { AddDog(); }
+        for (int j = 0; j < nOvc; j++) { AddSheep(); }  // postavi ovce in pse na polje
     }
 
     void AddSheep()
@@ -81,9 +72,6 @@ public class Terrain : MonoBehaviour
         if (timer < maxCas) sm.DNA.casi.Add(timer);
         sheepList.Remove(sheepObject);
         Destroy(sheepObject);
-        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 && timer < maxCas && score > 2)
-            foreach (GameObject oa in sheepardList)
-                oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) / nOvc);
     }
 
     private void RemoveAllSheep()
@@ -130,8 +118,9 @@ public class Terrain : MonoBehaviour
                 foreach (GameObject oa in sheepardList)
                 {
                     if (sheepList.Count == 0)
-                        oa.GetComponent<OvcarAgent>().AddReward((maxCas - timer) * 3);
+                        oa.GetComponent<OvcarAgent>().AddReward(Mathf.Pow((maxCas - timer) / maxCas, 2f) * 4f);
                     oa.GetComponent<OvcarAgent>().EndEpisode();
+                    oa.GetComponent<OvcarAgent>().exGCM = 1000f;
                 }
             ResetTerrain();
         }

@@ -89,9 +89,9 @@ public class SimulationManeger
         else
         {
             // ucenje AI2  (dodaj se moznost testiranja 100x)
-            DNA.nOvc = Random.Range(5, 101);
-            DNA.nOvcarjev = Random.Range(1, 5);
-            DNA.modelGibanja = modelGibanja1[Random.Range(0, 3)];
+            DNA.nOvc = (int)Mathf.Pow(Random.Range(1f, 10f), 2f);
+            DNA.nOvcarjev = 1;
+            DNA.modelGibanja = GinelliOvca.ModelGibanja.Ginelli;
         }
     }
 

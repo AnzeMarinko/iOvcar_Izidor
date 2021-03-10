@@ -199,6 +199,7 @@ public class GuiScript : MonoBehaviour
         if (GUI.Button(new Rect(120, 0, 60, 20), "Izhod")) { Application.Quit(); }
         if (Time.timeScale > 0)
         {
+            print(terrain.sm.DNA.nOvc);
             GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
             terrain.sm.DNA.nOvc + " " + terrain.sm.DNA.modelGibanja.ToString() + "\n" + terrain.sm.DNA.nOvcarjev + " " + terrain.sm.DNA.obnasanjePsa.ToString());
             if (GUI.Button(new Rect(3, 110, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama

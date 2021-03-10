@@ -39,6 +39,8 @@ public class OvcarAgent : Agent
     public float dljeCilju = 0.95f;
     public float rotiraj = Mathf.PI / 6f;
     public float pomenSmeriDrugih = 0.1f;
+    public float exGCM = 1000f;
+    int pobeglih = 0;
 
     public override void Initialize()
     {
@@ -72,7 +74,12 @@ public class OvcarAgent : Agent
         {
             razprsenost += (GCM - o.transform.position).magnitude;
         }
-        AddReward(- Time.deltaTime);
+        AddReward(- Time.deltaTime / terrain.maxCas);
+        if (exGCM - (GCM - staja).magnitude > Time.deltaTime * v2 / 3)
+        {
+            exGCM = (GCM - staja).magnitude;
+            AddReward(Time.deltaTime / terrain.maxCas);
+        }
         // v terrain se izvedejo tudi nagrade za ovce ko pridejo v stajo
     }
 
@@ -120,12 +127,16 @@ public class OvcarAgent : Agent
         {
             GCM += ovca.transform.position / terrain.sheepList.Count;
         }
-        sensor.AddObservation(terrain.sheepList.Count / 100f);
-        sensor.AddObservation(terrain.sheepardList.Count / 5f);
-        sensor.AddObservation((float)terrain.modelGibanja / 2f);
-        sensor.AddObservation((transform.position - staja).magnitude / 200f);
-        sensor.AddObservation((GCM - transform.position).magnitude / 200f);
-        // 5 float = 5 total values
+        sensor.AddObservation(Mathf.Min(terrain.sheepList.Count / 150f, 1f));
+        sensor.AddObservation(pobeglih / (terrain.sheepList.Count + 1f));
+        sensor.AddObservation(Mathf.Min(terrain.sheepardList.Count / 7f, 1f));
+        sensor.AddObservation(terrain.modelGibanja == GinelliOvca.ModelGibanja.Ginelli ? 1f : 0f);
+        sensor.AddObservation(terrain.modelGibanja == GinelliOvca.ModelGibanja.Stroembom ? 1f : 0f);
+        sensor.AddObservation(Mathf.Min((GCM.x - staja.x) / 150f, 1f));
+        sensor.AddObservation(Mathf.Min((GCM.z - staja.z) / 150f, 1f));
+        sensor.AddObservation(Mathf.Min((transform.position.x - staja.x) / 150f, 1f));
+        sensor.AddObservation(Mathf.Min((transform.position.z - staja.z) / 150f, 1f));
+        // 9 float = 9 total values
     }
     public void ComputeOwnParameters(float[] gen)
     {
@@ -176,7 +187,6 @@ public class OvcarAgent : Agent
             float doCentra = 0;
             bool soZbrane = true;
             bool preblizu = false;
-            int pobeglih = 0;
             foreach (GameObject ovca in terrain.sheepList)
             {
                 float doOvce = (transform.position - ovca.transform.position).magnitude;

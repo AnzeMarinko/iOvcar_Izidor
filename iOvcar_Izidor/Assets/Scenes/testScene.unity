@@ -2728,6 +2728,11 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetNumbers
       objectReference: {fileID: 0}
+    - target: {fileID: 4141816156922129175, guid: 9fde051322d3a964ab6b51df2bdfb73f,
+        type: 3}
+      propertyPath: m_MaxValue
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4141816156934435957, guid: 9fde051322d3a964ab6b51df2bdfb73f,
         type: 3}
       propertyPath: m_AnchorMax.x
