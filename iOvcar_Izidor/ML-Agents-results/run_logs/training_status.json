@@ -1,0 +1,36 @@
+{
+    "iOvcarML": {
+        "checkpoints": [
+            {
+                "steps": 499864,
+                "file_path": "results\\iOvcarML_adaptGinelliDemo\\iOvcarML\\iOvcarML-499864.onnx",
+                "reward": 2.6133022904396057,
+                "creation_time": 1615388357.5218787
+            },
+            {
+                "steps": 999937,
+                "file_path": "results\\iOvcarML_adaptGinelliDemo\\iOvcarML\\iOvcarML-999937.onnx",
+                "reward": 2.5080513541515055,
+                "creation_time": 1615402651.4575605
+            },
+            {
+                "steps": 1046289,
+                "file_path": "results\\iOvcarML_adaptGinelliDemo\\iOvcarML\\iOvcarML-1046289.onnx",
+                "reward": 2.5821003052406013,
+                "creation_time": 1615403934.0088518
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1046289,
+            "file_path": "results\\iOvcarML_adaptGinelliDemo\\iOvcarML.onnx",
+            "reward": 2.5821003052406013,
+            "creation_time": 1615403934.0088518
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.2.0",
+        "mlagents_version": "0.22.0",
+        "torch_version": "1.7.0+cu110",
+        "tensorflow_version": -1
+    }
+}

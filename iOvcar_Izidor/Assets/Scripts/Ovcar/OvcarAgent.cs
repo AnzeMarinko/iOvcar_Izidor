@@ -91,29 +91,24 @@ public class OvcarAgent : Agent
         int n1 = terrain.sm.DNA.nOvc;
         OvcarEnum.ObnasanjePsa vod = OvcarEnum.ObnasanjePsa.AI1;
         int n2 = terrain.sm.DNA.nOvcarjev;
-        string fileName = "Rezultati/geni.txt";
-        if (File.Exists(fileName))
+        string[] geni = optGen.opt.Split('\n');
+        float najblizje = 1000f;
+        float[] genf = new float[21];
+        foreach (string line in geni)
         {
-            string[] geni = File.ReadAllLines(fileName);
-            float najblizje = 1000f;
-            float[] genf = new float[21];
-            foreach (string line in geni)
+            string[] kombinacija = line.Split(' ');
+            float razdalja = (kombinacija[0].Contains(gin.ToString()) ? 1f : 100f) *
+                (Mathf.Abs(int.Parse(kombinacija[1]) - n1) + 1f) *
+                (kombinacija[2].Contains(vod.ToString()) ? 1f : 100f) *
+                (Mathf.Abs(int.Parse(kombinacija[3]) - n2) + 1f);
+            if (razdalja < najblizje)
             {
-                if (line.Length < 80) continue;
-                string[] kombinacija = line.Split(' ');
-                float razdalja = (kombinacija[0].Contains(gin.ToString()) ? 1f : 100f) *
-                    (Mathf.Abs(int.Parse(kombinacija[1]) - n1) + 1f) *
-                    (kombinacija[2].Contains(vod.ToString()) ? 1f : 100f) *
-                    (Mathf.Abs(int.Parse(kombinacija[3]) - n2) + 1f);
-                if (razdalja < najblizje)
-                {
-                    najblizje = razdalja;
-                    string[] gen = kombinacija[4].Split(';');
-                    for (int i = 0; i < 21; i++) genf[i] = (float.Parse(gen[i]) - 0.5f) * 2f;
-                }
+                najblizje = razdalja;
+                string[] gen = kombinacija[4].Split(';');
+                for (int i = 0; i < 21; i++) genf[i] = (float.Parse(gen[i]) - 0.5f) * 2f;
             }
-            for (int i = 0; i < 21; i++) actionsOut.ContinuousActions.Array[i] = genf[i];
         }
+        for (int i = 0; i < 21; i++) actionsOut.ContinuousActions.Array[i] = genf[i];
     }
 
     public override void OnEpisodeBegin()

@@ -34,6 +34,8 @@ public class ObnasanjeOvce : MonoBehaviour
     readonly float beta = 0.8f; // Relativna moc privlacno/odbojne sile
     readonly float delta = 4f;  // Ojacevalni eksponent
     readonly float eta = 0.13f; // Razpon suma
+    public List<float> xs = new List<float>();
+    public List<float> zs = new List<float>();
 
     // Use this for initialisation
     void Start()
@@ -49,6 +51,8 @@ public class ObnasanjeOvce : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        xs.Add(transform.position.x);
+        zs.Add(transform.position.z); 
         foreach (GameObject ovcar in terrain.sheepardList)   // posodobitev, kateri pes je najblizje
         {
             if ((ovcar.transform.position - transform.position).magnitude < (GetComponent<GinelliOvca>().voronoiPes.transform.position - transform.position).magnitude)

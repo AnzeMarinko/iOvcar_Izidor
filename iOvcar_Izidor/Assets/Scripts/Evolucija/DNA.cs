@@ -63,7 +63,6 @@ public class DNA
         {
             gN = "Fitness " + fits[ponovitev-1] + ", Gen ";
         }
-        if (obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi) gen = StaticClass.rocniGen;
         foreach (float g in gen) gN += ";" + (Mathf.RoundToInt(g * 10000f) / 10000f);
         gN += "\n";
         foreach (float cas in casi) gN += "," + Mathf.FloorToInt(cas);

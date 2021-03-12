@@ -16,8 +16,8 @@ public class Terrain : MonoBehaviour
     public float timer = 0;
 
     public GameObject ovcaGO;
-    public GameObject ovcarGO;
     public GameObject ovcarGOML;
+    public GameObject ovcarGO;
     int score = 0;  // rezultat za izpis
     public float maxCas = 180f;  // casovna omejitev simulacije
     public GameObject kameraGO;
@@ -25,6 +25,8 @@ public class Terrain : MonoBehaviour
     public GameObject napisGO;
     public SimulationManeger sm;
     public Vector3 center;
+    List<List<float>> xs = new List<List<float>>();
+    List<List<float>> zs = new List<List<float>>();
 
     public void ResetTerrain()
     {
@@ -36,11 +38,11 @@ public class Terrain : MonoBehaviour
         score = 0;
         timer = 0;
         RemoveAllSheep();
-        maxCas = obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 300f : 180f;  // vec casa za ucenje
+        maxCas = 180f;  //  obnasanjeOvcarja == OvcarEnum.ObnasanjePsa.AI2 ? 300f : 180f;  // vec casa za ucenje
         int i = 0;
         foreach (GameObject o in sheepardList)
         {
-            if (i < nOvcarjev)
+            if (i < 0)    // nOvcarjev)
                 o.transform.position = center + new Vector3(Random.Range(-120f, 120f), 0f, Random.Range(-120f, 120f));
             else { Destroy(o); sheepardList.Remove(o); }
             i++;
@@ -62,7 +64,7 @@ public class Terrain : MonoBehaviour
     void AddDog()
     {
         float phi = Random.Range(0f, 360f);  // kamorkoli dodaj psa
-        GameObject o = Instantiate(obnasanjeOvcarja != OvcarEnum.ObnasanjePsa.AI2 ? ovcarGO : ovcarGOML, center + new Vector3(Random.Range(-120f, 120f), 0f, Random.Range(-120f, 120f)), Quaternion.Euler(0f, phi, 0f), this.transform);
+        GameObject o = Instantiate(sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? ovcarGOML : ovcarGO, center + new Vector3(Random.Range(-120f, 120f), 0f, Random.Range(-120f, 120f)), Quaternion.Euler(0f, phi, 0f), this.transform);
         o.GetComponent<PremakniOvcarja>().obnasanjeOvcarja = obnasanjeOvcarja;
         sheepardList.Add(o);
     }
@@ -71,6 +73,8 @@ public class Terrain : MonoBehaviour
     {
         if (timer < maxCas) sm.DNA.casi.Add(timer);
         sheepList.Remove(sheepObject);
+        // xs.Add(sheepObject.GetComponent<ObnasanjeOvce>().xs);
+        // zs.Add(sheepObject.GetComponent<ObnasanjeOvce>().zs);
         Destroy(sheepObject);
     }
 
@@ -82,6 +86,8 @@ public class Terrain : MonoBehaviour
             {
                 if (sheepList[i] != null)
                 {
+                    // xs.Add(sheepList[i].GetComponent<ObnasanjeOvce>().xs);
+                    // zs.Add(sheepList[i].GetComponent<ObnasanjeOvce>().zs);
                     Destroy(sheepList[i]);
                 }
             }
@@ -101,19 +107,14 @@ public class Terrain : MonoBehaviour
 
     private void Update()
     {
-        cumulativeRewardText.fontSize = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? 100f : 50f;
-        cumulativeRewardText.fontStyle = sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? FontStyles.Bold : FontStyles.Normal;
+        cumulativeRewardText.fontSize = 100f;
+        cumulativeRewardText.fontStyle = FontStyles.Bold;
         score = nOvc - sheepList.Count;
         // Update the cumulative reward text
         cumulativeRewardText.text = Time.timeScale > 0 ? string.Format("{0:0}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60)) +
-            (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2 ? " (" + (sheepardList[0].GetComponent<OvcarAgent>().CompletedEpisodes + 1) +
-            ")\n:: " + sheepardList[0].GetComponent<OvcarAgent>().GetCumulativeReward().ToString("0.00") + " ::\nV staji: " + score + " / " + nOvc : "\n\n" +
-            "Ovce: " + score + " / " + nOvc +
-            "\nGeneracija: " + (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 ? "Final" : sm.evolucija.generation.ToString()) + ",\nposkus: " + (sm.osebek + 1) + " (" + (sm.DNA.ponovitev + 1) +
-            ")\nMax. fitness v " + (sm.evolucija.generation - 1) + ". generaciji:\n" + sm.evolucija.maxFitness + "\n   Nad 1: " + sm.evolucija.steviloUspesnih) : "";
+            " (" + (sm.DNA.ponovitev + 1) + ")\nOvce: " + score + " / " + nOvc : "";
         if (sheepList.Count == 0 || timer > maxCas)   // na koncu (vse ovce v staji ali konec casa) zapisi rezultate v datoteko v mapi Rezultati
         {
-            ZapisiRezultate();
             if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
                 foreach (GameObject oa in sheepardList)
                 {
@@ -122,6 +123,8 @@ public class Terrain : MonoBehaviour
                     oa.GetComponent<OvcarAgent>().EndEpisode();
                     oa.GetComponent<OvcarAgent>().exGCM = 1000f;
                 }
+            RemoveAllSheep();
+            ZapisiRezultate();
             ResetTerrain();
         }
         else
@@ -147,11 +150,7 @@ public class Terrain : MonoBehaviour
 
     public void ZapisiRezultate()
     {
-        if (sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.AI2)
-        {
-            // Rezultate piši le ko se na koncu testira
-        }
-        else if (StaticClass.zgodovina)
+        if (StaticClass.zgodovina && timer > 10f)
         {
             string dirName = "Rezultati/Rezultati-" + StaticClass.modelName + obnasanjeOvcarja.ToString();
             if (sm.evolucija.generation == sm.evolucija.maxGeneracij + 1 || sm.DNA.obnasanjePsa == OvcarEnum.ObnasanjePsa.Voronoi)
@@ -161,7 +160,35 @@ public class Terrain : MonoBehaviour
             if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
             string fileName = dirName + "/" + StaticClass.modelName + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev
                 + ".txt";
-
+            string lokacije = "Rezultati/" + StaticClass.modelName + modelGibanja.ToString() + "_" + nOvc + "-" + obnasanjeOvcarja.ToString() + "_" + nOvcarjev + "-" + sm.DNA.ponovitev
+                  + ".txt";
+            if (false && !File.Exists(lokacije) && sm.DNA.ponovitev < 3)
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(lokacije))
+                {
+                    int preskakuj = 4;
+                    string lok = "";
+                    foreach (GameObject o in sheepardList)
+                    {
+                        lok = "\n1;0;";
+                        for (int i = 0; i < o.GetComponent<PremakniOvcarja>().xs.Count; i += preskakuj + 1) lok += (Mathf.FloorToInt(o.GetComponent<PremakniOvcarja>().xs[i] * 100f) / 100f) + ";";
+                        sw.WriteLine(lok);
+                        lok = "\n1;1;";
+                        for (int i = 0; i < o.GetComponent<PremakniOvcarja>().zs.Count; i += preskakuj + 1) lok += (Mathf.FloorToInt(o.GetComponent<PremakniOvcarja>().zs[i] * 100f) / 100f) + ";";
+                        sw.WriteLine(lok);
+                    }
+                    for (int o = 0; o < sm.DNA.nOvc; o++)
+                    {
+                        lok = "\n0;0;";
+                        for (int i = 0; i < xs[o].Count; i += preskakuj + 1) lok += (Mathf.FloorToInt(xs[o][i] * 100f) / 100f) + ";";
+                        sw.WriteLine(lok);
+                        lok = "\n0;1;";
+                        for (int i = 0; i < zs[o].Count; i += preskakuj + 1) lok += (Mathf.FloorToInt(zs[o][i] * 100f) / 100f) + ";";
+                        sw.WriteLine(lok);
+                    }
+                }
+            }
             if (!File.Exists(fileName))
             {
                 // Create a file to write to.

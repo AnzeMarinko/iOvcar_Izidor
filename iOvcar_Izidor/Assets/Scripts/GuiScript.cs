@@ -3,20 +3,6 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-/* TODO:
- * 
- * grafi za Voronoi in AI1
- * 
- * za AI2 nakljucno nastavi stevilo ovcarjev in ovc v simulaciji (mozno spreminjanje stevila ovcarjev in modela ovcarjev)
- * najprej se nauci AI2 iz demonstracij iz opt gena
- * 
- * uredi kodo, pomoč, datoteke, lastnosti projekta
- * 
- *      Dodatne ideje kot predlogi za nadaljnje delo:
- * Ovire ali drugačna oblika polja ali npr. voda kjer ovce nočejo hoditi
- * Fizikalna/teoretična študija kjer ovce smatramo kot delce (particle system) ter skušamo primerjati vedenje z elementarnimi 
- *        fizikalnimi pojavi v naravi (npr. https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.110.228701). N -> \infty
-*/
 
 public class GuiScript : MonoBehaviour
 {
@@ -83,10 +69,10 @@ public class GuiScript : MonoBehaviour
         terrain.sm.DNA = new DNA(0, modelGibanja1[modelOvc.value], (int)nSOvc.value,
             MLAgents.isOn ? OvcarEnum.ObnasanjePsa.AI2 : OvcarEnum.ObnasanjePsa.Voronoi, (int)nSOvcarjev.value, 50);
         terrain.sm.DNA.gen = gen;
-        terrain.ResetTerrain();
         Time.timeScale = 20f;
         canvas.enabled = !canvas.enabled;
         pomoc.enabled = false;
+        terrain.ResetTerrain();
     }
 
     public void SetNumbers()  // nastavi stevilo ovc in ovcarjev
@@ -126,26 +112,21 @@ public class GuiScript : MonoBehaviour
         int n1 = (int)nSOvc.value;
         OvcarEnum.ObnasanjePsa vod = OvcarEnum.ObnasanjePsa.AI1;
         int n2 = (int)nSOvcarjev.value;
-        string fileName = "Rezultati/geni.txt";
-        if (File.Exists(fileName))
+        string[] geni = optGen.opt.Split('\n');
+        float najblizje = 1000f;
+        foreach (string line in geni)
         {
-            string[] geni = File.ReadAllLines(fileName);
-            float najblizje = 1000f;
-            foreach(string line in geni)
+            string[] kombinacija = line.Split(' ');
+            float razdalja = (kombinacija[0].Contains(gin.ToString()) ? 1f : 100f) *
+                (Mathf.Abs(int.Parse(kombinacija[1]) - n1) + 1f) *
+                (kombinacija[2].Contains(vod.ToString()) ? 1f : 100f) *
+                (Mathf.Abs(int.Parse(kombinacija[3]) - n2) + 1f);
+            if (razdalja < najblizje)
             {
-                if (line.Length < 80) continue;
-                string[] kombinacija = line.Split(' ');
-                float razdalja = ( kombinacija[0].Contains(gin.ToString()) ? 1f : 100f) *
-                    (Mathf.Abs(int.Parse(kombinacija[1]) - n1) + 1f) *
-                    (kombinacija[2].Contains(vod.ToString()) ? 1f : 100f) *
-                    (Mathf.Abs(int.Parse(kombinacija[3]) - n2) + 1f);
-                if (razdalja < najblizje)
-                {
-                    najblizje = razdalja;
-                    string[] gen = kombinacija[4].Split(';');
-                    for (int i = 0; i < 21; i++) sliders[i].value = float.Parse(gen[i]);
-                    for (int i = 0; i < 21; i++) SetGen(i);
-                }
+                najblizje = razdalja;
+                string[] gen = kombinacija[4].Split(';');
+                for (int i = 0; i < 21; i++) sliders[i].value = float.Parse(gen[i]);
+                for (int i = 0; i < 21; i++) SetGen(i);
             }
         }
     }
@@ -158,6 +139,10 @@ public class GuiScript : MonoBehaviour
     public void MLA()
     {
         foreach (Slider s in sliders) s.enabled = !s.enabled;
+        nSOvcarjev.value = 1;
+        modelOvc.value = 0;
+        nSOvcarjev.enabled = !nSOvcarjev.enabled;
+        modelOvc.enabled = !modelOvc.enabled;
     }
 
     public void Help(int text)  // besedilo v oknu z dodatnim ali pomocjo
@@ -199,7 +184,6 @@ public class GuiScript : MonoBehaviour
         if (GUI.Button(new Rect(120, 0, 60, 20), "Izhod")) { Application.Quit(); }
         if (Time.timeScale > 0)
         {
-            print(terrain.sm.DNA.nOvc);
             GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
             terrain.sm.DNA.nOvc + " " + terrain.sm.DNA.modelGibanja.ToString() + "\n" + terrain.sm.DNA.nOvcarjev + " " + terrain.sm.DNA.obnasanjePsa.ToString());
             if (GUI.Button(new Rect(3, 110, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama

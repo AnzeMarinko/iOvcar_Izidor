@@ -5637,9 +5637,9 @@ GameObject:
   - component: {fileID: 6914850704291380973}
   - component: {fileID: 6914850704300660401}
   - component: {fileID: 4895930738342009605}
-  - component: {fileID: 478010239891298119}
   - component: {fileID: 1613051772606736440}
   - component: {fileID: 3496811545696193522}
+  - component: {fileID: -2852966869424622447}
   - component: {fileID: -7908033445289428159}
   - component: {fileID: 253665354607382611}
   - component: {fileID: 7987161442457977629}
@@ -5726,19 +5726,6 @@ MonoBehaviour:
   rotiraj: 0.5235988
   pomenSmeriDrugih: 0.1
   exGCM: 1000
---- !u!114 &478010239891298119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6914850704291146381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64932799d4c89eb4c933309931a2f51f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  obnasanjeOvcarja: 0
 --- !u!54 &1613051772606736440
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5769,6 +5756,21 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 2
   m_Center: {x: 0, y: 0.2, z: 0}
+--- !u!114 &-2852966869424622447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6914850704291146381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64932799d4c89eb4c933309931a2f51f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obnasanjeOvcarja: 0
+  xs: []
+  zs: []
 --- !u!114 &-7908033445289428159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5787,7 +5789,7 @@ MonoBehaviour:
     VectorActionSize: 15000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: e80f9ca18e8d5c84589677ddc2597e23, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: iOvcarML
@@ -5851,7 +5853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Record: 0
   NumStepsToRecord: 0
-  DemonstrationName: Ginelli
+  DemonstrationName: Ginelli100
   DemonstrationDirectory: C:\Users\HP\Desktop\MagistrskoDelo2020\iOvcar_Izidor\iOvcar_Izidor\Assets/Demonstrations
 --- !u!1 &6914850704291146385
 GameObject:
