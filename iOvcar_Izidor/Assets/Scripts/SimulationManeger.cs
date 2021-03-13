@@ -131,16 +131,17 @@ public class SimulationManeger
     {
         if (!Directory.Exists("Rezultati")) Directory.CreateDirectory("Rezultati");
         kombinacije = new List<DNA>();
-        kombinacije.Add(new DNA(1, GinelliOvca.ModelGibanja.Ginelli, (int)Random.Range(5f, 9f), OvcarEnum.ObnasanjePsa.AI1, (int)Random.Range(1, 5), 0));
-        foreach (int n2 in nOvcarjev1)
-            foreach (int n1 in nOvc1)
-                foreach (GinelliOvca.ModelGibanja gin in modelGibanja1)
-                    foreach (OvcarEnum.ObnasanjePsa vod in obnasanjeOvcarja)
-                    {
-                        string name = "/" + gin.ToString() + "_" + n1 + "-" + vod.ToString() + "_" + n2 + ".txt";
-                        if (!(vod == OvcarEnum.ObnasanjePsa.AI2 && !(n2 == 1 && gin == GinelliOvca.ModelGibanja.Ginelli))  && !File.Exists("Rezultati/Rezultati-" + vod.ToString() + name) && !File.Exists("Rezultati/Rezultati-" + vod.ToString() + "-Final" + name))
-                            kombinacije.Add(new DNA(1, gin, n1, vod, n2, 0));
-                    }
+        kombinacije.Add(new DNA(1, GinelliOvca.ModelGibanja.Ginelli, (int)Random.Range(40f, 60f), OvcarEnum.ObnasanjePsa.AI1, (int)Random.Range(1, 4), 0));
+        if (kombinacije.Count == 0)
+            foreach (int n2 in nOvcarjev1)
+                foreach (int n1 in nOvc1)
+                    foreach (GinelliOvca.ModelGibanja gin in modelGibanja1)
+                        foreach (OvcarEnum.ObnasanjePsa vod in obnasanjeOvcarja)
+                        {
+                            string name = "/" + gin.ToString() + "_" + n1 + "-" + vod.ToString() + "_" + n2 + ".txt";
+                            if (!(vod == OvcarEnum.ObnasanjePsa.AI2 && !(n2 == 1 && gin == GinelliOvca.ModelGibanja.Ginelli))  && !File.Exists("Rezultati/Rezultati-" + vod.ToString() + name) && !File.Exists("Rezultati/Rezultati-" + vod.ToString() + "-Final" + name))
+                                kombinacije.Add(new DNA(1, gin, n1, vod, n2, 0));
+                        }
     }
 
     void ZapisiGen(GinelliOvca.ModelGibanja gin, int n1, OvcarEnum.ObnasanjePsa vod, int n2, float[] gen)

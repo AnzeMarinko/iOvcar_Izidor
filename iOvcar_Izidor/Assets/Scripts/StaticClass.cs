@@ -3,7 +3,7 @@
 public static class StaticClass
 {
     public static string modelName = "";  // vhodno ime modela za shranjevanje
-    public static bool zgodovina = true;  // shranjevanje rezultatov
+    public static bool zgodovina = false;  // shranjevanje rezultatov
     public static float v1 = 5f;  // Hitrost premikanja v stanju vodenja ovc
     public static float ra = 2;   // Faktor za dovoljeno velikost crede
     public static float dc = 10;  // Razdalja za zbiranje ovc v credo

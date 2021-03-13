@@ -29,6 +29,7 @@ public class GuiScript : MonoBehaviour
     public Toggle MLAgents;
     public Canvas pomoc;
     public Text pomocText;
+    public readonly float speedup = 20f;
 
 
     public void Start()
@@ -58,7 +59,7 @@ public class GuiScript : MonoBehaviour
     {
         cas = Time.realtimeSinceStartup - trajanjePavz;
         if (Input.GetKey(KeyCode.Escape)) Application.Quit();
-        if (Input.GetKey(KeyCode.P)) Time.timeScale = Time.timeScale > 0 ? 0f : 20f;
+        if (Input.GetKey(KeyCode.P)) Time.timeScale = Time.timeScale > 0 ? 0f : speedup;
     }
 
     public void ClickUporabi()
@@ -150,12 +151,20 @@ public class GuiScript : MonoBehaviour
         pomoc.enabled = true;
         string[] texts = new string[2] {
             // dodatno:
-            "<b>Dodatno</b>\n" +
-            "\nProgram je nastal v  študijskem letu 2020/2021 za potrebe magistrskega dela." +
-            "\nAvtor:    <i>Anže Marinko</i>" +
-            "\nVeč informacij o magistrski nalogi.",
+            "<b>Dodatno</b>\n\n" +
+            "Program je nastal v študijskem letu 2020/2021 za potrebe magistrskega dela.\n" +
+            "Študijski program:     <i><b>Interdisciplinarni študij Računalništvo in matematika</b></i>\n" +
+            "                           <i>Fakulteta za matematiko in fiziko, Univerza v Ljubljani</i>\n" +
+            "                           <i>Fakulteta za računalništvo in informatiko, Univerza v Ljubljani</i>\n" +
+            "Naslov magistrskega dela:   <i><b>Vodenje psa ovčarja s pomočjo umetne inteligence.</b></i>" +
+            "\nAvtor:              <i><b>Anže Marinko</b></i>" +
+            "\nMentor:             <i>izr. prof. Iztok Lebar Bajec</i>" +
+            "\nSomentor:          <i>doc. dr. Jure Demšar</i>\n\n" +
+            "Program je namenjen izrisu simulacij, nastavljanju parametrov in testiranju modelov psov ovčarjev.",
             // pomoc:
-            "<b>Pomoč</b>\n\n Informacije o programu." };
+            "<b>Pomoč</b>\n\nV meniju izberite želene nastavitve in pritisnite gumb <b>Prični znova</b>. V kolikor ste" +
+            " potrdili shranjevanje rezultatov, se bodo ti shranili v mapo <i>Rezultati</i> zraven programa.\n" +
+            "V meniju, ki vam je na voljo med samo simulacijo, lahko tudi spreminjate pogled." };
         if (text < 2) pomocText.text = texts[text];
         else pomoc.enabled = false;
     }
@@ -165,7 +174,7 @@ public class GuiScript : MonoBehaviour
         if (GUI.Button(new Rect(3, 0, 60, 20), Time.timeScale > 0 ? "Meni" : "Nadaljuj"))
         {
             canvas.enabled = !canvas.enabled;
-            Time.timeScale = Time.timeScale > 0 ? 0f : 20f;
+            Time.timeScale = Time.timeScale > 0 ? 0f : speedup;
             if (Time.timeScale > 0)
             {
                 trajanjePavz += Time.realtimeSinceStartup - pavzaOd;
@@ -186,9 +195,19 @@ public class GuiScript : MonoBehaviour
         {
             GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
             terrain.sm.DNA.nOvc + " " + terrain.sm.DNA.modelGibanja.ToString() + "\n" + terrain.sm.DNA.nOvcarjev + " " + terrain.sm.DNA.obnasanjePsa.ToString());
-            if (GUI.Button(new Rect(3, 110, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
+            if (GUI.Button(new Rect(3, 130, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
             { GetComponent<Camera>().depth *= -1; }
-            if (GUI.Button(new Rect(3, 130, 105, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
+            if (GetComponent<Camera>().depth < 0)
+            {
+                if (GUI.Button(new Rect(3, 150, 180, 20), "Menjaj premični pogled"))  // naslednja simulacija iz seznama
+                { terrain.odZgorajPogled = !terrain.odZgorajPogled; }
+                if (!terrain.odZgorajPogled)
+                {
+                    if (GUI.Button(new Rect(3, 170, 180, 20), "Menjaj ovčarja"))  // naslednja simulacija iz seznama
+                    { terrain.snemaniOvcar++; }
+                }
+            }
+            if (GUI.Button(new Rect(3, 110, 180, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
             { Screen.fullScreen = !Screen.fullScreen; }
         }
     }

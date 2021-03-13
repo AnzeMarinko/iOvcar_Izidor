@@ -6,7 +6,7 @@ using UnityEngine;
 public class PremakniOvcarja : MonoBehaviour
 {
     public OvcarEnum.ObnasanjePsa obnasanjeOvcarja;   // nacin vodenja ovcarja nastavljen v gui
-    public List<float> xs = new List<float>();
+    public List<float> xs = new List<float>();  // seznama za sledenje
     public List<float> zs = new List<float>();
 
     // pozeni pravi start glede na vodenje ovcarja
@@ -35,8 +35,8 @@ public class PremakniOvcarja : MonoBehaviour
     // pozeni pravi update glede na vodenje ovcarja
     void FixedUpdate()
     {
-        xs.Add(transform.position.x);
-        zs.Add(transform.position.z);
+        // xs.Add(transform.position.x);
+        // zs.Add(transform.position.z);
         switch (obnasanjeOvcarja)
         {
             case OvcarEnum.ObnasanjePsa.Voronoi:

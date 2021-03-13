@@ -27,6 +27,8 @@ public class Terrain : MonoBehaviour
     public Vector3 center;
     List<List<float>> xs = new List<List<float>>();
     List<List<float>> zs = new List<List<float>>();
+    public bool odZgorajPogled = false;
+    public int snemaniOvcar = 0;
 
     public void ResetTerrain()
     {
@@ -130,21 +132,42 @@ public class Terrain : MonoBehaviour
         else
         {
             timer += Time.deltaTime;
-            Vector3 GCM = new Vector3(0f, 0f, 0f);  // premikaj sprehodno kamero s credo
-            foreach (GameObject ovca in sheepList)
+            if (odZgorajPogled)
             {
-                GCM += ovca.transform.position;
-            }
-            GCM /= sheepList.Count;
-            float razdalja = 0f;
-            foreach (GameObject ovca in sheepList)
+                Vector3 GCM = new Vector3(0f, 0f, 0f);  // premikaj sprehodno kamero s credo
+                foreach (GameObject ovca in sheepList)
+                {
+                    GCM += ovca.transform.position;
+                }
+                GCM /= sheepList.Count;
+                float razdalja = 0f;
+                foreach (GameObject ovca in sheepList)
+                {
+                    razdalja += (ovca.transform.position - GCM).magnitude;
+                }
+                razdalja /= sheepList.Count;
+                razdalja *= 8;
+                razdalja = Mathf.Min(Mathf.Max(razdalja, 75f), 240f);
+                kamera.transform.position = new Vector3(GCM.x, razdalja / Mathf.Tan(Mathf.PI / 12), GCM.z) * 0.05f + kamera.transform.position * 0.95f;
+                kamera.transform.rotation = Quaternion.Euler(90f * 0.3f + kamera.transform.rotation.eulerAngles.x * 0.7f, 0f * 0.05f + kamera.transform.rotation.eulerAngles.y * 0.95f, 0f);
+            } else if (sheepardList.Count > 0 && sheepList.Count > 0 && Time.timeScale > 0)
             {
-                razdalja += (ovca.transform.position - GCM).magnitude;
+                if (snemaniOvcar >= sheepardList.Count)
+                    snemaniOvcar = 0;
+                Vector3 GCM = new Vector3(0f, 0f, 0f);  // premikaj sprehodno kamero s credo
+                foreach (GameObject ovca in sheepList)
+                {
+                    GCM += ovca.transform.position;
+                }
+                GCM /= sheepList.Count;
+                Vector3 lokacija = sheepardList[snemaniOvcar].transform.position;
+                Vector3 smer = (GCM - lokacija).normalized;
+                lokacija = lokacija - new Vector3(smer.x, -20f / 70f, smer.z) * 70f;
+                smer = smer * 0.2f + kamera.transform.forward * 0.8f;
+                kamera.transform.position = lokacija * 0.3f + kamera.transform.position * 0.7f;
+                kamera.transform.rotation = Quaternion.Euler(10f * 0.3f + kamera.transform.rotation.eulerAngles.x * 0.7f,
+                    Mathf.Atan2(smer.x, smer.z) * 180f / Mathf.PI, 0f);
             }
-            razdalja /= sheepList.Count;
-            razdalja *= 8;
-            razdalja = Mathf.Min(Mathf.Max(razdalja, 75f), 240f);
-            kamera.transform.position = new Vector3(GCM.x, razdalja / Mathf.Tan(Mathf.PI / 12), GCM.z) * 0.05f + kamera.transform.position * 0.95f;
         }
     }
 
