@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (MiKTeX 2.9.7400 64-bit)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: magisterij.aux
+The style file: fmf-sl.bst
+Database file #1: ../literatura.bib
+You've used 26 entries,
+            2705 wiz_defined-function locations,
+            713 strings with 9166 characters,
+and the built_in function-call counts, 9974 in all, are:
+= -- 746
+> -- 267
+< -- 6
++ -- 146
+- -- 74
+* -- 603
+:= -- 1158
+add.period$ -- 26
+call.type$ -- 26
+change.case$ -- 130
+chr.to.int$ -- 0
+cite$ -- 26
+duplicate$ -- 927
+empty$ -- 991
+format.name$ -- 90
+if$ -- 2134
+int.to.chr$ -- 0
+int.to.str$ -- 26
+missing$ -- 174
+newline$ -- 84
+num.names$ -- 36
+pop$ -- 431
+preamble$ -- 1
+purify$ -- 97
+quote$ -- 0
+skip$ -- 320
+stack$ -- 0
+substring$ -- 576
+swap$ -- 463
+text.length$ -- 6
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 104
+warning$ -- 0
+while$ -- 70
+width$ -- 28
+write$ -- 208

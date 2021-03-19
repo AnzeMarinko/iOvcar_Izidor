@@ -1,0 +1,124 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem{aiba2020suggestion}
+C.~Aiba in K.~Fujioka, \emph{A suggestion for effective shepherding models with
+  two sheepdogs}, v: IECON 2020 The 46th Annual Conference of the IEEE
+  Industrial Electronics Society, IEEE, 2020, str. 77--81.
+
+\bibitem{comparative}
+B.~Bennett in M.~Trafankowski, \emph{A comparative investigation of herding
+  algorithms}, v: Proc. Symp. on Understanding and Modelling Collective
+  Phenomena (UMoCoP), 2012, str. 33--38.
+
+\bibitem{degond2015continuum}
+P.~Degond, A.~Manhart in H.~Yu, \emph{A continuum model for nematic alignment
+  of self-propelled particles}, arXiv preprint arXiv:1509.03124  (2015).
+
+\bibitem{Demsar}
+J.~Dem{\v{s}}ar, W.~Blewitt in I.~Lebar~Bajec, \emph{A hybrid model for
+  simulating grazing herds in real time}, Computer Animation and Virtual Worlds
+  \textbf{31}(1) (2020) e1914.
+
+\bibitem{reinforcement}
+V.~Fran{\c{c}}ois-Lavet in~dr., \emph{An introduction to deep reinforcement
+  learning}, arXiv preprint arXiv:1811.12560  (2018).
+
+\bibitem{Ginelli}
+F.~Ginelli in~dr., \emph{Intermittent collective dynamics emerge from
+  conflicting imperatives in sheep herds}, Proceedings of the National Academy
+  of Sciences \textbf{112}(41) (2015) 12729--12734.
+
+\bibitem{sarsa}
+C.~K. Go in~dr., \emph{A reinforcement learning approach to the shepherding
+  task using sarsa}, v: 2016 International Joint Conference on Neural Networks
+  (IJCNN), IEEE, 2016, str. 3833--3836.
+
+\bibitem{krasevec}
+\emph{O kraševcu}, [ogled 1.\ 2.\ 2021], dostopno na
+  \url{http://www.dlvkos.si/o-krasevcu/}.
+
+\bibitem{lee2017autonomous}
+W.~Lee in D.~Kim, \emph{Autonomous shepherding behaviors of multiple target
+  steering robots}, Sensors \textbf{17}(12) (2017) 2729.
+
+\bibitem{letalske-chung}
+\emph{‘sheepdog robot’ herds birds away from flight paths}, [ogled 1.\ 2.\
+  2021], dostopno na
+  \url{https://www.imperial.ac.uk/news/187630/sheepdog-robot-\\herds-birds-away-from/}.
+
+\bibitem{letalske-chung2}
+\emph{Drone-based bird-herding is taking off}, [ogled 1.\ 2.\ 2021], dostopno
+  na
+  \url{https://insideunmannedsystems.com/drone-based-bird-herding-\\is-taking-off/}.
+
+\bibitem{letalske-hudson}
+\emph{Us airways flight 1549}, [ogled 1.\ 2.\ 2021], dostopno na
+  \url{https://en.wikipedia.org/wiki/US_Airways_Flight_1549}.
+
+\bibitem{letalske-nesrece}
+\emph{Da ptica ne bi sklatila jeklene ptice}, [ogled 1.\ 2.\ 2021], dostopno na
+  \url{https://www.24ur.com/novice/slovenija/da-ptica-ne-bi-sklatila-\\jeklene-ptice.html}.
+
+\bibitem{letalske-nesrece2}
+\emph{Preiskava razkrila: Nesrečo boeinga 737, v kateri je umrlo 157 ljudi,
+  povzročile ptice!}, [ogled 1.\ 2.\ 2021], dostopno na
+  \url{https://nova24tv.si/svet/preiskava-razkrila-nesreco-boeinga-737-v-kateri-je-\\umrlo-157-ljudi-povzrocile-ptice/}.
+
+\bibitem{letalske-sully}
+\emph{Sully}, [ogled 1.\ 2.\ 2021], dostopno na
+  \url{https://www.warnerbros.com/movies/sully}.
+
+\bibitem{lien2005shepherding}
+J.-M. Lien in~dr., \emph{Shepherding behaviors with multiple shepherds}, v:
+  Proceedings of the 2005 IEEE International Conference on Robotics and
+  Automation, IEEE, 2005, str. 3402--3407.
+
+\bibitem{bird-herd}
+A.~A. {Paranjape} in~dr., \emph{Robotic herding of a flock of birds using an
+  unmanned aerial vehicle}, IEEE Transactions on Robotics \textbf{34}(4) (2018)
+  901--915, \doi{10.1109/TRO.2018.2853610}.
+
+\bibitem{pierson2015bio}
+A.~Pierson in M.~Schwager, \emph{Bio-inspired non-cooperative multi-robot
+  herding.}, v: ICRA, Citeseer, 2015, str. 1843--1849.
+
+\bibitem{pierson2017controlling}
+A.~Pierson in M.~Schwager, \emph{Controlling noncooperative herds with robotic
+  herders}, IEEE Transactions on Robotics \textbf{34}(2) (2017) 517--525.
+
+\bibitem{boids}
+C.~W. Reynolds, \emph{Flocks, herds and schools: A distributed behavioral
+  model}, v: Proceedings of the 14th annual conference on Computer graphics and
+  interactive techniques, 1987, str. 25--34.
+
+\bibitem{robot-sheperd}
+\emph{A robot sheepdog? ‘no one wants this,’ says one shepherd}, [ogled 1.\
+  2.\ 2021], dostopno na
+  \url{https://www.theverge.com/2020/5/22/21267379/robot-dog-rocos-boston-dynamics-video-spot-shepherd-reaction}.
+
+\bibitem{ppo-clanek}
+J.~Schulman in~dr., \emph{Proximal policy optimization algorithms}, arXiv
+  preprint arXiv:1707.06347  (2017).
+
+\bibitem{diplomska}
+R.~{\v{S}}eme, \emph{Ra{\v{c}}unalni{\v{s}}ka simulacija {\v{c}}rede ovc in psa
+  ov{\v{c}}arja}, doktorska disertacija, Univerza v Ljubljani, 2016.
+
+\bibitem{natureOfCode}
+D.~Shiffman, S.~Fry in Z.~Marsh, \emph{The nature of code}, 2012.
+
+\bibitem{Stroembom}
+D.~Str{\"o}mbom in~dr., \emph{Solving the shepherding problem: heuristics for
+  herding autonomous, interacting agents}, Journal of the royal society
+  interface \textbf{11}(100) (2014) 20140719.
+
+\bibitem{obstacles}
+J.~Zhi in J.-M. Lien, \emph{Learning to herd agents amongst obstacles: Training
+  robust shepherding behaviors using deep reinforcement learning}, arXiv
+  preprint arXiv:2005.09476  (2020).
+
+\end{thebibliography}

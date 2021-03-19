@@ -53,6 +53,10 @@ public class GuiScript : MonoBehaviour
         StaticClass.zgodovina = zgodovina.isOn;
         StaticClass.ComputeGen();
         pomoc.enabled = false;
+        GetComponent<Camera>().depth = 1;
+        terrain.odZgorajPogled = true;
+        terrain.snemaniOvcar = 0;
+        StaticClass.zgodovina = false;
     }
 
     void Update()
@@ -193,21 +197,23 @@ public class GuiScript : MonoBehaviour
         if (GUI.Button(new Rect(120, 0, 60, 20), "Izhod")) { Application.Quit(); }
         if (Time.timeScale > 0)
         {
-            GUI.Box(new Rect(3, 20, 180, 90), "iOvcar IZIDOR\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
-            terrain.sm.DNA.nOvc + " " + terrain.sm.DNA.modelGibanja.ToString() + "\n" + terrain.sm.DNA.nOvcarjev + " " + terrain.sm.DNA.obnasanjePsa.ToString());
-            if (GUI.Button(new Rect(3, 130, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
+            // Update the cumulative reward text
+            GUI.Box(new Rect(3, 20, 180, 100), "iOvcar IZIDOR\n" + string.Format("{0}h {1:00}' {2:00}''\n\n", Mathf.FloorToInt(cas / 3600), Mathf.FloorToInt((cas / 60) % 60), Mathf.FloorToInt(cas % 60)) +
+                (GetComponent<Camera>().depth < 0 ? string.Format("{0:0}:{1:00}", Mathf.FloorToInt(terrain.timer / 60), Mathf.FloorToInt(terrain.timer % 60)) + " (" + (terrain.sm.DNA.ponovitev + 1) +
+                ")\nV staji: " + (terrain.nOvc - terrain.sheepList.Count) + " / " : "") + terrain.nOvc + " " + terrain.sm.DNA.modelGibanja.ToString() + "\n" + terrain.sm.DNA.nOvcarjev + " " + terrain.sm.DNA.obnasanjePsa.ToString());
+            if (GUI.Button(new Rect(3, 120, 180, 20), GetComponent<Camera>().depth > 0 ? "Vkolpi sprehodno kamero" : "Izklopi sprehodno kamero"))  // naslednja simulacija iz seznama
             { GetComponent<Camera>().depth *= -1; }
             if (GetComponent<Camera>().depth < 0)
             {
-                if (GUI.Button(new Rect(3, 150, 180, 20), "Menjaj premični pogled"))  // naslednja simulacija iz seznama
+                if (GUI.Button(new Rect(3, 160, 180, 20), "Menjaj premični pogled"))  // naslednja simulacija iz seznama
                 { terrain.odZgorajPogled = !terrain.odZgorajPogled; }
                 if (!terrain.odZgorajPogled)
                 {
-                    if (GUI.Button(new Rect(3, 170, 180, 20), "Menjaj ovčarja"))  // naslednja simulacija iz seznama
+                    if (GUI.Button(new Rect(3, 180, 180, 20), "Menjaj ovčarja"))  // naslednja simulacija iz seznama
                     { terrain.snemaniOvcar++; }
                 }
             }
-            if (GUI.Button(new Rect(3, 110, 180, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
+            if (GUI.Button(new Rect(3, 140, 180, 20), "Celoten zaslon"))  // naslednja simulacija iz seznama
             { Screen.fullScreen = !Screen.fullScreen; }
         }
     }

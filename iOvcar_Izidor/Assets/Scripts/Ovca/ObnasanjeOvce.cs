@@ -51,8 +51,11 @@ public class ObnasanjeOvce : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // xs.Add(transform.position.x);
-        // zs.Add(transform.position.z); 
+        if (StaticClass.zgodovina)
+        {
+            xs.Add(transform.position.x);
+            zs.Add(transform.position.z);
+        }
         foreach (GameObject ovcar in terrain.sheepardList)   // posodobitev, kateri pes je najblizje
         {
             if ((ovcar.transform.position - transform.position).magnitude < (GetComponent<GinelliOvca>().voronoiPes.transform.position - transform.position).magnitude)

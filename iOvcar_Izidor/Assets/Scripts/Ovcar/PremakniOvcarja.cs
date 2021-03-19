@@ -35,8 +35,8 @@ public class PremakniOvcarja : MonoBehaviour
     // pozeni pravi update glede na vodenje ovcarja
     void FixedUpdate()
     {
-        // xs.Add(transform.position.x);
-        // zs.Add(transform.position.z);
+        xs.Add(transform.position.x);
+        zs.Add(transform.position.z);
         switch (obnasanjeOvcarja)
         {
             case OvcarEnum.ObnasanjePsa.Voronoi:

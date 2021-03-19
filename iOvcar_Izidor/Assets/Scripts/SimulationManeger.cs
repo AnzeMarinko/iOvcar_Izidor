@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SimulationManeger
 {
-    public int steviloPonovitev = 100;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
+    public int steviloPonovitev = 2;   // stevilo iteracij za vsako nastavitev in vse mozne nastavitve
     public int[] nOvc1 = { 25, 75 };
     public int[] nOvcarjev1 = { 1, 2, 3 };
     public GinelliOvca.ModelGibanja[] modelGibanja1 = { GinelliOvca.ModelGibanja.Ginelli, GinelliOvca.ModelGibanja.Stroembom, GinelliOvca.ModelGibanja.PopravljenStroembom };
@@ -24,9 +24,9 @@ public class SimulationManeger
         zacetek = true;
         if (SceneManager.GetActiveScene().name == "testScene")   // nastavi seznam modelov za testiranje
         {
-            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
+            // obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.Voronoi);
             obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI1);
-            obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
+            // obnasanjeOvcarja.Add(OvcarEnum.ObnasanjePsa.AI2);
         }
         else if (SceneManager.GetActiveScene().name == "trainingScene")
         {
