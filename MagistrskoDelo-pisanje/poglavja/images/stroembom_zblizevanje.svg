@@ -147,7 +147,10 @@
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:snap-object-midpoints="true"
-     showguides="false">
+     showguides="false"
+     inkscape:snap-others="false"
+     inkscape:object-nodes="false"
+     inkscape:snap-nodes="false">
     <inkscape:grid
        type="xygrid"
        id="grid239"
@@ -162,7 +165,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -173,7 +176,7 @@
      transform="translate(-33.765114,-27.906479)">
     <path
        sodipodi:type="star"
-       style="fill:#ffe6d5;fill-opacity:0.57352942;stroke:#d48100;stroke-width:0.565;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#ffe6d5;fill-opacity:1;stroke:#d48100;stroke-width:0.565;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        id="path1088"
        sodipodi:sides="300"
        sodipodi:cx="90.147324"
@@ -194,25 +197,25 @@
        inkscape:path-effect="#path-effect1094"
        inkscape:original-d="m 91.281249,82.965773 c 5.606912,-14.551818 11.213561,-29.103902 16.819941,-43.656249 1.07122,-2.393633 2.14213,-4.787435 3.2128,-7.181549" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.20066px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 91.281249,82.965773 c 9.393081,-1.946562 18.785981,-3.893087 28.178721,-5.83958"
+       style="fill:none;stroke:#000000;stroke-width:0.166216px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 91.281426,82.98296 c 7.357676,-1.705134 14.715234,-3.41024 22.072654,-5.115315"
        id="path1104"
        inkscape:path-effect="#path-effect1106"
-       inkscape:original-d="m 91.281249,82.965773 c 9.393121,-1.946345 18.786021,-3.892871 28.178721,-5.83958" />
+       inkscape:original-d="m 91.281426,82.98296 c 7.35772,-1.704946 14.715274,-3.41005 22.072654,-5.115315" />
     <rect
        style="fill:#ae001f;fill-opacity:0.791165;stroke:#640000;stroke-width:0.265;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect1108"
        width="6.2366071"
        height="6.2366071"
-       x="125.29517"
-       y="72.308105" />
+       x="114.87167"
+       y="74.713531" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;inline-size:26.7705;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265;stroke-miterlimit:4;stroke-dasharray:none"
        x="126.811"
        y="65.578873"
        id="text1114"
-       transform="translate(-3.9038996,5.1256067)"><tspan
+       transform="translate(-4.7057082,8.8673801)"><tspan
          x="126.811"
          y="65.578873"><tspan
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.05556px;font-family:Candara;-inkscape-font-specification:'Candara, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.265;stroke-miterlimit:4;stroke-dasharray:none">LCM</tspan></tspan></text>
@@ -267,9 +270,9 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 121.33036,76.540175 -2.28004,2.563849 -1.08034,-3.256493 z"
-       inkscape:transform-center-x="-0.16775697"
-       inkscape:transform-center-y="0.16020437"
-       transform="matrix(0.8389644,0,0,0.51368868,19.245489,37.487966)" />
+       inkscape:transform-center-x="-0.13140621"
+       inkscape:transform-center-y="0.14033502"
+       transform="matrix(0.65716877,0,0,0.44997745,33.619565,43.426293)" />
     <use
        id="use2737"
        inkscape:spray-origin="#path84-5"

@@ -259,7 +259,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
      inkscape:cx="582.06697"
-     inkscape:cy="511.91598"
+     inkscape:cy="350.29157"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -298,21 +298,28 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-33.765114,-27.906479)">
+    <ellipse
+       style="opacity:0.989924;fill:#fff6d3;fill-opacity:1;stroke:#515660;stroke-width:0.439259;stroke-linejoin:round;stroke-dashoffset:3.57543;paint-order:fill markers stroke"
+       id="path112"
+       cx="106.20914"
+       cy="215.46074"
+       rx="151.25713"
+       ry="148.24699" />
     <path
-       style="fill:#000000;fill-rule:nonzero;stroke:#515660;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#000000;fill-rule:nonzero;stroke:#000000;stroke-width:0.365;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 106.32203,215.52968 c 0,0 0.11289,0.069 0.11289,0.069 15.34475,-25.11662 61.2661,-100.53546 76.61085,-125.652087 -15.34475,25.116627 -61.49188,100.397527 -76.83663,125.514147 0,0 0.11289,0.069 0.11289,0.069 z"
        id="path981"
        inkscape:path-effect="#path-effect983"
        inkscape:original-d="M 106.32203,215.52968 183.04577,89.946563" />
     <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.747575px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.738956"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.747575px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.99598396"
        d="m 208.56396,191.47131 c 26.65434,-7.45574 53.30839,-14.9114 79.96231,-22.36702"
        id="path1104-2-4"
        inkscape:original-d="m 208.56396,191.47131 c 26.65463,-7.45472 53.30868,-14.91036 79.96231,-22.36702"
        inkscape:path-effect="#path-effect961" />
     <path
        sodipodi:type="star"
-       style="fill:#929292;fill-opacity:0.871486;stroke:#030000;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.477912"
+       style="fill:#929292;fill-opacity:1;stroke:#030000;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path1138-4-5"
        sodipodi:sides="3"
        sodipodi:cx="119.45022"
@@ -328,22 +335,15 @@
        inkscape:transform-center-y="0.54549178"
        transform="matrix(2.367694,-0.01791792,-0.05278325,1.6950845,9.7777138,40.445257)"
        d="m 121.33036,76.540175 -2.28004,2.563849 -1.08034,-3.256493 z" />
-    <ellipse
-       style="opacity:0.989924;fill:#ffdd55;fill-opacity:0.0281124;stroke:#515660;stroke-width:0.439259;stroke-linejoin:round;stroke-dashoffset:3.57543;paint-order:fill markers stroke"
-       id="path112"
-       cx="106.20914"
-       cy="215.46074"
-       rx="151.25713"
-       ry="148.24699" />
     <path
-       style="fill:#a4a3aa;stroke:#020000;stroke-width:0.695835px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.51004016;fill-opacity:0.79116499"
+       style="fill:#a4a3aa;stroke:#020000;stroke-width:0.695835px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:0.97991967"
        d="m 208.56396,191.47131 c 2.29011,-24.72952 4.5802,-49.45879 6.87028,-74.18796"
        id="path1104-2"
        inkscape:original-d="m 208.56396,191.47131 c 2.29114,-24.72942 4.58123,-49.45869 6.87028,-74.18796"
        inkscape:path-effect="#path-effect108" />
     <path
        sodipodi:type="star"
-       style="fill:#a4a3aa;fill-opacity:0.79116499;stroke:#020000;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.51004016"
+       style="fill:#a4a3aa;fill-opacity:1;stroke:#020000;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path1138-4"
        sodipodi:sides="3"
        sodipodi:cx="119.45022"
@@ -371,7 +371,7 @@
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1118);fill:#000000;fill-opacity:1;stroke:none;" />
     <path
        sodipodi:type="star"
-       style="fill:#05001f;fill-opacity:0.791165;stroke:#030000;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#05001f;fill-opacity:1;stroke:#030000;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path1138"
        sodipodi:sides="3"
        sodipodi:cx="119.45022"

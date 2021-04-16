@@ -87,7 +87,7 @@ def figs(i, j, ylim, title, v):
             plt.ylabel(str(n1f) + " " + ginf + " ovc", size='large')
         if k % 12 == 11:
             plt.tight_layout()
-            plt.savefig("../../MagistrskoDelo-pisanje/poglavja/grafi/" + ginf + "-evolucija-" + title + ".pdf")
+            plt.savefig("../MagistrskoDelo-pisanje/poglavja/grafi/" + ginf + "-evolucija-" + title + ".png", dpi=300)
 
 
 figs(1, 0, 110, "Fitness", 0)

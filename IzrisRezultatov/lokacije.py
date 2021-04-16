@@ -29,7 +29,7 @@ def lokacije(filename):
         return gin, n1, vod, n2, xs0, ys0, xs1, ys1
 
 
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(10, 10), tight_layout=True)
 for k, file in enumerate(os.listdir(folder)[:12]):
     ginf, n1f, vodf, n2f, xs0f, ys0f, xs1f, ys1f = lokacije(file)
     print(file)
@@ -43,4 +43,5 @@ for k, file in enumerate(os.listdir(folder)[:12]):
     plt.title(n1f + " " + ginf + " ovc, " + n2f + " ovčar" + ("" if int(n2f) == 1 else "ja" if int(n2f) == 2 else "ji"))
     plt.axis('equal')
     plt.axis('off')
+plt.savefig("../MagistrskoDelo-pisanje/poglavja/grafi/lokacijeAI1.png", dpi=300)
 plt.show()

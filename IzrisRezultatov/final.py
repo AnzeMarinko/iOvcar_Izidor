@@ -15,30 +15,40 @@ def prezivetvena(filename):
                 d = [int(i) for i in line[:-1].split(",")[1:]]
                 da = [d + [181] * int(n1)][:(int(n1))]
                 data.append(list(np.histogram(da, 180, (0, 180))[0]))
-    data = list((1 - np.cumsum(np.mean(np.array(data), 0) / int(n1))) * 100)
-    return data
+    data = 1 - np.cumsum(np.array(data) / int(n1), 1)
+    data1 = list(np.mean(np.array(data), 0) * 100)
+    data2 = list(np.percentile(np.array(data), 97.5, axis=0) * 100)
+    data3 = list(np.percentile(np.array(data), 2.5, axis=0) * 100)
+    return data1, data2, data3
 
 
 colors = list(TABLEAU_COLORS)  # barve za locevanje med stevili ovc in ovcarjev
 lines = ["-", "--", ":"]
+n1s = [25, 50, 75, 100]
+n2s = list(range(1, 4))
 
-plt.figure(figsize=(12, 4))
+plt.figure(figsize=(9, 10))
 for k, gin in enumerate(["Ginelli", "Stroembom", "PopravljenStroembom"]):
-    plt.subplot(1, 3, k+1)
-    for i1, n1 in enumerate([25, 50, 75, 100]):
-        for i2, n2 in enumerate(range(1, 4)):
+    for i1, n1 in enumerate(n1s):
+        for i2, n2 in enumerate(n2s):
+            plt.subplot(len(n1s), 3, 3 * i1 + k + 1)
             vod = "Voronoi"
-            podatki = prezivetvena(f"{gin}_{n1}-{vod}_{n2}.txt")
-            plt.plot(podatki, linestyle=lines[i2], color=colors[i1],
-                     label=f"{n1} ovc, {n2} {'pes' if n2 == 1 else 'psa' if n2 == 2 else 'psi'}")
-    if k == 2:
-        plt.legend(loc='best')
-    if k == 0:
-        plt.ylabel("Delež ovc na pašniku [%]")
+            podatki, spodaj, zgoraj = prezivetvena(f"{gin}_{n1}-{vod}_{n2}.txt")
+            plt.plot(podatki, color=colors[i2],
+                     label=f"Povprečje, {n2} {'pes' if n2 == 1 else 'psa' if n2 == 2 else 'psi'}")
+            plt.fill_between([*range(180)], spodaj, zgoraj, color=colors[i2], alpha=0.15, label=f"95 % IZ, {n2} {'pes' if n2 == 1 else 'psa' if n2 == 2 else 'psi'}")
+            plt.plot(spodaj, color=colors[i2], alpha=0.15)
+            plt.plot(zgoraj, color=colors[i2], alpha=0.15)
+            if k == 0:
+                plt.ylabel(f"Delež ovc na pašniku\nod začetnih {n1} [%]")
+            if i1 == 0:
+                plt.title(f"{gin}")
+        if k == 2 and i1 == 2:
+            plt.legend(loc='best')
     plt.xlabel("Čas [s]")
-    plt.title(f"{gin}")
 plt.tight_layout()
-plt.savefig("../../MagistrskoDelo-pisanje/poglavja/grafi/prezivetvena-Voronoi.pdf")
+plt.savefig("../MagistrskoDelo-pisanje/poglavja/grafi/prezivetvena-Voronoi.png", dpi=300)
+plt.show()
 
 
 def geni():
@@ -80,7 +90,7 @@ for g in range(4):
         if g == 2 and k == 0:
             plt.legend(loc='best')
         if g == 0:
-            plt.title(f"{gin} ovc")
+            plt.title(gin.replace("S", " S"))
 plt.tight_layout()
-plt.savefig(f"../../MagistrskoDelo-pisanje/poglavja/grafi/geni-1-4.pdf")
+plt.savefig(f"../MagistrskoDelo-pisanje/poglavja/grafi/geni-1-4.pdf")
 plt.show()

@@ -134,7 +134,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="352.05833"
+     inkscape:cx="340.42738"
      inkscape:cy="310.36707"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -173,7 +173,7 @@
      transform="translate(-33.765114,-27.906479)">
     <path
        sodipodi:type="star"
-       style="fill:#ffe6d5;fill-opacity:0.573529;stroke:#d48100;stroke-width:0.565;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffe6d5;fill-opacity:1;stroke:#d48100;stroke-width:0.565;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path1088"
        sodipodi:sides="300"
        sodipodi:cx="90.147324"
@@ -265,7 +265,8 @@
        y="0"
        width="100%"
        height="100%"
-       transform="translate(36.977082,-23.265103)" />
+       transform="translate(36.977082,-23.265103)"
+       style="stroke:#0b49cf;stroke-opacity:1;fill:#55b0ff;fill-opacity:1;fill-rule:nonzero;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none" />
     <ellipse
        style="fill:#55b0ff;fill-opacity:1;stroke:#0b49cf;stroke-width:0.514906;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path84-5"
